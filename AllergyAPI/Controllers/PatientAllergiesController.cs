@@ -110,7 +110,7 @@ namespace EHospital.AllergyAPI.Controllers
             }
         }
 
-        [HttpPut("notes={notes}", Name = "UpdateNotes")]
+        [HttpPut("id={id}/notes={notes}", Name = "UpdateNotes")]
         public async Task<IActionResult> UpdatePatientAllergyNotes(int id, string notes)
         {
             if (ModelState.IsValid)

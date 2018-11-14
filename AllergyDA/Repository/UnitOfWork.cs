@@ -7,8 +7,7 @@ using System.Data.SqlClient;
 
 namespace EHospital.AllergyDA.Repository
 {
-    // TODO: Connect AutoMapper, create services in BL
-    // TODO: Extend functionality of UnitOfWotk
+    
     // TODO: Add logger
     /// <summary>
     /// Unit of Work allows you to simplify work with different repositories
