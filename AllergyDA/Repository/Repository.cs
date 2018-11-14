@@ -41,9 +41,9 @@ namespace EHospital.AllergyDA.Repository
         /// <returns>
         /// Entity collection.
         /// </returns>
-        public async Task<IEnumerable<T>> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return await _entities.AsNoTracking().ToListAsync();
+            return _entities.AsNoTracking();
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace EHospital.AllergyDA.Repository
         /// <returns>
         /// Entity collection.
         /// </returns>
-        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> predicate)
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate)
         {
-            return await _entities.Where(predicate).ToListAsync();
+            return _entities.Where(predicate).AsNoTracking();
         }
 
         /// <summary>
@@ -65,9 +65,9 @@ namespace EHospital.AllergyDA.Repository
         /// <returns>
         /// Entity.
         /// </returns>
-        public async Task<T> GetEntity(int id)
+        public T Get(int id)
         {
-            return await _entities.FindAsync(id);
+            return _entities.Find(id);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace EHospital.AllergyDA.Repository
         /// Created entity.
         /// </returns>
         /// <exception cref="ArgumentNullException">Tried to insert null entity!</exception>
-        public T InsertEntity(T entity)
+        public T Insert(T entity)
         {
             if (entity == null)
             {
@@ -91,44 +91,29 @@ namespace EHospital.AllergyDA.Repository
         /// <summary>
         /// Updates the entity.
         /// </summary>
-        /// <param name="entityToUpdate">The entity to update.</param>
+        /// <param name="entity">The entity to update.</param>
         /// <returns>
         /// Updated entity.
         /// </returns>
-        public T UpdateEntity(T entityToUpdate)
+        public T Update(T entity)
         {
-            _entities.Attach(entityToUpdate);
-            _context.Entry(entityToUpdate).State = EntityState.Modified;
-            return entityToUpdate;
+            _entities.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            return entity;
         }
 
         /// <summary>
         /// Deletes the entity.
         /// </summary>
-        /// <param name="entityToDelete">The entity to delete.</param>
+        /// <param name="entity">The entity to delete.</param>
         /// <returns>
         /// Deleted entity.
         /// </returns>
-        public T DeleteEntity(T entityToDelete)
+        public T Delete(T entity)
         {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _entities.Attach(entityToDelete);
-            }
-            _entities.Remove(entityToDelete);
-            return entityToDelete;
-        }
-
-        /// <summary>
-        /// Deletes the entity.
-        /// </summary>
-        /// <param name="Id">The identifier.</param>
-        /// <returns>Deleted entity.</returns>
-        public T DeleteEntity(int id)
-        {
-            T entityToDelete = _entities.Find(id);
-            DeleteEntity(entityToDelete);
-            return entityToDelete;
+            _entities.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            return entity;
         }
     }
 }

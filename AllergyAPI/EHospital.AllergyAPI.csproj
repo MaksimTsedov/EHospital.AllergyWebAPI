@@ -9,12 +9,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AllergyDA\EHospital.AllergyDA.csproj" />
+    <ProjectReference Include="..\AllergyDomain\EHospital.AllergyDomain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -44,6 +44,20 @@ namespace EHospital.AllergyDA.Contracts
         IRepository<AllergySymptom> AllergySymptoms { get; }
 
         /// <summary>
+        /// Gets the patients information.
+        /// </summary>
+        /// <value>
+        /// The patients information.
+        /// </value>
+        IRepository<PatientInfo> PatientsInfo { get; }
+
+        /// <summary>
+        /// Soft cascade delete patient-allergy pair.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        void CascadeDeletePatientAllergy(int id);
+
+        /// <summary>
         /// Saves this instance into db.
         /// </summary>
         Task Save();

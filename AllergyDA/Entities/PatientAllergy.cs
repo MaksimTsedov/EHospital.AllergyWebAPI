@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EHospital.AllergyDA.Entities
 {
@@ -59,5 +60,25 @@ namespace EHospital.AllergyDA.Entities
         ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.
         /// </value>
         public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Maps the specified patient allergy to this instance.
+        /// </summary>
+        /// <param name="patientAllergy">The patient-allergy pair.</param>
+        public void Map(PatientAllergy patientAllergy)
+        {
+            this.AllergyId = patientAllergy.AllergyId;
+            this.Duration = patientAllergy.Duration;
+            this.Notes = patientAllergy.Notes;
+        }
+
+        /// <summary>
+        /// Clones the notes to this instance.
+        /// </summary>
+        /// <param name="notesToClone">The notes to clone.</param>
+        public void CloneNotes(string notesToClone)
+        {
+            this.Notes = notesToClone;
+        }
     }
 }

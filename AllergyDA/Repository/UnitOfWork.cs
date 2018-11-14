@@ -2,6 +2,7 @@
 using EHospital.AllergyDA.Entities;
 using EHospital.AllergyDA.Contracts;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.AllergyDA.Repository
 {
@@ -24,6 +25,7 @@ namespace EHospital.AllergyDA.Repository
         private Repository<Symptom> _symptomRepository;
         private Repository<PatientAllergy> _patientAllergyRepository;
         private Repository<AllergySymptom> _allergySymptomRepository;
+        private Repository<PatientInfo> _patientInfoRepository;
 
         /// <summary>
         /// The disposed state
@@ -104,6 +106,35 @@ namespace EHospital.AllergyDA.Repository
 
                 return _allergySymptomRepository;
             }
+        }
+
+        /// <summary>
+        /// Gets the patient information repository.
+        /// </summary>
+        /// <value>
+        /// The patient information repository.
+        /// </value>
+        public IRepository<PatientInfo> PatientsInfo
+        {
+            get
+            {
+                if (_patientInfoRepository == null)
+                {
+                    _patientInfoRepository = new Repository<PatientInfo>(_context);
+                }
+
+                return _patientInfoRepository;
+            }
+        }
+
+        /// <summary>
+        /// Soft cascade delete patient-allergy pair.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void CascadeDeletePatientAllergy(int id)
+        {
+            _context.Database.ExecuteSqlCommand("CascadeDeletePatientAllergy @Id", parameters: id);
+            
         }
 
         /// <summary>

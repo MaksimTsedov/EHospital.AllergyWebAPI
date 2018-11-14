@@ -2,6 +2,8 @@
 using EHospital.AllergyDA.Contracts;
 using EHospital.AllergyDA.Entities;
 using EHospital.AllergyDA.Repository;
+using EHospital.AllergyDomain.Contracts;
+using EHospital.AllergyDomain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +33,12 @@ namespace EHospital.AllergyAPI
             services.AddScoped<IRepository<Symptom>, Repository<Symptom>>();
             services.AddScoped<IRepository<PatientAllergy>, Repository<PatientAllergy>>();
             services.AddScoped<IRepository<AllergySymptom>, Repository<AllergySymptom>>();
+            services.AddScoped<IAllergyRepository, AllergyRepository>();
+            services.AddScoped<IAllergySymptomRepository, AllergySymptomRepository>();
+            services.AddScoped<IPatientAllergyRepository, PatientAllergyRepository>();
+            services.AddScoped<ISymptomRepository, SymptomRepository>();
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

@@ -11,28 +11,27 @@ namespace EHospital.AllergyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AllergiesController : ControllerBase
+    public class SymptomsController : ControllerBase
     {
-        IAllergyRepository _allergy;
+        ISymptomRepository _symptom;
 
-        public AllergiesController(IAllergyRepository allergy)
+        public SymptomsController(ISymptomRepository symptom)
         {
-            _allergy = allergy;
+            _symptom = symptom;
             AutoMapper.Mapper.Reset();
             Mapper.Initialize(cfg => {
-                cfg.CreateMap<Allergy, AllergyView>(MemberList.None);
-                cfg.CreateMap<Allergy, AllergyRequest>(MemberList.None);
-                ;
+                cfg.CreateMap<Symptom, SymptomView>();
+                cfg.CreateMap<Symptom, SymptomRequest>();
             });
         }
 
         [HttpGet]
-        public IActionResult GetAllAllergies()
+        public IActionResult GetAllSymptoms()
         {
             try
             {
-                var allergies = _allergy.GetAllAllergies();                
-                return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
+                var symptoms = _symptom.GetAllSymptoms();
+                return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }
             catch (NullReferenceException ex)
             {
@@ -40,27 +39,27 @@ namespace EHospital.AllergyAPI.Controllers
             }
         }
 
-        [HttpGet("beginning={beginning}", Name = "SearchAllergyQuery")]
-        public IActionResult GetAllAllergies(string beginning)
+        [HttpGet("beginning={beginning}", Name = "SearchSymptomQuery")]
+        public IActionResult GetAllSymptoms(string beginning)
         {
             try
             {
-                var allergies = _allergy.SearchAllergiesByName(beginning);
-                return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
+                var symptoms = _symptom.SearchSymptomsByName(beginning);
+                return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }
             catch (NullReferenceException ex)
             {
                 return NotFound(ex.Message);
-            }            
+            }
         }
 
-        [HttpGet("id={id}", Name = "AllergyById")]
-        public IActionResult GetAllergy(int id)
+        [HttpGet("id={id}", Name = "SymptomById")]
+        public IActionResult GetSymptom(int id)
         {
             try
             {
-                var allergy = _allergy.GetAllergy(id);
-                return Ok(Mapper.Map<AllergyView>(allergy));
+                var symptom = _symptom.GetSymptom(id);
+                return Ok(Mapper.Map<SymptomView>(symptom));
             }
             catch (NullReferenceException ex)
             {
@@ -69,19 +68,19 @@ namespace EHospital.AllergyAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAllergy([FromBody]AllergyRequest allergy)
+        public async Task<IActionResult> CreateSymptom([FromBody]SymptomRequest symptom)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var result = await _allergy.CreateAllergyAsync(Mapper.Map<Allergy>(allergy));
-                    return Created("allergies", Mapper.Map<AllergyView>(result));
+                    var result = await _symptom.CreateSymptomAsync(Mapper.Map<Symptom>(symptom));
+                    return Created("symptoms", Mapper.Map<SymptomView>(result));
                 }
-                catch (ArgumentException ex)
+                catch (DuplicateWaitObjectException ex)
                 {
                     return Conflict(ex.Message);
-                }             
+                }
             }
             else
             {
@@ -90,20 +89,19 @@ namespace EHospital.AllergyAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAllergy(int id)
+        public async Task<IActionResult> DeleteSymptom(int id)
         {
             if (ModelState.IsValid)
             {
                 try
-                {     
-                    var result = await _allergy.DeleteAllergyAsync(id);
-                    return Ok(Mapper.Map<AllergyView>(result));
+                {
+                    return Ok(Mapper.Map<SymptomView>(await _symptom.DeleteSymptomAsync(id)));
                 }
                 catch (NullReferenceException ex)
                 {
                     return NotFound(ex.Message);
                 }
-                catch (ArgumentException ex)
+                catch (TaskCanceledException ex)
                 {
                     return Conflict(ex.Message);
                 }
