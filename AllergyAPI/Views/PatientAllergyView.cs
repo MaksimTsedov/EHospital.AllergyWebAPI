@@ -24,7 +24,7 @@
         /// <value>
         /// The allergy.
         /// </value>
-        public string Allergy { get; set; }
+        public int AllergyId { get; set; }
 
         /// <summary>
         /// Gets or sets the duration of allergy.

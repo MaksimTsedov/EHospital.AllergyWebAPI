@@ -24,6 +24,6 @@
         /// <value>
         /// The symptom.
         /// </value>
-        public string Symptom { get; set; }
+        public int SymptomId { get; set; }
     }
 }

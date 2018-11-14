@@ -21,15 +21,22 @@ namespace EHospital.AllergyAPI.Controllers
             AutoMapper.Mapper.Reset();
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<PatientAllergy, PatientAllergyView>();
-                cfg.CreateMap<Allergy, PatientAllergyView>().
-                ForMember(desc => desc.Allergy, opt => opt.MapFrom(c => c.Pathogen));
-                cfg.CreateMap<PatientAllergy, PatientAllergyRequest>();
+                cfg.CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg =>
+                {
+                    return new PatientAllergy()
+                    {
+                        AllergyId = arg.AllergyId,
+                        PatientId = arg.PatientId,
+                        Duration = arg.Duration,
+                        Notes = arg.Notes
+                    };
+                });
                 cfg.CreateMap<PatientAllergy, PatientAllergyNotesView>().
                 ForMember(desc => desc.Notes, opt => opt.MapFrom(c => c.Notes));
             });
         }
 
-        [HttpGet("patientId={id}")]
+        [HttpGet("patientId={patientId}")]
         public IActionResult GetAllPatientAllergies(int patientId)
         {
             try

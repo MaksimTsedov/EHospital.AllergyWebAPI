@@ -11,6 +11,6 @@ namespace EHospital.AllergyDA.Entities
         /// The patient information identifier.
         /// </value>
         [Key]
-        public int PatientInfoId { get; set; }
+        public int PatientId { get; set; }
     }
 }

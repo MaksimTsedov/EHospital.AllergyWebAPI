@@ -3,6 +3,7 @@ using EHospital.AllergyDA.Entities;
 using EHospital.AllergyDA.Contracts;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
 
 namespace EHospital.AllergyDA.Repository
 {
@@ -114,7 +115,7 @@ namespace EHospital.AllergyDA.Repository
         /// <value>
         /// The patient information repository.
         /// </value>
-        public IRepository<PatientInfo> PatientsInfo
+        public IRepository<PatientInfo> PatientInfo
         {
             get
             {
@@ -133,7 +134,8 @@ namespace EHospital.AllergyDA.Repository
         /// <param name="id">The identifier.</param>
         public void CascadeDeletePatientAllergy(int id)
         {
-            _context.Database.ExecuteSqlCommand("CascadeDeletePatientAllergy @Id", parameters: id);
+            var procId = new SqlParameter("@Id", id);
+            _context.Database.ExecuteSqlCommand("CascadeDeletePatientAllergy @Id", parameters: procId);
             
         }
 

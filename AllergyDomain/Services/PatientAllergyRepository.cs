@@ -79,7 +79,7 @@ namespace EHospital.AllergyDomain.Services
         /// <exception cref="ArgumentException">Duplicate patient-allergy pair.</exception>
         public async Task<PatientAllergy> CreatePatientAllergyAsync(PatientAllergy patientAllergy)
         {
-            if (_unitOfWork.PatientsInfo.Get(patientAllergy.PatientId) == null)
+            if (_unitOfWork.PatientInfo.Get(patientAllergy.PatientId) == null)
             {
                 throw new NullReferenceException("Not found such patient.");
             }

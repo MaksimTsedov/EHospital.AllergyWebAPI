@@ -21,7 +21,13 @@ namespace EHospital.AllergyAPI.Controllers
             AutoMapper.Mapper.Reset();
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<Symptom, SymptomView>();
-                cfg.CreateMap<Symptom, SymptomRequest>();
+                cfg.CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg =>
+                {
+                    return new Symptom()
+                    {
+                        Naming = arg.Naming
+                    };
+                });
             });
         }
 

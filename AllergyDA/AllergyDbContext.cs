@@ -62,7 +62,7 @@ namespace EHospital.AllergyDA
         /// <value>
         /// The patients.
         /// </value>
-        public virtual DbSet<PatientInfo> Patients { get; }
+        public virtual DbSet<PatientInfo> PatientInfo { get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -49,7 +49,7 @@ namespace EHospital.AllergyDA.Contracts
         /// <value>
         /// The patients information.
         /// </value>
-        IRepository<PatientInfo> PatientsInfo { get; }
+        IRepository<PatientInfo> PatientInfo { get; }
 
         /// <summary>
         /// Soft cascade delete patient-allergy pair.
