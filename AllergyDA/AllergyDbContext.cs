@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using EHospital.AllergyDA.Entities;
+using EHospital.Allergies.DAL.Entities;
 
-namespace EHospital.AllergyDA
+namespace EHospital.Allergies.DAL
 {
     /// <summary>
     /// Database context for allergy

@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EHospital.AllergyDA.Entities;
+using EHospital.Allergies.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using EHospital.AllergyAPI.Views;
-using EHospital.AllergyDomain.Contracts;
+using EHospital.Allergies.WebAPI.Views;
+using EHospital.Allergies.Domain.Contracts;
 
-namespace EHospital.AllergyAPI.Controllers
+namespace EHospital.Allergies.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PatientAllergiesController : ControllerBase
     {
         IPatientAllergyRepository _patientAllergy;
+        IAllergyRepository _allergy;
 
         public PatientAllergiesController(IPatientAllergyRepository patientAllergy)
         {
             this._patientAllergy = patientAllergy;
             AutoMapper.Mapper.Reset();
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<PatientAllergy, PatientAllergyView>();
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<PatientAllergy, PatientAllergyView>().
+                                ForMember(dest => dest.Allergy, opt => opt.MapFrom
+                                (src => _allergy.GetAllergy(src.AllergyId).Pathogen));
                 cfg.CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg =>
                 {
                     return new PatientAllergy()
@@ -110,14 +114,14 @@ namespace EHospital.AllergyAPI.Controllers
             }
         }
 
-        [HttpPut("id={id}/notes={notes}", Name = "UpdateNotes")]
-        public async Task<IActionResult> UpdatePatientAllergyNotes(int id, string notes)
+        [HttpPut("idToUpdateNotes={idToUpdateNotes}", Name = "UpdateNotes")]
+        public async Task<IActionResult> UpdatePatientAllergyNotes(int idToUpdateNotes, [FromBody]string notes)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var result = await _patientAllergy.UpdateNotesAsync(id, notes);
+                    var result = await _patientAllergy.UpdateNotesAsync(idToUpdateNotes, notes);
                     return Ok(Mapper.Map<PatientAllergyView>(result));
                 }
                 catch (NullReferenceException ex)

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.AllergyDA.Contracts;
-using EHospital.AllergyDA.Entities;
-using EHospital.AllergyDomain.Contracts;
+using EHospital.Allergies.DAL.Contracts;
+using EHospital.Allergies.DAL.Entities;
+using EHospital.Allergies.Domain.Contracts;
 
-namespace EHospital.AllergyDomain.Services
+namespace EHospital.Allergies.Domain.Services
 {
     public class AllergyRepository : IAllergyRepository
     {

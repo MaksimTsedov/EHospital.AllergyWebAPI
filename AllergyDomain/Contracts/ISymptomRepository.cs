@@ -1,8 +1,8 @@
-﻿using EHospital.AllergyDA.Entities;
+﻿using EHospital.Allergies.DAL.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EHospital.AllergyDomain.Contracts
+namespace EHospital.Allergies.Domain.Contracts
 {
     public interface ISymptomRepository
     {

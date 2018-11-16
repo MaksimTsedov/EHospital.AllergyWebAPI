@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AllergyDA\EHospital.AllergyDA.csproj" />
-    <ProjectReference Include="..\AllergyDomain\EHospital.AllergyDomain.csproj" />
+    <ProjectReference Include="..\AllergyDA\EHospital.Allergies.DAL.csproj" />
+    <ProjectReference Include="..\AllergyDomain\EHospital.Allergies.Domain.csproj" />
   </ItemGroup>
 
 </Project>

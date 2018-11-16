@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.AllergyAPI", "AllergyAPI\EHospital.AllergyAPI.csproj", "{F46D784D-7623-486A-A5B4-2C74E138CEFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.Allergies.WebAPI", "AllergyAPI\EHospital.Allergies.WebAPI.csproj", "{F46D784D-7623-486A-A5B4-2C74E138CEFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.AllergyDA", "AllergyDA\EHospital.AllergyDA.csproj", "{B87F0566-A027-4172-B588-D772925D3BB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.Allergies.DAL", "AllergyDA\EHospital.Allergies.DAL.csproj", "{B87F0566-A027-4172-B588-D772925D3BB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.AllergyDomain", "AllergyDomain\EHospital.AllergyDomain.csproj", "{E61CA8DA-346C-46B0-A46E-E82EE27DD7E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.Allergies.Domain", "AllergyDomain\EHospital.Allergies.Domain.csproj", "{E61CA8DA-346C-46B0-A46E-E82EE27DD7E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

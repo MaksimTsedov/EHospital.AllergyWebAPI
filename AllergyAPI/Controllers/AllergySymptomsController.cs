@@ -1,27 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EHospital.AllergyDA.Entities;
-using EHospital.AllergyDomain;
+using EHospital.Allergies.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using EHospital.AllergyAPI.Views;
-using EHospital.AllergyDomain.Contracts;
+using EHospital.Allergies.WebAPI.Views;
+using EHospital.Allergies.Domain.Contracts;
 
-namespace EHospital.AllergyAPI.Controllers
+namespace EHospital.Allergies.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AllergySymptomsController : ControllerBase
     {
         IAllergySymptomRepository _allergySymptom;
+        ISymptomRepository _symptoms; // Can I load this repo with data for mapping?
 
-        public AllergySymptomsController(IAllergySymptomRepository allergySymptom)
+        public AllergySymptomsController(IAllergySymptomRepository allergySymptom, ISymptomRepository symptoms)
         {
             _allergySymptom = allergySymptom;
+            _symptoms = symptoms;
             AutoMapper.Mapper.Reset();
             Mapper.Initialize(cfg => {
-                cfg.CreateMap<AllergySymptom, AllergySymptomView>();
+                cfg.CreateMap<AllergySymptom, AllergySymptomView>().
+                                ForMember(dest => dest.SymptomName, opt => opt.MapFrom
+                                (src => _symptoms.GetSymptom(src.SymptomId).Naming));
                 cfg.CreateMap<AllergySymptomRequest, AllergySymptom>().ConvertUsing(arg =>
                 {
                     return new AllergySymptom()

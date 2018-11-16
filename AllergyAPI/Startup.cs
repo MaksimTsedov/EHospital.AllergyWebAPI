@@ -1,9 +1,9 @@
-﻿using EHospital.AllergyDA;
-using EHospital.AllergyDA.Contracts;
-using EHospital.AllergyDA.Entities;
-using EHospital.AllergyDA.Repository;
-using EHospital.AllergyDomain.Contracts;
-using EHospital.AllergyDomain.Services;
+﻿using EHospital.Allergies.DAL;
+using EHospital.Allergies.DAL.Contracts;
+using EHospital.Allergies.DAL.Entities;
+using EHospital.Allergies.DAL.Repository;
+using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace EHospital.AllergyAPI
+namespace EHospital.Allergies.WebAPI
 {
     public class Startup
     {

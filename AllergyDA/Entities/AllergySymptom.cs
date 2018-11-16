@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EHospital.AllergyDA.Entities
+namespace EHospital.Allergies.DAL.Entities
 {
     /// <summary>
     /// Symptom-allergy entity

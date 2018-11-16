@@ -1,4 +1,4 @@
-﻿namespace EHospital.AllergyAPI.Views
+﻿namespace EHospital.Allergies.WebAPI.Views
 {
     public class AllergySymptomView
     {
@@ -24,6 +24,6 @@
         /// <value>
         /// The symptom.
         /// </value>
-        public int SymptomId { get; set; }
+        public string SymptomName { get; set; }
     }
 }

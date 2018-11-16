@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EHospital.AllergyDA.Entities;
+using EHospital.Allergies.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using EHospital.AllergyAPI.Views;
-using EHospital.AllergyDomain.Contracts;
+using EHospital.Allergies.WebAPI.Views;
+using EHospital.Allergies.Domain.Contracts;
 
-namespace EHospital.AllergyAPI.Controllers
+namespace EHospital.Allergies.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

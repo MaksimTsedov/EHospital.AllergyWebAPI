@@ -1,11 +1,11 @@
 ﻿using System;
-using EHospital.AllergyDA.Entities;
-using EHospital.AllergyDA.Contracts;
+using EHospital.Allergies.DAL.Entities;
+using EHospital.Allergies.DAL.Contracts;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 
-namespace EHospital.AllergyDA.Repository
+namespace EHospital.Allergies.DAL.Repository
 {
     
     // TODO: Add logger
@@ -13,7 +13,7 @@ namespace EHospital.AllergyDA.Repository
     /// Unit of Work allows you to simplify work with different repositories
     /// and makes sure that all repositories will use the same data context.
     /// </summary>
-    /// <seealso cref="AllergyDA.IUnitOfWork" />
+    /// <seealso cref="Allergies.DAL.IUnitOfWork" />
     public class UnitOfWork : IUnitOfWork
     {
         /// <summary>

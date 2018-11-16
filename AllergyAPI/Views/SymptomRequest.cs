@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EHospital.AllergyAPI.Views
+namespace EHospital.Allergies.WebAPI.Views
 {
     public class SymptomRequest
     {
