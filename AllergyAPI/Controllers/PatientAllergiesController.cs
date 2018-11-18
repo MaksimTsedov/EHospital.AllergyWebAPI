@@ -80,7 +80,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     var result = await _patientAllergy.UpdatePatientAllergyAsync(id, Mapper.Map<PatientAllergy>(patientAllergy));
                     return Ok(Mapper.Map<PatientAllergyView>(result));
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }

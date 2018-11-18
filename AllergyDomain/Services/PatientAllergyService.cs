@@ -96,7 +96,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Updated patient-allergy pair.
         /// </returns>
-        /// <exception cref="NullReferenceException">Patient-allergy pair doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public async Task<PatientAllergy> UpdatePatientAllergyAsync(int id, PatientAllergy patientAllergy)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
@@ -119,7 +119,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Updated patient-allergy pair.
         /// </returns>
-        /// <exception cref="NullReferenceException">Patient-allergy pair doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public async Task<PatientAllergy> UpdateNotesAsync(int id, string notes)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
