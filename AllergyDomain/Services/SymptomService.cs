@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Contracts;
-using EHospital.Allergies.DAL.Entities;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
 
-namespace EHospital.Allergies.Domain.Services
+namespace EHospital.Allergies.BusinesLogic.Services
 {
-    public class SymptomRepository : ISymptomRepository
+    public class SymptomService : ISymptomService
     {
         IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymptomRepository" /> class.
+        /// Initializes a new instance of the <see cref="SymptomService" /> class.
         /// </summary>
-        /// <param name="uow">The unit of work.</param>
-        public SymptomRepository(IUnitOfWork uow)
+        /// <param name="unitOfWork">The unit of work.</param>
+        public SymptomService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = uow;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -29,33 +28,23 @@ namespace EHospital.Allergies.Domain.Services
         /// <exception cref="NullReferenceException">No records in db.</exception>
         public IQueryable<Symptom> GetAllSymptoms()
         {
-            var result = _unitOfWork.Symptoms.GetAll().Where(a => !a.IsDeleted); ;
-            if (result.Count() == 0)
-            {
-                throw new NullReferenceException("No records in db.");
-            }
-
-            return result.OrderBy(a => a.Naming);
+            return _unitOfWork.Symptoms.GetAll().Where(a => !a.IsDeleted)
+                                                       .OrderBy(s => s.Naming);
         }
 
         /// <summary>
         /// Searches the symptoms by name beginning.
         /// </summary>
-        /// <param name="beginning"></param>
+        /// <param name="searchKey"></param>
         /// <returns>
         /// Enumeration of symptoms with start substring.
         /// </returns>
         /// <exception cref="NullReferenceException">No symptoms exist.</exception>
-        public IQueryable<Symptom> SearchSymptomsByName(string beginning)
+        public IQueryable<Symptom> SearchSymptomsByName(string searchKey)
         {
-            var result = _unitOfWork.Symptoms.GetAll(a => a.Naming.StartsWith(beginning)).
-                                              Where(a => !a.IsDeleted); ;
-            if (result.Count() == 0)
-            {
-                throw new NullReferenceException("No symptoms exist.");
-            }
-
-            return result.OrderBy(a => a.Naming);
+            return _unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
+                                                      .Where(s => !s.IsDeleted)
+                                                      .OrderBy(s => s.Naming);
         }
 
         /// <summary>
@@ -71,7 +60,7 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.Symptoms.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Symptom doesn`t exist.");
+                throw new ArgumentNullException("Symptom doesn`t exist.");
             }
 
             return result;
@@ -111,12 +100,12 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.Symptoms.Get(id);
             if (result == null)
             {
-                throw new NullReferenceException("No symptom found.");
+                throw new ArgumentNullException("No symptom found.");
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(s => s.SymptomId == result.SymptomId))
             {
-                throw new ArgumentException("There are exist records with involvment of this symptom.");
+                throw new InvalidOperationException("There are exist records with involvment of this symptom.");
             }
 
             result.IsDeleted = true;

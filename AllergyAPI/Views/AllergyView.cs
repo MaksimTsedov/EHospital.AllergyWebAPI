@@ -2,7 +2,7 @@
 {
     public class AllergyView
     {
-        public int AllergyId { get; set; }
+        public string AllergyId { get; set; }
 
         public string Pathogen { get; set; }
     }

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EHospital.Allergies.DAL.Entities;
+﻿using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
-namespace EHospital.Allergies.DAL
+namespace EHospital.Allergies.Data
 {
     /// <summary>
     /// Database context for allergy
@@ -64,11 +64,34 @@ namespace EHospital.Allergies.DAL
         /// </value>
         public virtual DbSet<PatientInfo> PatientInfo { get; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PatientAllergy>()
+                .HasOne(pa => pa.Allergy)
+                .WithMany(a => a.PatientAllergies)
+                .HasForeignKey(pa => pa.AllergyId);
+
+            modelBuilder.Entity<PatientAllergy>()
+                .HasOne(pa => pa.Patient)
+                .WithMany(p => p.PatientAllergies)
+                .HasForeignKey(pa => pa.PatientId);
+
+            modelBuilder.Entity<AllergySymptom>()
+               .HasOne(als => als.PatientAllergy)
+               .WithMany(pa => pa.AllergySymptoms)
+               .HasForeignKey(als => als.PatientAllergyId);
+
+            modelBuilder.Entity<AllergySymptom>()
+                .HasOne(als => als.Symptom)
+                .WithMany(s => s.AllergySymptoms)
+                .HasForeignKey(als => als.SymptomId);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Initial Catalog=EHospital;Integrated Security=True");
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EHospitalDB;Trusted_Connection=True;");
             }
         }
     }

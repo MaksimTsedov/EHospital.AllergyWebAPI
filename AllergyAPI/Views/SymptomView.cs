@@ -2,7 +2,7 @@
 {
     public class SymptomView
     {
-        public int SymptomId { get; set; }
+        public string SymptomId { get; set; }
 
         public string Naming { get; set; }
     }

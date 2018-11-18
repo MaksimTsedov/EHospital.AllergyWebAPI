@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using EHospital.Allergies.WebAPI.Views;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
+using System.Linq;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -13,45 +13,24 @@ namespace EHospital.Allergies.WebAPI.Controllers
     [ApiController]
     public class PatientAllergiesController : ControllerBase
     {
-        IPatientAllergyRepository _patientAllergy;
-        IAllergyRepository _allergy;
+        private readonly IPatientAllergyService _patientAllergy;
 
-        public PatientAllergiesController(IPatientAllergyRepository patientAllergy)
+        public PatientAllergiesController(IPatientAllergyService patientAllergy)
         {
             this._patientAllergy = patientAllergy;
-            AutoMapper.Mapper.Reset();
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<PatientAllergy, PatientAllergyView>().
-                                ForMember(dest => dest.Allergy, opt => opt.MapFrom
-                                (src => _allergy.GetAllergy(src.AllergyId).Pathogen));
-                cfg.CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg =>
-                {
-                    return new PatientAllergy()
-                    {
-                        AllergyId = arg.AllergyId,
-                        PatientId = arg.PatientId,
-                        Duration = arg.Duration,
-                        Notes = arg.Notes
-                    };
-                });
-                cfg.CreateMap<PatientAllergy, PatientAllergyNotesView>().
-                ForMember(desc => desc.Notes, opt => opt.MapFrom(c => c.Notes));
-            });
         }
 
         [HttpGet("patientId={patientId}")]
         public IActionResult GetAllPatientAllergies(int patientId)
         {
-            try
+            var allergies = _patientAllergy.GetAllPatientAllergies(patientId);
+
+            if (allergies.Count() != 0)
             {
-                var allergies = _patientAllergy.GetAllPatientAllergies(patientId);
-                return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
+                return Ok(Mapper.Map<PatientAllergiesSymptomsView>(allergies));
             }
-            catch (NullReferenceException ex)
-            {
-                return NotFound(ex.Message);
-            }
+
+            return NotFound("Not found any allergy of chosen patient.");
         }
 
         [HttpGet("id={id}", Name = "PatientAllergyById")]
@@ -62,7 +41,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
                 var patientAllergy = _patientAllergy.GetPatientAllergy(id);
                 return Ok(Mapper.Map<PatientAllergyView>(patientAllergy));
             }
-            catch (NullReferenceException ex)
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -78,19 +57,17 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     var result = await _patientAllergy.CreatePatientAllergyAsync(Mapper.Map<PatientAllergy>(patientAllergy));
                     return Created("patientallergies", Mapper.Map<PatientAllergyView>(result));
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }
-                catch (DuplicateWaitObjectException ex)
+                catch (ArgumentException ex)
                 {
                     return Conflict(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpPut("id={id}", Name = "UpdatePatientAllergy")]
@@ -108,10 +85,8 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     return NotFound(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpPut("idToUpdateNotes={idToUpdateNotes}", Name = "UpdateNotes")]
@@ -124,15 +99,13 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     var result = await _patientAllergy.UpdateNotesAsync(idToUpdateNotes, notes);
                     return Ok(Mapper.Map<PatientAllergyView>(result));
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpDelete]
@@ -145,20 +118,13 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     await _patientAllergy.DeletePatientAllergyAsync(id);
                     return Ok("Cascade deleting success.");
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }
-                catch (Exception ex)
-                {
-                    return UnprocessableEntity(ex.Message);
-                }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
 
+            return BadRequest(ModelState);
+        }
     }
 }

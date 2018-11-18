@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Contracts;
-using EHospital.Allergies.DAL.Entities;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
 
-namespace EHospital.Allergies.Domain.Services
+namespace EHospital.Allergies.BusinesLogic.Services
 {
-    public class AllergySymptomRepository : IAllergySymptomRepository
+    public class AllergySymptomService : IAllergySymptomService
     {
-        IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymptomRepository" /> class.
+        /// Initializes a new instance of the <see cref="SymptomService" /> class.
         /// </summary>
-        /// <param name="uow">The unit of work.</param>
-        public AllergySymptomRepository(IUnitOfWork uow)
+        /// <param name="unitOfWork">The unit of work.</param>
+        public AllergySymptomService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = uow;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -28,14 +27,14 @@ namespace EHospital.Allergies.Domain.Services
         /// <returns>
         /// Enumeration of allergy symptoms.
         /// </returns>
-        /// <exception cref="NullReferenceException">Not found any symptom.</exception>
+        /// <exception cref="ArgumentException">Not found any symptom.</exception>
         public IQueryable<Symptom> GetAllAllergySymptoms(int patientAllergyId)
         {
             var allergySymptoms = _unitOfWork.AllergySymptoms.GetAll(a => a.PatientAllergyId == patientAllergyId).
                                                               Where(a => !a.IsDeleted);
             if (allergySymptoms.Count() == 0)
             {
-                throw new NullReferenceException("Not found any symptom.");
+                throw new ArgumentException("Not found any symptom.");
             }
 
             IEnumerable<Symptom> result = _unitOfWork.Symptoms.GetAll();
@@ -59,7 +58,7 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.AllergySymptoms.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Allergy-symptom pair doesn`t exist.");
+                throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.");
             }
 
             return result;
@@ -72,23 +71,29 @@ namespace EHospital.Allergies.Domain.Services
         /// <returns>
         /// Allergy-symptom pair.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Not found such allergy of patient.
+        /// or
+        /// Not found such symptom.
+        /// </exception>
+        /// <exception cref="ArgumentException">Duplicate allergy-symptom pair.</exception>
         /// <exception cref="NullReferenceException">
         /// Not found such allergy of patient.
         /// or
-        /// Not found such symptom.</exception>
-        /// <exception cref="ArgumentException">Duplicate allergy-symptom pair.</exception>
+        /// Not found such symptom.
+        /// </exception>
         public async Task<AllergySymptom> CreateAllergySymptomAsync(AllergySymptom allergySymptom)
         {
             PatientAllergy patientAllergy = _unitOfWork.PatientAllergies.Get(allergySymptom.PatientAllergyId);
             Symptom symptom = _unitOfWork.Symptoms.Get(allergySymptom.SymptomId);
             if (patientAllergy == null)
             {
-                throw new NullReferenceException("Not found such allergy of patient.");
+                throw new ArgumentNullException("Not found such allergy of patient.");
             }
 
             if (symptom == null)
             {
-                throw new NullReferenceException("Not found such symptom.");
+                throw new ArgumentNullException("Not found such symptom.");
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(a => 
@@ -98,6 +103,8 @@ namespace EHospital.Allergies.Domain.Services
                 throw new ArgumentException("Duplicate allergy-symptom pair.");
             }
 
+            allergySymptom.PatientAllergy = patientAllergy;
+            allergySymptom.Symptom = symptom;
             AllergySymptom result = _unitOfWork.AllergySymptoms.Insert(allergySymptom);
             await _unitOfWork.Save();
             return result;
@@ -110,13 +117,13 @@ namespace EHospital.Allergies.Domain.Services
         /// <returns>
         /// Deleted allergy-symptom pair
         /// </returns>
-        /// <exception cref="NullReferenceException">No sympthom of allergy found.</exception>
+        /// <exception cref="ArgumentNullException">No sympthom of allergy found.</exception>
         public async Task<AllergySymptom> DeleteAllergySymptomAsync(int id)
         {
             var result = _unitOfWork.AllergySymptoms.Get(id);
             if (result == null)
             {
-                throw new NullReferenceException("No sympthom of allergy found.");
+                throw new ArgumentNullException("No sympthom of allergy found.");
             }
 
             result.IsDeleted = true;

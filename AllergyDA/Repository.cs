@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using EHospital.Allergies.DAL.Contracts;
+using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace EHospital.Allergies.DAL.Repository
+namespace EHospital.Allergies.Data
 {
     /// <summary>
     /// Repository consists CRUD operations above data of 'T' type
     /// </summary>
     /// <typeparam name="T">Entity.</typeparam>
-    /// <seealso cref="Allergies.DAL.Contracts.IRepository{T}" />
+    /// <seealso cref="Allergies.Data.Contracts.IRepository{T}" />
     public class Repository<T> : IRepository<T> where T : class
     {
         /// <summary>

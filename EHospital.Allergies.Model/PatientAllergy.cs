@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace EHospital.Allergies.DAL.Entities
+namespace EHospital.Allergies.Model
 {
     /// <summary>
     /// Patient-allergy entity 
@@ -27,6 +28,14 @@ namespace EHospital.Allergies.DAL.Entities
         public int PatientId { get; set; }
 
         /// <summary>
+        /// Gets or sets the patient.
+        /// </summary>
+        /// <value>
+        /// The patient.
+        /// </value>
+        public PatientInfo Patient { get; set; }
+
+        /// <summary>
         /// Gets or sets the allergy identifier.
         /// </summary>
         /// <value>
@@ -34,6 +43,14 @@ namespace EHospital.Allergies.DAL.Entities
         /// </value>
         [Required(ErrorMessage = "Please select allergy.")]
         public int AllergyId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allergy.
+        /// </summary>
+        /// <value>
+        /// The allergy.
+        /// </value>
+        public Allergy Allergy { get; set; }
 
         /// <summary>
         /// Gets or sets the duration of allergy.
@@ -62,10 +79,18 @@ namespace EHospital.Allergies.DAL.Entities
         public bool IsDeleted { get; set; }
 
         /// <summary>
+        /// Gets or sets the allergy symptoms.
+        /// </summary>
+        /// <value>
+        /// The allergy symptoms.
+        /// </value>
+        public ICollection<AllergySymptom> AllergySymptoms { get; set; }
+
+        /// <summary>
         /// Maps the specified patient allergy to this instance.
         /// </summary>
         /// <param name="patientAllergy">The patient-allergy pair.</param>
-        public void Map(PatientAllergy patientAllergy)
+        public void Bind(PatientAllergy patientAllergy)
         {
             this.AllergyId = patientAllergy.AllergyId;
             this.Duration = patientAllergy.Duration;
@@ -75,10 +100,10 @@ namespace EHospital.Allergies.DAL.Entities
         /// <summary>
         /// Clones the notes to this instance.
         /// </summary>
-        /// <param name="notesToClone">The notes to clone.</param>
-        public void CloneNotes(string notesToClone)
+        /// <param name="notesToSet">The notes to clone.</param>
+        public void SetNotes(string notesToSet)
         {
-            this.Notes = notesToClone;
+            this.Notes = notesToSet;
         }
     }
 }

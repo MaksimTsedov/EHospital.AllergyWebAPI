@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace EHospital.Allergies.DAL.Contracts
+namespace EHospital.Allergies.Model
 {
     /// <summary>
     /// Abstract CRUD operations for entity.

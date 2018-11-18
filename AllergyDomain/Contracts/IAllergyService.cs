@@ -1,10 +1,10 @@
-﻿using EHospital.Allergies.DAL.Entities;
+﻿using EHospital.Allergies.Model;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EHospital.Allergies.Domain.Contracts
+namespace EHospital.Allergies.BusinesLogic.Contracts
 {
-    public interface IAllergyRepository
+    public interface IAllergyService
     {
         /// <summary>
         /// Gets all allergies.

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using EHospital.Allergies.WebAPI.Views;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
+using System.Linq;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -13,53 +14,38 @@ namespace EHospital.Allergies.WebAPI.Controllers
     [ApiController]
     public class SymptomsController : ControllerBase
     {
-        ISymptomRepository _symptom;
+        private readonly ISymptomService _symptom;
 
-        public SymptomsController(ISymptomRepository symptom)
+        public SymptomsController(ISymptomService symptom)
         {
             _symptom = symptom;
-            AutoMapper.Mapper.Reset();
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<Symptom, SymptomView>();
-                cfg.CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg =>
-                {
-                    return new Symptom()
-                    {
-                        Naming = arg.Naming
-                    };
-                });
-            });
         }
 
         [HttpGet]
         public IActionResult GetAllSymptoms()
         {
-            try
+            var symptoms = _symptom.GetAllSymptoms();
+            if (symptoms.Count() != 0)
             {
-                var symptoms = _symptom.GetAllSymptoms();
                 return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }
-            catch (NullReferenceException ex)
-            {
-                return NotFound(ex.Message);
-            }
+
+            return NotFound("No symptoms recorded.");
         }
 
-        [HttpGet("beginning={beginning}", Name = "SearchSymptomQuery")]
-        public IActionResult GetAllSymptoms(string beginning)
+        [HttpGet("searchKey={searchKey}", Name = "SearchSymptomQuery")]
+        public IActionResult GetAllSymptoms(string searchKey)
         {
-            try
+            var symptoms = _symptom.SearchSymptomsByName(searchKey);
+            if (symptoms.Count() != 0)
             {
-                var symptoms = _symptom.SearchSymptomsByName(beginning);
                 return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }
-            catch (NullReferenceException ex)
-            {
-                return NotFound(ex.Message);
-            }
+
+            return NotFound("No symptoms recorded.");
         }
 
-        [HttpGet("id={id}", Name = "SymptomById")]
+        [HttpGet("{id}", Name = "SymptomById")]
         public IActionResult GetSymptom(int id)
         {
             try
@@ -67,7 +53,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
                 var symptom = _symptom.GetSymptom(id);
                 return Ok(Mapper.Map<SymptomView>(symptom));
             }
-            catch (NullReferenceException ex)
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -83,15 +69,13 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     var result = await _symptom.CreateSymptomAsync(Mapper.Map<Symptom>(symptom));
                     return Created("symptoms", Mapper.Map<SymptomView>(result));
                 }
-                catch (DuplicateWaitObjectException ex)
+                catch (ArgumentException ex)
                 {
                     return Conflict(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpDelete]
@@ -103,20 +87,17 @@ namespace EHospital.Allergies.WebAPI.Controllers
                 {
                     return Ok(Mapper.Map<SymptomView>(await _symptom.DeleteSymptomAsync(id)));
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }
-                catch (TaskCanceledException ex)
+                catch (InvalidOperationException ex)
                 {
                     return Conflict(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
 
+            return BadRequest(ModelState);
+        }
     }
 }

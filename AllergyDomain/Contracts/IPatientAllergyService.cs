@@ -1,10 +1,10 @@
-﻿using EHospital.Allergies.DAL.Entities;
+﻿using EHospital.Allergies.Model;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EHospital.Allergies.Domain.Contracts
+namespace EHospital.Allergies.BusinesLogic.Contracts
 {
-    public interface IPatientAllergyRepository
+    public interface IPatientAllergyService
     {
         /// <summary>
         /// Gets all patient allergies.
@@ -13,7 +13,7 @@ namespace EHospital.Allergies.Domain.Contracts
         /// <returns>
         /// List of allergies of chosen patient.
         /// </returns>
-        IQueryable<Allergy> GetAllPatientAllergies(int patientId);
+        IQueryable<PatientAllergy> GetAllPatientAllergies(int patientId);
 
         /// <summary>
         /// Gets the patient-allergy pair.

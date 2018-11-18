@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Contracts;
-using EHospital.Allergies.DAL.Entities;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
 
-namespace EHospital.Allergies.Domain.Services
+namespace EHospital.Allergies.BusinesLogic.Services
 {
-    public class PatientAllergyRepository : IPatientAllergyRepository
+    public class PatientAllergyService : IPatientAllergyService
     {
-        IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymptomRepository" /> class.
+        /// Initializes a new instance of the <see cref="SymptomService" /> class.
         /// </summary>
-        /// <param name="uow">The unit of work.</param>
-        public PatientAllergyRepository(IUnitOfWork uow)
+        /// <param name="unitOfWork">The unit of work.</param>
+        public PatientAllergyService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = uow;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -29,21 +27,10 @@ namespace EHospital.Allergies.Domain.Services
         /// List of allergies of chosen patient.
         /// </returns>
         /// <exception cref="NullReferenceException">Not found any allergy of chosen patient.</exception>
-        public IQueryable<Allergy> GetAllPatientAllergies(int patientId)
+        public IQueryable<PatientAllergy> GetAllPatientAllergies(int patientId)
         {
-            var patienAlletgies = _unitOfWork.PatientAllergies.GetAll(a => a.PatientId == patientId).
-                                                              Where(a => !a.IsDeleted);
-            if (patienAlletgies.Count() == 0)
-            {
-                throw new NullReferenceException("Not found any allergy of chosen patient.");
-            }
-
-            IEnumerable<Allergy> result = _unitOfWork.Allergies.GetAll();
-            return patienAlletgies.Join(result,
-                                   a => a.AllergyId,
-                                   s => s.AllergyId,
-                                   (a, s) => new Allergy { AllergyId = s.AllergyId, Pathogen = s.Pathogen, IsDeleted = s.IsDeleted }).
-                                   OrderBy(s => s.Pathogen);
+            return _unitOfWork.PatientAllergies.GetAll(a => a.PatientId == patientId)
+                                               .Where(a => !a.IsDeleted);
         }
 
         /// <summary>
@@ -53,13 +40,13 @@ namespace EHospital.Allergies.Domain.Services
         /// <returns>
         /// Patient-allergy pair.
         /// </returns>
-        /// <exception cref="NullReferenceException">Patient-allergy pair doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public PatientAllergy GetPatientAllergy(int id)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
             return result;
@@ -72,26 +59,27 @@ namespace EHospital.Allergies.Domain.Services
         /// <returns>
         /// Patient-allergy pair.
         /// </returns>
-        /// <exception cref="NullReferenceException">
+        /// <exception cref="ArgumentNullException">
         /// Not found such patient.
         /// or
         /// Not found such allergy.</exception>
         /// <exception cref="ArgumentException">Duplicate patient-allergy pair.</exception>
         public async Task<PatientAllergy> CreatePatientAllergyAsync(PatientAllergy patientAllergy)
         {
-            if (_unitOfWork.PatientInfo.Get(patientAllergy.PatientId) == null)
+            PatientInfo patientInfo = _unitOfWork.PatientInfo.Get(patientAllergy.PatientId);
+            Allergy allergy = _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
+            if (patientInfo == null)
             {
-                throw new NullReferenceException("Not found such patient.");
+                throw new ArgumentNullException("Not found such patient.");
             }
 
-            if (_unitOfWork.Allergies.Get(patientAllergy.AllergyId) == null)
+            if (allergy == null)
             {
-                throw new NullReferenceException("Not found such allergy.");
+                throw new ArgumentNullException("Not found such allergy.");
             }
 
-            if (_unitOfWork.PatientAllergies.GetAll().Any(a =>
-                                                         a.AllergyId == patientAllergy.AllergyId &&
-                                                         a.PatientId == patientAllergy.PatientId))
+            if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == patientAllergy.AllergyId
+                                                         && a.PatientId == patientAllergy.PatientId))
             {
                 throw new ArgumentException("Duplicate patient-allergy pair.");
             }
@@ -115,10 +103,10 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
-            result.Map(patientAllergy);
+            result.Bind(patientAllergy);
             _unitOfWork.PatientAllergies.Update(result);
             await _unitOfWork.Save();
             return result;
@@ -138,10 +126,10 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
-            result.CloneNotes(notes);
+            result.SetNotes(notes);
             _unitOfWork.PatientAllergies.Update(result);
             await _unitOfWork.Save();
             return result;
@@ -161,7 +149,7 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
             _unitOfWork.CascadeDeletePatientAllergy(id);

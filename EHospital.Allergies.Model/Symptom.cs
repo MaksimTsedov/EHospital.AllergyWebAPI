@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace EHospital.Allergies.DAL.Entities
+namespace EHospital.Allergies.Model
 {
     /// <summary>
     /// Symptom entity
@@ -34,5 +35,13 @@ namespace EHospital.Allergies.DAL.Entities
         ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.
         /// </value>
         public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allergy symptoms.
+        /// </summary>
+        /// <value>
+        /// The allergy symptoms.
+        /// </value>
+        public ICollection<AllergySymptom> AllergySymptoms { get; set; }
     }
 }

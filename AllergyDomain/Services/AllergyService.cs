@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Contracts;
-using EHospital.Allergies.DAL.Entities;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
 
-namespace EHospital.Allergies.Domain.Services
+namespace EHospital.Allergies.BusinesLogic.Services
 {
-    public class AllergyRepository : IAllergyRepository
+    public class AllergyService : IAllergyService
     {
-        IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AllergyRepository" /> class.
+        /// Initializes a new instance of the <see cref="AllergyService" /> class.
         /// </summary>
-        /// <param name="uow">The unit of work.</param>
-        public AllergyRepository(IUnitOfWork uow)
+        /// <param name="unitOfWork">The unit of work.</param>
+        public AllergyService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = uow;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -29,13 +28,8 @@ namespace EHospital.Allergies.Domain.Services
         /// <exception cref="NullReferenceException">No records in db.</exception>
         public IQueryable<Allergy> GetAllAllergies()
         {
-            var result = _unitOfWork.Allergies.GetAll().Where(a => !a.IsDeleted);
-            if (result.Count() == 0)
-            {
-                throw new NullReferenceException("No records in db.");
-            }
-
-            return result.OrderBy(a => a.Pathogen);
+            return _unitOfWork.Allergies.GetAll().Where(a => !a.IsDeleted)
+                                                       .OrderBy(a => a.Pathogen);
         }
 
         /// <summary>
@@ -51,7 +45,7 @@ namespace EHospital.Allergies.Domain.Services
             var result = _unitOfWork.Allergies.Get(id);
             if (result == null || result.IsDeleted)
             {
-                throw new NullReferenceException("Allergy doesn`t exist.");
+                throw new ArgumentNullException("Allergy doesn`t exist.");
             }
 
             return result;
@@ -60,21 +54,16 @@ namespace EHospital.Allergies.Domain.Services
         /// <summary>
         /// Searches the allergies by name beginning.
         /// </summary>
-        /// <param name="beginning">The beginning of naming.</param>
+        /// <param name="searchKey">The beginning of naming.</param>
         /// <returns>
         /// Enumeration of allergies with start substring.
         /// </returns>
         /// <exception cref="NullReferenceException">Not found any allergy.</exception>
-        public IQueryable<Allergy> SearchAllergiesByName(string beginning)
+        public IQueryable<Allergy> SearchAllergiesByName(string searchKey)
         {
-            var result = _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(beginning)).
-                                               Where(a => !a.IsDeleted);
-            if (result.Count() == 0)
-            {
-                throw new NullReferenceException("Not found any allergy.");
-            }
-
-            return result.OrderBy(a => a.Pathogen);
+            return _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(searchKey))
+                                                       .Where(a => !a.IsDeleted)
+                                                       .OrderBy(a => a.Pathogen);
         }
 
         /// <summary>
@@ -104,29 +93,26 @@ namespace EHospital.Allergies.Domain.Services
         /// <returns>
         /// Deleted allergy.
         /// </returns>
-        /// <exception cref="NullReferenceException">No allergy found.</exception>
-        /// <exception cref="ArgumentException">There are exist records with involvment of this allergy.</exception>
+        /// <exception cref="ArgumentNullException">No allergy found.</exception>
+        /// <exception cref="InvalidOperationException">There are exist records with involvment of this allergy.</exception>
         public async Task<Allergy> DeleteAllergyAsync(int id)
         {
             var result = _unitOfWork.Allergies.Get(id);
 
             if (result == null)
             {
-                throw new NullReferenceException("No allergy found.");
+                throw new ArgumentNullException("No allergy found.");
             }
 
-            if (_unitOfWork.PatientAllergies.GetAll().Count() != 0)
+            if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.AllergyId))
             {
-                if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.AllergyId))
-                {
-                    throw new ArgumentException("There are exist records with involvment of this allergy.");
-                }
+                throw new InvalidOperationException("There are exist records with involvment of this allergy.");
             }
 
             result.IsDeleted = true;
             _unitOfWork.Allergies.Delete(result);
             await _unitOfWork.Save();
             return result;
-        }      
+        }
     }
 }

@@ -1,9 +1,7 @@
-﻿using EHospital.Allergies.DAL;
-using EHospital.Allergies.DAL.Contracts;
-using EHospital.Allergies.DAL.Entities;
-using EHospital.Allergies.DAL.Repository;
-using EHospital.Allergies.Domain.Contracts;
-using EHospital.Allergies.Domain.Services;
+﻿using AutoMapper;
+using EHospital.Allergies.Data;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.BusinesLogic.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using EHospital.Allergies.Model;
 
 namespace EHospital.Allergies.WebAPI
 {
@@ -26,17 +25,19 @@ namespace EHospital.Allergies.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = @"Server=(localdb)\mssqllocaldb;Initial Catalog=EHospital;Integrated Security=True;";
+            string connection = @"Server=(localdb)\mssqllocaldb;Database=EHospitalDB;Trusted_Connection=True;";
             services.AddDbContext<AllergyDbContext>(options => options.UseSqlServer(connection));
+
+            Mapper.Initialize(cfg => cfg.AddProfile<AllergyProfile>());
 
             services.AddScoped<IRepository<Allergy>, Repository<Allergy>>();
             services.AddScoped<IRepository<Symptom>, Repository<Symptom>>();
             services.AddScoped<IRepository<PatientAllergy>, Repository<PatientAllergy>>();
             services.AddScoped<IRepository<AllergySymptom>, Repository<AllergySymptom>>();
-            services.AddScoped<IAllergyRepository, AllergyRepository>();
-            services.AddScoped<IAllergySymptomRepository, AllergySymptomRepository>();
-            services.AddScoped<IPatientAllergyRepository, PatientAllergyRepository>();
-            services.AddScoped<ISymptomRepository, SymptomRepository>();
+            services.AddScoped<IAllergyService, AllergyService>();
+            services.AddScoped<IAllergySymptomService, AllergySymptomService>();
+            services.AddScoped<IPatientAllergyService, PatientAllergyService>();
+            services.AddScoped<ISymptomService, SymptomService>();
 
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 

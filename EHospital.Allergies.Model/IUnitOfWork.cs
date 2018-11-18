@@ -1,9 +1,7 @@
 ﻿using System;
-using EHospital.Allergies.DAL.Entities;
-using EHospital.Allergies.DAL.Contracts;
 using System.Threading.Tasks;
 
-namespace EHospital.Allergies.DAL.Contracts
+namespace EHospital.Allergies.Model
 {
     /// <summary>
     /// Abstraction about union of needed entities

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EHospital.Allergies.DAL.Entities
+namespace EHospital.Allergies.Model
 {
     /// <summary>
     /// Symptom-allergy entity
@@ -26,6 +26,14 @@ namespace EHospital.Allergies.DAL.Entities
         public int PatientAllergyId { get; set; }
 
         /// <summary>
+        /// Gets or sets the patient allergy.
+        /// </summary>
+        /// <value>
+        /// The patient allergy.
+        /// </value>
+        public PatientAllergy PatientAllergy { get; set; }
+
+        /// <summary>
         /// Gets or sets the symptom identifier.
         /// </summary>
         /// <value>
@@ -33,6 +41,14 @@ namespace EHospital.Allergies.DAL.Entities
         /// </value>
         [Required(ErrorMessage = "Please select symptom.")]
         public int SymptomId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the symptom.
+        /// </summary>
+        /// <value>
+        /// The symptom.
+        /// </value>
+        public Symptom Symptom { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is deleted.

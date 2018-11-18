@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EHospital.Allergies.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using EHospital.Allergies.WebAPI.Views;
-using EHospital.Allergies.Domain.Contracts;
+using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.Model;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -13,27 +13,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
     [ApiController]
     public class AllergySymptomsController : ControllerBase
     {
-        IAllergySymptomRepository _allergySymptom;
-        ISymptomRepository _symptoms; // Can I load this repo with data for mapping?
+        private readonly IAllergySymptomService _allergySymptom;
 
-        public AllergySymptomsController(IAllergySymptomRepository allergySymptom, ISymptomRepository symptoms)
+        public AllergySymptomsController(IAllergySymptomService allergySymptom, ISymptomService symptoms)
         {
             _allergySymptom = allergySymptom;
-            _symptoms = symptoms;
-            AutoMapper.Mapper.Reset();
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<AllergySymptom, AllergySymptomView>().
-                                ForMember(dest => dest.SymptomName, opt => opt.MapFrom
-                                (src => _symptoms.GetSymptom(src.SymptomId).Naming));
-                cfg.CreateMap<AllergySymptomRequest, AllergySymptom>().ConvertUsing(arg =>
-                {
-                    return new AllergySymptom()
-                    {
-                        PatientAllergyId = arg.PatientAllergyId,
-                        SymptomId = arg.SymptomId
-                    };
-                });
-            });
         }
 
         [HttpGet("allergyId={allegryId}")]
@@ -44,21 +28,21 @@ namespace EHospital.Allergies.WebAPI.Controllers
                 var symptoms = _allergySymptom.GetAllAllergySymptoms(allegryId);
                 return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }
-            catch (NullReferenceException ex)
+            catch (ArgumentException ex)
             {
                 return NotFound(ex.Message);
             }
         }
 
-        [HttpGet("id={id}", Name = "AllergySymptomById")]
-        public IActionResult GetAllergySymptom(int id)
+        [HttpGet("allergySymptomId={allergySymptomId}", Name = "AllergySymptomById")]
+        public IActionResult GetAllergySymptom(int allergySymptomId)
         {
             try
             {
-                var allergySymptom = _allergySymptom.GetAllergySymptom(id);
+                var allergySymptom = _allergySymptom.GetAllergySymptom(allergySymptomId);
                 return Ok(Mapper.Map<AllergySymptomView>(allergySymptom));
             }
-            catch (NullReferenceException ex)
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -74,19 +58,17 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     var result = await _allergySymptom.CreateAllergySymptomAsync(Mapper.Map<AllergySymptom>(allergySymptom));
                     return Created("allergysymptoms", Mapper.Map<AllergySymptomView>(result));
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }
-                catch (DuplicateWaitObjectException ex)
+                catch (ArgumentException ex)
                 {
                     return Conflict(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpDelete]
@@ -99,16 +81,13 @@ namespace EHospital.Allergies.WebAPI.Controllers
                     var result = await _allergySymptom.DeleteAllergySymptomAsync(id);
                     return Ok(Mapper.Map<AllergySymptomView>(result));
                 }
-                catch (NullReferenceException ex)
+                catch (ArgumentNullException ex)
                 {
                     return NotFound(ex.Message);
                 }
             }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
 
+            return BadRequest(ModelState);
+        }
     }
 }
