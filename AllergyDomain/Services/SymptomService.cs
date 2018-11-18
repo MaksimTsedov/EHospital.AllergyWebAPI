@@ -103,7 +103,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                 throw new ArgumentNullException("No symptom found.");
             }
 
-            if (_unitOfWork.AllergySymptoms.GetAll().Any(s => s.SymptomId == result.SymptomId))
+            if (_unitOfWork.AllergySymptoms.GetAll().Any(s => s.SymptomId == result.Id))
             {
                 throw new InvalidOperationException("There are exist records with involvment of this symptom.");
             }

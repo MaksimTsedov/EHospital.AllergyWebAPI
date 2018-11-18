@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EHospital.Allergies.Model
 {
-    public class PatientInfo
+    public class PatientInfo : IBaseEntity
     {
         /// <summary>
         /// Gets or sets the patient information identifier.
@@ -12,7 +12,7 @@ namespace EHospital.Allergies.Model
         /// The patient information identifier.
         /// </value>
         [Key]
-        public int PatientId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the patient allergies.
@@ -21,5 +21,13 @@ namespace EHospital.Allergies.Model
         /// The patient allergies.
         /// </value>
         public ICollection<PatientAllergy> PatientAllergies { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is deleted.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsDeleted { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace EHospital.Allergies.Model
     /// <summary>
     /// Symptom entity
     /// </summary>
-    public class Symptom
+    public class Symptom : IBaseEntity
     {
         /// <summary>
         /// Gets or sets the symptom identifier.
@@ -15,7 +15,7 @@ namespace EHospital.Allergies.Model
         /// The symptom identifier.
         /// </value>
         [Key]
-        public int SymptomId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the naming.

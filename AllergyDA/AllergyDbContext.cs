@@ -12,13 +12,6 @@ namespace EHospital.Allergies.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="AllergyDbContext"/> class.
         /// </summary>
-        public AllergyDbContext()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AllergyDbContext"/> class.
-        /// </summary>
         /// <param name="options">The options for this context.</param>
         public AllergyDbContext(DbContextOptions options) : base(options)
         {
@@ -85,14 +78,6 @@ namespace EHospital.Allergies.Data
                 .HasOne(als => als.Symptom)
                 .WithMany(s => s.AllergySymptoms)
                 .HasForeignKey(als => als.SymptomId);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EHospitalDB;Trusted_Connection=True;");
-            }
         }
     }
 }

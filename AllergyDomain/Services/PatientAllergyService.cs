@@ -29,8 +29,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="NullReferenceException">Not found any allergy of chosen patient.</exception>
         public IQueryable<PatientAllergy> GetAllPatientAllergies(int patientId)
         {
-            return _unitOfWork.PatientAllergies.GetAll(a => a.PatientId == patientId)
-                                               .Where(a => !a.IsDeleted);
+            return _unitOfWork.PatientAllergies.GetAll(a => a.PatientId == patientId);
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public PatientAllergy GetPatientAllergy(int id)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
-            if (result == null || result.IsDeleted)
+            if (result == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
@@ -101,7 +100,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public async Task<PatientAllergy> UpdatePatientAllergyAsync(int id, PatientAllergy patientAllergy)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
-            if (result == null || result.IsDeleted)
+            if (result == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
@@ -124,7 +123,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public async Task<PatientAllergy> UpdateNotesAsync(int id, string notes)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
-            if (result == null || result.IsDeleted)
+            if (result == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
@@ -147,7 +146,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public async Task DeletePatientAllergyAsync(int id)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
-            if (result == null || result.IsDeleted)
+            if (result == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }

@@ -8,7 +8,7 @@
         /// <value>
         /// The patient-allergy pair identifier.
         /// </value>
-        public int PatientAllergyId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the notes for allergy of patient.

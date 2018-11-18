@@ -25,10 +25,12 @@ namespace EHospital.Allergies.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = @"Server=(localdb)\mssqllocaldb;Database=EHospitalDB;Trusted_Connection=True;";
-            services.AddDbContext<AllergyDbContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<AllergyDbContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("EHospitalDatabase")));
 
             Mapper.Initialize(cfg => cfg.AddProfile<AllergyProfile>());
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IRepository<Allergy>, Repository<Allergy>>();
             services.AddScoped<IRepository<Symptom>, Repository<Symptom>>();
@@ -39,15 +41,13 @@ namespace EHospital.Allergies.WebAPI
             services.AddScoped<IPatientAllergyService, PatientAllergyService>();
             services.AddScoped<ISymptomService, SymptomService>();
 
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v0.1", new Info
+                c.SwaggerDoc("v1", new Info
                 {
-                    Version = "v0.1",
+                    Version = "v1",
                     Title = "AllergyAPI",
                     Description = "UI for testing correct functionality of Allergy service",
                     TermsOfService = "None",
@@ -74,7 +74,7 @@ namespace EHospital.Allergies.WebAPI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v0.1/swagger.json", "AllergyAPI V0.1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AllergyAPI V1");
             });
         }
     }

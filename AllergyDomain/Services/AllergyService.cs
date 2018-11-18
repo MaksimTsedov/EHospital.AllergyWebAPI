@@ -104,7 +104,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                 throw new ArgumentNullException("No allergy found.");
             }
 
-            if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.AllergyId))
+            if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.Id))
             {
                 throw new InvalidOperationException("There are exist records with involvment of this allergy.");
             }

@@ -10,7 +10,7 @@ namespace EHospital.Allergies.Model
     /// Abstract CRUD operations for entity.
     /// </summary>
     /// <typeparam name="T">Entity.</typeparam>
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : IBaseEntity
     {
         /// <summary>
         /// Gets all entity collection.

@@ -11,7 +11,7 @@ namespace EHospital.Allergies.Data
     /// </summary>
     /// <typeparam name="T">Entity.</typeparam>
     /// <seealso cref="Allergies.Data.Contracts.IRepository{T}" />
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class, IBaseEntity
     {
         /// <summary>
         /// The allergy db context
@@ -41,7 +41,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public IQueryable<T> GetAll()
         {
-            return _entities.AsNoTracking();
+            return _entities.Where(t => !t.IsDeleted).AsNoTracking();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate)
         {
-            return _entities.Where(predicate).AsNoTracking();
+            return _entities.Where(t => !t.IsDeleted).Where(predicate).AsNoTracking();
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public T Get(int id)
         {
-            return _entities.Find(id);
+            return _entities.Where(t => !t.IsDeleted).FirstOrDefault(t => !t.IsDeleted);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace EHospital.Allergies.Data
         /// Updated entity.
         /// </returns>
         public T Update(T entity)
-        {
+        {  
             _entities.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             return entity;

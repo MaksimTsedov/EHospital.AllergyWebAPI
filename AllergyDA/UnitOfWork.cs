@@ -18,18 +18,29 @@ namespace EHospital.Allergies.Data
         /// <summary>
         /// The allergy context
         /// </summary>
-        private AllergyDbContext _context = new AllergyDbContext();
+        private static AllergyDbContext _context;
 
-        private Repository<Allergy> _allergyRepository;
-        private Repository<Symptom> _symptomRepository;
-        private Repository<PatientAllergy> _patientAllergyRepository;
-        private Repository<AllergySymptom> _allergySymptomRepository;
-        private Repository<PatientInfo> _patientInfoRepository;
+        // How about this approach?
+        private readonly Lazy<Repository<Allergy>> _allergyRepository 
+                   = new Lazy<Repository<Allergy>>(() => new Repository<Allergy>(_context));
+        private readonly Lazy<Repository<Symptom>> _symptomRepository 
+                   = new Lazy<Repository<Symptom>>(() => new Repository<Symptom>(_context));
+        private readonly Lazy<Repository<PatientAllergy>> _patientAllergyRepository
+                   = new Lazy<Repository<PatientAllergy>>(() => new Repository<PatientAllergy>(_context));
+        private readonly Lazy<Repository<AllergySymptom>> _allergySymptomRepository
+                   = new Lazy<Repository<AllergySymptom>>(() => new Repository<AllergySymptom>(_context));
+        private readonly Lazy<Repository<PatientInfo>> _patientInfoRepository
+                   = new Lazy<Repository<PatientInfo>>(() => new Repository<PatientInfo>(_context));
 
         /// <summary>
         /// The disposed state
         /// </summary>
         private bool disposed = false;
+
+        public UnitOfWork(AllergyDbContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// Gets the allergies.
@@ -41,12 +52,7 @@ namespace EHospital.Allergies.Data
         {
             get
             {
-                if (_allergyRepository == null)
-                {
-                    _allergyRepository = new Repository<Allergy>(_context);
-                }
-
-                return _allergyRepository;
+                return _allergyRepository.Value;
             }
         }
 
@@ -60,12 +66,7 @@ namespace EHospital.Allergies.Data
         {
             get
             {
-                if (_symptomRepository == null)
-                {
-                    _symptomRepository = new Repository<Symptom>(_context);
-                }
-
-                return _symptomRepository;
+                return _symptomRepository.Value;
             }
         }
 
@@ -79,12 +80,7 @@ namespace EHospital.Allergies.Data
         {
             get
             {
-                if (_patientAllergyRepository == null)
-                {
-                    _patientAllergyRepository = new Repository<PatientAllergy>(_context);
-                }
-
-                return _patientAllergyRepository;
+                return _patientAllergyRepository.Value;
             }
         }
 
@@ -98,12 +94,7 @@ namespace EHospital.Allergies.Data
         {
             get
             {
-                if (_allergySymptomRepository == null)
-                {
-                    _allergySymptomRepository = new Repository<AllergySymptom>(_context);
-                }
-
-                return _allergySymptomRepository;
+                return _allergySymptomRepository.Value;
             }
         }
 
@@ -117,12 +108,7 @@ namespace EHospital.Allergies.Data
         {
             get
             {
-                if (_patientInfoRepository == null)
-                {
-                    _patientInfoRepository = new Repository<PatientInfo>(_context);
-                }
-
-                return _patientInfoRepository;
+                return _patientInfoRepository.Value;
             }
         }
 

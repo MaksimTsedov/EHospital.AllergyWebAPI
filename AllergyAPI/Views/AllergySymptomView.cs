@@ -8,7 +8,7 @@
         /// <value>
         /// The allergy-symptom pair identifier.
         /// </value>
-        public int AllergySymptomId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the patient-allergy pair identifier.

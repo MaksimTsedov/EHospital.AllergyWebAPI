@@ -5,7 +5,7 @@ namespace EHospital.Allergies.Model
     /// <summary>
     /// Symptom-allergy entity
     /// </summary>
-    public class AllergySymptom
+    public class AllergySymptom : IBaseEntity
     {
         /// <summary>
         /// Gets or sets the allergy-symptom pair identifier.
@@ -14,7 +14,7 @@ namespace EHospital.Allergies.Model
         /// The allergy-symptom pair identifier.
         /// </value>
         [Key]
-        public int AllergySymptomId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the patient-allergy pair identifier.

@@ -40,8 +40,8 @@ namespace EHospital.Allergies.BusinesLogic.Services
             IEnumerable<Symptom> result = _unitOfWork.Symptoms.GetAll();
             return allergySymptoms.Join(result,
                                    a => a.SymptomId,
-                                   s => s.SymptomId,
-                                   (a, s) => new Symptom { SymptomId = s.SymptomId, Naming = s.Naming, IsDeleted = s.IsDeleted }).
+                                   s => s.Id,
+                                   (a, s) => new Symptom { Id = s.Id, Naming = s.Naming, IsDeleted = s.IsDeleted }).
                                    OrderBy(s => s.Naming);
         }
 
@@ -97,7 +97,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(a => 
-                                                         a.AllergySymptomId == allergySymptom.AllergySymptomId &&
+                                                         a.Id == allergySymptom.Id &&
                                                          a.SymptomId == allergySymptom.SymptomId))
             {
                 throw new ArgumentException("Duplicate allergy-symptom pair.");
