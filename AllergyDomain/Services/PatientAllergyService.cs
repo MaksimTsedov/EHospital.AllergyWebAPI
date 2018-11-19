@@ -34,7 +34,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             return _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)
                                                .Include(a => a.AllergySymptoms)
                                                .ThenInclude(a => (a as AllergySymptom).Symptom) // Read that it has to have an Intellisense issue)
-                                               .Where(a => !a.IsDeleted && a.PatientId == patientId);
+                                               .Where(a => a.PatientId == patientId);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public PatientAllergy GetPatientAllergy(int id)
         {
             var result = _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)
-                                                     .FirstOrDefault(pa => !pa.IsDeleted && pa.Id == id);
+                                                     .FirstOrDefault(pa => pa.Id == id);
             if (result == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());

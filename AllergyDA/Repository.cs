@@ -129,10 +129,5 @@ namespace EHospital.Allergies.Data
         {
             return _entities.Where(t => !t.IsDeleted).Include(navigationPropertyPath);
         }
-
-        //public IIncludableQueryable<T, ICollection<TProperty>> Include<ICollection<TProperty>>(Expression<Func<T, ICollection<TProperty>>> navigationPropertyPath)
-        //{
-        //    return _entities.Where(t => !t.IsDeleted).Include(navigationPropertyPath);
-        //}
     }
 }

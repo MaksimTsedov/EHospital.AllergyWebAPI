@@ -56,7 +56,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public AllergySymptom GetAllergySymptom(int id)
         {
             var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom)
-                                                    .FirstOrDefault(a => !a.IsDeleted && a.Id == id);
+                                                    .FirstOrDefault(a => a.Id == id);
             if (result == null)
             {
                 throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.", new ArgumentException());
