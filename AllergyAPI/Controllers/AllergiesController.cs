@@ -14,6 +14,8 @@ namespace EHospital.Allergies.WebAPI.Controllers
     [ApiController]
     public class AllergiesController : ControllerBase
     {
+        private static readonly log4net.ILog log = log4net.LogManager
+                                                          .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IAllergyService _allergy;
 
         public AllergiesController(IAllergyService allergy)
@@ -24,37 +26,45 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpGet]
         public IActionResult GetAllAllergies()
         {
+            log.Info("Getting all allergies.");
             var allergies = _allergy.GetAllAllergies();
-            if (allergies.Count() != 0)
+            if (!allergies.Any())
             {
-                return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
+                log.Warn("No allergy recorded.");
+                return NotFound("No allergy recorded.");
             }
 
-            return NotFound("No allergy recorded.");
+            return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
         }
 
         [HttpGet("searchKey={searchKey}", Name = "SearchAllergyQuery")]
         public IActionResult GetAllAllergies(string searchKey)
         {
+            log.Info($"Getting allergies by search key \"{searchKey}\".");
             var allergies = _allergy.SearchAllergiesByName(searchKey);
-            if (allergies.Count() != 0)
+            if (!allergies.Any())
             {
-                return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
+                log.Warn($"No allergy found by \"{searchKey}\" search key.");
+                return NotFound("No allergy recorded.");
             }
 
-            return NotFound("No allergy recorded.");
+            log.Info($"Got {allergies.Count()} allergies with search key \"{searchKey}\".");
+            return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
         }
 
         [HttpGet("{id}", Name = "AllergyById")]
         public IActionResult GetAllergy(int id)
         {
+            log.Info($"Getting allergy by id = {id}.");
             try
             {
                 var allergy = _allergy.GetAllergy(id);
+                log.Info($"Got allergy by id = {id}.");
                 return Ok(Mapper.Map<AllergyView>(allergy));
             }
             catch (ArgumentNullException ex)
             {
+                log.Warn($"No allergy found by id = {id}.", ex);
                 return NotFound(ex.Message);
             }
         }
@@ -62,43 +72,47 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAllergy([FromBody]AllergyRequest allergy)
         {
-            if (ModelState.IsValid)
+            log.Info("Creating allergy.");
+            if (!ModelState.IsValid) // Can`t get to model state so i can`t log it, how to fix it?
             {
-                try
-                {
-                    var result = await _allergy.CreateAllergyAsync(Mapper.Map<Allergy>(allergy));
-                    return Created("allergies", Mapper.Map<AllergyView>(result));
-                }
-                catch (ArgumentException ex)
-                {
-                    return Conflict(ex.Message);
-                }
+                log.Error($"Invalid build of allergy: {ModelState}.");
+                return BadRequest(ModelState);
             }
 
-            return BadRequest(ModelState);
+            try
+            {
+                var result = await _allergy.CreateAllergyAsync(Mapper.Map<Allergy>(allergy));
+                log.Info($"Successfull create of {result.Pathogen} allergy.");
+                return Created("allergies", Mapper.Map<AllergyView>(result));
+            }
+            catch (ArgumentException ex)
+            {
+                log.Error("Cannot insert allergy due to duplicate name.", ex);
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteAllergy(int id)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var result = await _allergy.DeleteAllergyAsync(id);
-                    return Ok(Mapper.Map<AllergyView>(result));
-                }
-                catch (ArgumentNullException ex)
-                {
-                    return NotFound(ex.Message);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return Conflict(ex.Message);
-                }
-            }
+            log.Info("Deleting allergy.");
 
-            return BadRequest(ModelState);
+            try
+            {
+                var result = await _allergy.DeleteAllergyAsync(id);
+                log.Info($"{result.Pathogen} deleted successfully.");
+                return Ok(Mapper.Map<AllergyView>(result));
+            }
+            catch (ArgumentNullException ex)
+            {
+                log.Error(ex.Message, ex);
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                log.Warn(ex.Message, ex);
+                return Conflict(ex.Message);
+            }
         }
     }
 }

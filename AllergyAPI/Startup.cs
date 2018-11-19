@@ -10,11 +10,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using EHospital.Allergies.Model;
+using Microsoft.Extensions.Logging;
 
 namespace EHospital.Allergies.WebAPI
 {
     public class Startup
     {
+
+        private static readonly log4net.ILog log = log4net.LogManager
+                                                          .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -43,6 +47,8 @@ namespace EHospital.Allergies.WebAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            log.Info("Using allergy service.");
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -68,7 +74,7 @@ namespace EHospital.Allergies.WebAPI
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();  
             app.UseMvc();
 
             app.UseSwagger();
