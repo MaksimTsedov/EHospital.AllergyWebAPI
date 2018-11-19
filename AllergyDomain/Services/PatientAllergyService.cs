@@ -33,7 +33,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             // TODO: Filter isDeleted allergy symptoms
             return _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)
                                                .Include(a => a.AllergySymptoms)
-                                               .ThenInclude(a => (a as AllergySymptom).Symptom) // Read that it has to have an Intellisense issue)
+                                               .ThenInclude(a => (a as AllergySymptom).Symptom) // It have an Intellisense issue if it isn`t cast to type)
                                                .Where(a => a.PatientId == patientId);
         }
 
