@@ -6,6 +6,7 @@ using EHospital.Allergies.WebAPI.Views;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -27,7 +28,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
 
             if (allergies.Count() != 0)
             {
-                return Ok(Mapper.Map<PatientAllergiesSymptomsView>(allergies));
+                return Ok(Mapper.Map<IEnumerable<PatientAllergiesSymptomsView>>(allergies));
             }
 
             return NotFound("Not found any allergy of chosen patient.");

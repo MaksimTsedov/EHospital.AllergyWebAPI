@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using EHospital.Allergies.Model;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace EHospital.Allergies.Data
 {

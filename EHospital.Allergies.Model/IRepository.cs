@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -52,5 +53,14 @@ namespace EHospital.Allergies.Model
         /// <param name="entity">The entity to delete.</param>
         /// <returns>Deleted entity.</returns>
         T Delete(T entity);
+
+        /// <summary>
+        /// Specifies related entities to include in the query results. 
+        /// The navigation property to be included is specified starting with the type of entity being queried. 
+        /// </summary>
+        /// <typeparam name="TProperty">The type of the related entity to be included.</typeparam>
+        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
+        /// <returns>A new query with the related data included.</returns>
+        IIncludableQueryable<T, TProperty> Include<TProperty>(Expression<Func<T, TProperty>> navigationPropertyPath);
     }
 }

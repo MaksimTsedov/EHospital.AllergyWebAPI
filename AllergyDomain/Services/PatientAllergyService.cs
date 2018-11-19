@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
@@ -29,7 +30,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="NullReferenceException">Not found any allergy of chosen patient.</exception>
         public IQueryable<PatientAllergy> GetAllPatientAllergies(int patientId)
         {
-            return _unitOfWork.PatientAllergies.GetAll(a => a.PatientId == patientId);
+            // TODO: Filter isDeleted allergy symptoms
+            return _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)
+                                               .Include(a => a.AllergySymptoms)
+                                               .ThenInclude(a => (a as AllergySymptom).Symptom) // Read that it has to have an Intellisense issue)
+                                               .Where(a => !a.IsDeleted && a.PatientId == patientId);
         }
 
         /// <summary>
@@ -42,10 +47,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public PatientAllergy GetPatientAllergy(int id)
         {
-            var result = _unitOfWork.PatientAllergies.Get(id);
+            var result = _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)
+                                                     .FirstOrDefault(pa => !pa.IsDeleted && pa.Id == id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
             }
 
             return result;
@@ -69,12 +75,12 @@ namespace EHospital.Allergies.BusinesLogic.Services
             Allergy allergy = _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
             if (patientInfo == null)
             {
-                throw new ArgumentNullException("Not found such patient.");
+                throw new ArgumentNullException("Not found such patient.", new ArgumentException());
             }
 
             if (allergy == null)
             {
-                throw new ArgumentNullException("Not found such allergy.");
+                throw new ArgumentNullException("Not found such allergy.", new ArgumentException());
             }
 
             if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == patientAllergy.AllergyId
@@ -102,7 +108,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
             }
 
             result.Bind(patientAllergy);
@@ -125,7 +131,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
             }
 
             result.SetNotes(notes);
@@ -133,8 +139,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             await _unitOfWork.Save();
             return result;
         }
-
-        // HACK: Used stored procedure        
+        
         /// <summary>
         /// Deletes the patient-allergy pair asynchronous from db.
         /// </summary>
@@ -148,7 +153,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
             }
 
             _unitOfWork.CascadeDeletePatientAllergy(id);

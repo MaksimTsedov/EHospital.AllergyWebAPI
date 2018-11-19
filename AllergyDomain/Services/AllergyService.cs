@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
@@ -28,8 +29,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="NullReferenceException">No records in db.</exception>
         public IQueryable<Allergy> GetAllAllergies()
         {
-            return _unitOfWork.Allergies.GetAll().Where(a => !a.IsDeleted)
-                                                       .OrderBy(a => a.Pathogen);
+            return _unitOfWork.Allergies.GetAll().OrderBy(a => a.Pathogen);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public Allergy GetAllergy(int id)
         {
             var result = _unitOfWork.Allergies.Get(id);
-            if (result == null || result.IsDeleted)
+            if (result == null)
             {
-                throw new ArgumentNullException("Allergy doesn`t exist.");
+                throw new ArgumentNullException("Allergy doesn`t exist.", new ArgumentException());
             }
 
             return result;
@@ -62,7 +62,6 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public IQueryable<Allergy> SearchAllergiesByName(string searchKey)
         {
             return _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(searchKey))
-                                                       .Where(a => !a.IsDeleted)
                                                        .OrderBy(a => a.Pathogen);
         }
 
@@ -101,7 +100,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
 
             if (result == null)
             {
-                throw new ArgumentNullException("No allergy found.");
+                throw new ArgumentNullException("No allergy found.", new ArgumentException());
             }
 
             if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.Id))

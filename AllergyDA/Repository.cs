@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EHospital.Allergies.Data
 {
@@ -65,7 +67,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public T Get(int id)
         {
-            return _entities.Where(t => !t.IsDeleted).FirstOrDefault(t => !t.IsDeleted);
+            return _entities.FirstOrDefault(t => !t.IsDeleted && t.Id == id);
         }
 
         /// <summary>
@@ -113,5 +115,24 @@ namespace EHospital.Allergies.Data
             _context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
+
+        /// <summary>
+        /// Specifies related entities to include in the query results.
+        /// The navigation property to be included is specified starting with the type of entity being queried.
+        /// </summary>
+        /// <typeparam name="TProperty">The type of the related entity to be included.</typeparam>
+        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
+        /// <returns>
+        /// A new query with the related data included.
+        /// </returns>
+        public IIncludableQueryable<T, TProperty> Include<TProperty>(Expression<Func<T, TProperty>> navigationPropertyPath)
+        {
+            return _entities.Where(t => !t.IsDeleted).Include(navigationPropertyPath);
+        }
+
+        //public IIncludableQueryable<T, ICollection<TProperty>> Include<ICollection<TProperty>>(Expression<Func<T, ICollection<TProperty>>> navigationPropertyPath)
+        //{
+        //    return _entities.Where(t => !t.IsDeleted).Include(navigationPropertyPath);
+        //}
     }
 }

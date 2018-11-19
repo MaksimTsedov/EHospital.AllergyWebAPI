@@ -28,8 +28,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="NullReferenceException">No records in db.</exception>
         public IQueryable<Symptom> GetAllSymptoms()
         {
-            return _unitOfWork.Symptoms.GetAll().Where(a => !a.IsDeleted)
-                                                       .OrderBy(s => s.Naming);
+            return _unitOfWork.Symptoms.GetAll().OrderBy(s => s.Naming);
         }
 
         /// <summary>
@@ -43,7 +42,6 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public IQueryable<Symptom> SearchSymptomsByName(string searchKey)
         {
             return _unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
-                                                      .Where(s => !s.IsDeleted)
                                                       .OrderBy(s => s.Naming);
         }
 
@@ -58,9 +56,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public Symptom GetSymptom(int id)
         {
             var result = _unitOfWork.Symptoms.Get(id);
-            if (result == null || result.IsDeleted)
+            if (result == null)
             {
-                throw new ArgumentNullException("Symptom doesn`t exist.");
+                throw new ArgumentNullException("Symptom doesn`t exist.", new ArgumentException());
             }
 
             return result;
@@ -100,7 +98,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.Symptoms.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("No symptom found.");
+                throw new ArgumentNullException("No symptom found.", new ArgumentException());
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(s => s.SymptomId == result.Id))
