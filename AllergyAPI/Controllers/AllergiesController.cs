@@ -7,6 +7,7 @@ using EHospital.Allergies.WebAPI.Views;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
 using System.Linq;
+using System.Reflection;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -15,7 +16,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
     public class AllergiesController : ControllerBase
     {
         private static readonly log4net.ILog log = log4net.LogManager
-                                                          .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IAllergyService _allergy;
 
         public AllergiesController(IAllergyService allergy)
@@ -73,7 +74,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         public async Task<IActionResult> CreateAllergy([FromBody]AllergyRequest allergy)
         {
             log.Info("Creating allergy.");
-            if (!ModelState.IsValid) // Can`t get to model state so i can`t log it, how to fix it?
+            if (!ModelState.IsValid) // TODO: Can`t get to model state so i can`t log it, how to fix it?
             {
                 log.Error($"Invalid build of allergy: {ModelState}.");
                 return BadRequest(ModelState);

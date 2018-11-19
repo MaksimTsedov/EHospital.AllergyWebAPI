@@ -112,7 +112,6 @@ namespace EHospital.Allergies.WebAPI.Controllers
                 log.Warn(ex.Message, ex);
                 return Conflict(ex.Message);
             }
-
         }
     }
 }

@@ -8,8 +8,6 @@ using System.Collections.Generic;
 
 namespace EHospital.Allergies.Data
 {
-    
-    // TODO: Add logger
     /// <summary>
     /// Unit of Work allows you to simplify work with different repositories
     /// and makes sure that all repositories will use the same data context.

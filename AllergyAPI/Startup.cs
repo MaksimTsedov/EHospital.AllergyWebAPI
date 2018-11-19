@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using EHospital.Allergies.Model;
-using Microsoft.Extensions.Logging;
 
 namespace EHospital.Allergies.WebAPI
 {

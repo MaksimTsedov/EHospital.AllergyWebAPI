@@ -11,10 +11,9 @@ namespace EHospital.Allergies.WebAPI
     public class Program
     {
         //private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         public static void Main(string[] args)
         {
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());            
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             CreateWebHostBuilder(args).Build().Run();
         }
