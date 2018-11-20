@@ -77,12 +77,12 @@ namespace EHospital.Allergies.Data
         /// <returns>
         /// Created entity.
         /// </returns>
-        /// <exception cref="ArgumentNullException">Tried to insert null entity!</exception>
+        /// <exception cref="ArgumentException">Tried to insert null entity!</exception>
         public T Insert(T entity)
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("Tried to insert null entity!");
+                throw new ArgumentException("Tried to insert null entity!");
             }
             _entities.Add(entity);
             return entity;
