@@ -112,7 +112,8 @@ namespace EHospital.Allergies.Data
         public T Delete(T entity)
         {
             _entities.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            var entry = _context.Entry(entity);
+            entry.Property(typeof(T).GetProperty("IsDeleted").Name).IsModified = true;
             return entity;
         }
 

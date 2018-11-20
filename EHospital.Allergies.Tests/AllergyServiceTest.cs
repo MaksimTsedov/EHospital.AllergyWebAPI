@@ -23,9 +23,9 @@ namespace EHospital.Allergies.Tests
             _mockData = new Mock<IUnitOfWork>();
             _mockData.Setup(s => s.Allergies).Returns(_mockRepo.Object);
             allergyList = new List<Allergy>() {
-           new Allergy() { Id = 1, Pathogen = "prisma" },
-           new Allergy() { Id = 2, Pathogen = "pomidor" },
-           new Allergy() { Id = 3, Pathogen = "abrikos" }
+           new Allergy { Id = 1, Pathogen = "prisma" },
+           new Allergy { Id = 2, Pathogen = "pomidor" },
+           new Allergy { Id = 3, Pathogen = "abrikos" }
           };
         }
 
