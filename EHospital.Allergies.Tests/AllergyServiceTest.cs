@@ -1,6 +1,4 @@
-using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.BusinesLogic.Services;
-using EHospital.Allergies.Data;
 using EHospital.Allergies.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -109,7 +107,7 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             int id = 4;
-            Allergy testAllergy = new Allergy { Id = id, Pathogen = "Test" };
+            Allergy testAllergy = new Allergy { Pathogen = "Test" };
             _mockData.Setup(s => s.Allergies.Insert(testAllergy)).Returns((Allergy a) =>
             {
                 a.Id = id;
@@ -120,7 +118,7 @@ namespace EHospital.Allergies.Tests
             var actual = new AllergyService(_mockData.Object).CreateAllergyAsync(testAllergy).Result;
 
             //Assert
-            Assert.AreEqual(testAllergy.Id, actual.Id);
+            Assert.AreEqual(testAllergy, actual);
             _mockData.Verify(m => m.Save(), Times.Once);
         }
 
