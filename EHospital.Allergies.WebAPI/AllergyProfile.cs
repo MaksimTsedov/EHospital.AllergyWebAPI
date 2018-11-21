@@ -21,6 +21,7 @@ namespace EHospital.Allergies.WebAPI
                     Pathogen = arg.Pathogen
                 };
             });
+
             //AllergySymptom
             CreateMap<AllergySymptom, AllergySymptomView>().
                                 ForMember(dest => dest.SymptomName, opt => opt.MapFrom
@@ -33,6 +34,7 @@ namespace EHospital.Allergies.WebAPI
                     SymptomId = arg.SymptomId
                 };
             });
+
             //PatientAllergy
             CreateMap<PatientAllergy, PatientAllergiesSymptomsView>()
                                 .ForMember(dest => dest.Allergy, opt => opt.MapFrom
@@ -49,13 +51,13 @@ namespace EHospital.Allergies.WebAPI
                 return new PatientAllergy()
                 {
                     AllergyId = arg.AllergyId,
-                    PatientId = arg.PatientId,
                     Duration = arg.Duration,
                     Notes = arg.Notes
                 };
             });
             CreateMap<PatientAllergy, PatientAllergyNotesView>().
                 ForMember(desc => desc.Notes, opt => opt.MapFrom(c => c.Notes));
+
             //Symptoms
             CreateMap<Symptom, SymptomView>();
             CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg =>

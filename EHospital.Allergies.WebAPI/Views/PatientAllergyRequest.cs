@@ -5,15 +5,6 @@ namespace EHospital.Allergies.WebAPI.Views
     public class PatientAllergyRequest
     {
         /// <summary>
-        /// Gets or sets the patient identifier.
-        /// </summary>
-        /// <value>
-        /// The patient identifier.
-        /// </value>
-        [Required(ErrorMessage = "Please select patient.")]
-        public int PatientId { get; set; }
-
-        /// <summary>
         /// Gets or sets the allergy identifier.
         /// </summary>
         /// <value>

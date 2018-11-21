@@ -1,7 +1,6 @@
 ﻿using EHospital.Allergies.BusinesLogic.Services;
 using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -16,8 +15,8 @@ namespace EHospital.Allergies.Tests
     {
         private static Mock<IRepository<AllergySymptom>> _mockRepo;
         private static Mock<IUnitOfWork> _mockData;
-        private List<Symptom> symptomList;
-        private List<AllergySymptom> allergySymptomList;
+        private List<Symptom> _symptomList;
+        private List<AllergySymptom> _allergySymptomList;
 
         [TestInitialize]
         public void Initialize()
@@ -25,12 +24,12 @@ namespace EHospital.Allergies.Tests
             _mockRepo = new Mock<IRepository<AllergySymptom>>();
             _mockData = new Mock<IUnitOfWork>();
             _mockData.Setup(s => s.AllergySymptoms).Returns(_mockRepo.Object);
-            symptomList = new List<Symptom>() {
+            _symptomList = new List<Symptom>() {
            new Symptom { Id = 1, Naming = "prisma" },
            new Symptom { Id = 2, Naming = "pomidor" },
            new Symptom { Id = 3, Naming = "abrikos" }
             };
-            allergySymptomList = new List<AllergySymptom>() {
+            _allergySymptomList = new List<AllergySymptom>() {
            new AllergySymptom { Id = 1, PatientAllergyId = 1, SymptomId = 1 },
            new AllergySymptom { Id = 2, PatientAllergyId = 1, SymptomId = 2 },
            new AllergySymptom { Id = 3, PatientAllergyId = 2, SymptomId = 3 }
@@ -42,8 +41,8 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             _mockData.Setup(s => s.AllergySymptoms.GetAll(It.IsAny<Expression<Func<AllergySymptom, bool>>>()))
-                                            .Returns(allergySymptomList.Where(a => a.PatientAllergyId == 1).AsQueryable);
-            _mockData.Setup(s => s.Symptoms.GetAll()).Returns(symptomList.AsQueryable);
+                                            .Returns(_allergySymptomList.Where(a => a.PatientAllergyId == 1).AsQueryable);
+            _mockData.Setup(s => s.Symptoms.GetAll()).Returns(_symptomList.AsQueryable);
 
 
             //Act
@@ -64,8 +63,8 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             _mockData.Setup(s => s.AllergySymptoms.GetAll(It.IsAny<Expression<Func<AllergySymptom, bool>>>()))
-                                            .Returns(allergySymptomList.Where(a => a.PatientAllergyId == id).AsQueryable);
-            _mockData.Setup(s => s.Symptoms.GetAll()).Returns(symptomList.AsQueryable);
+                                            .Returns(_allergySymptomList.Where(a => a.PatientAllergyId == id).AsQueryable);
+            _mockData.Setup(s => s.Symptoms.GetAll()).Returns(_symptomList.AsQueryable);
 
             //Act
             var actual = new AllergySymptomService(_mockData.Object).GetAllAllergySymptoms(id).ToList();
@@ -78,10 +77,10 @@ namespace EHospital.Allergies.Tests
             int id = 4;
             AllergySymptom testAllergySymptom = new AllergySymptom { PatientAllergyId = 1, SymptomId = 3 };
 
-            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(symptomList[2]);
+            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(_symptomList[2]);
             _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId)).Returns(new PatientAllergy { Id = 1 });
             _mockData.Setup(s => s.AllergySymptoms.GetAll())
-                                            .Returns(allergySymptomList.AsQueryable);
+                                            .Returns(_allergySymptomList.AsQueryable);
             _mockData.Setup(s => s.AllergySymptoms.Insert(testAllergySymptom)).Returns((AllergySymptom a) =>
             {
                 a.Id = id;
@@ -125,10 +124,10 @@ namespace EHospital.Allergies.Tests
             int id = 4;
             AllergySymptom testAllergySymptom = new AllergySymptom { PatientAllergyId = 1, SymptomId = 2 };
 
-            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(symptomList[1]);
+            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(_symptomList[1]);
             _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId)).Returns(new PatientAllergy { Id = 1 });
             _mockData.Setup(s => s.AllergySymptoms.GetAll())
-                                            .Returns(allergySymptomList.AsQueryable);
+                                            .Returns(_allergySymptomList.AsQueryable);
             _mockData.Setup(s => s.AllergySymptoms.Insert(testAllergySymptom)).Returns((AllergySymptom a) =>
             {
                 a.Id = id;
@@ -147,13 +146,13 @@ namespace EHospital.Allergies.Tests
             //Arrange
 
             _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
-                                                  .Returns(allergySymptomList.AsQueryable().Include(a => a.Symptom));
+                                                  .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
 
             //Act
             var actual = new AllergySymptomService(_mockData.Object).GetAllergySymptom(2);
 
             //Assert
-            Assert.AreEqual(actual, allergySymptomList[1]);
+            Assert.AreEqual(actual, _allergySymptomList[1]);
         }
 
         [TestMethod]
@@ -165,7 +164,7 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
-                                                  .Returns(allergySymptomList.AsQueryable().Include(a => a.Symptom));
+                                                  .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
 
             //Act
             var actual = new AllergySymptomService(_mockData.Object).GetAllergySymptom(id);
@@ -175,7 +174,7 @@ namespace EHospital.Allergies.Tests
         public void AllergySymptoms_DeleteAllergySymptomAsync_IdIs_1_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.AllergySymptoms.Get(1)).Returns(allergySymptomList[0]);
+            _mockData.Setup(s => s.AllergySymptoms.Get(1)).Returns(_allergySymptomList[0]);
 
             //Act
             var actual = new AllergySymptomService(_mockData.Object).DeleteAllergySymptomAsync(1).Result;

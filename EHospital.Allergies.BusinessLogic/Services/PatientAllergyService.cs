@@ -106,11 +106,20 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public async Task<PatientAllergy> UpdatePatientAllergyAsync(int id, PatientAllergy patientAllergy)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);
-            if (result == null)
+            var allergyUpdate = _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
+            if (result == null || allergyUpdate == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
             }
-
+            if (result.AllergyId != patientAllergy.AllergyId)
+            {
+                if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == patientAllergy.AllergyId
+                                                         && a.PatientId == result.PatientId))
+                {
+                    throw new ArgumentException("Duplicate patient-allergy pair.");
+                }
+            }
+            
             result.Bind(patientAllergy);
             _unitOfWork.PatientAllergies.Update(result);
             await _unitOfWork.Save();
@@ -139,7 +148,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             await _unitOfWork.Save();
             return result;
         }
-        
+
         /// <summary>
         /// Deletes the patient-allergy pair asynchronous from db.
         /// </summary>
@@ -147,7 +156,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Task.
         /// </returns>
-        /// <exception cref="NullReferenceException">Patient-allergy pair doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public async Task DeletePatientAllergyAsync(int id)
         {
             var result = _unitOfWork.PatientAllergies.Get(id);

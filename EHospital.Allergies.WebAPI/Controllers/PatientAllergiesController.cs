@@ -59,7 +59,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         public async Task<IActionResult> CreatePatientAllergy([FromBody]PatientAllergyRequest patientAllergy)
         {
             log.Info("Assignment allergy to a patient.");
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 log.Error($"Invalid allergy assignment: {ModelState}.");
                 return BadRequest(ModelState);
@@ -87,7 +87,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         public async Task<IActionResult> UpdatePatientAllergy(int id, [FromBody]PatientAllergyRequest patientAllergy)
         {
             log.Info("Updating patient allergy information.");
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 log.Error($"Invalid patient-allergy pair updating: {ModelState}.");
                 return BadRequest(ModelState);
@@ -104,13 +104,18 @@ namespace EHospital.Allergies.WebAPI.Controllers
                 log.Error(ex.Message, ex);
                 return NotFound(ex.Message);
             }
+            catch (ArgumentException ex)
+            {
+                log.Error("Cannot update allergy to patient due to its duplicate.", ex);
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("idToUpdateNotes={idToUpdateNotes}", Name = "UpdateNotes")]
         public async Task<IActionResult> UpdatePatientAllergyNotes(int idToUpdateNotes, [FromBody]string notes)
         {
             log.Info("Change notes about patient allergy.");
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 log.Error($"Invalid notes updating: {ModelState}.");
                 return BadRequest(ModelState);
