@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EHospital.Allergies.Model
 {
@@ -57,5 +58,21 @@ namespace EHospital.Allergies.Model
         ///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.
         /// </value>
         public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the creation date.
+        /// </summary>
+        /// <value>
+        /// The creation date.
+        /// </value>
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets or sets the deletion date.
+        /// </summary>
+        /// <value>
+        /// The deletion date.
+        /// </value>
+        public DateTime? DeletionDate { get; set; }
     }
 }

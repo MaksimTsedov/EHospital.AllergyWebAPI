@@ -118,14 +118,15 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentNullException">No sympthom of allergy found.</exception>
         public async Task<AllergySymptom> DeleteAllergySymptomAsync(int id)
         {
-            var result = _unitOfWork.AllergySymptoms.Get(id);
+            var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom)
+                                                    .FirstOrDefault(a => a.Id == id);
             if (result == null)
             {
                 throw new ArgumentNullException("No sympthom of allergy of patient found.", new ArgumentException(""));
             }
 
-            result.Symptom = _unitOfWork.Symptoms.Get(result.SymptomId);
             result.IsDeleted = true;
+            result.DeletionDate = DateTime.UtcNow;
             _unitOfWork.AllergySymptoms.Delete(result);
             await _unitOfWork.Save();
             return result;

@@ -1,7 +1,6 @@
 ﻿using EHospital.Allergies.BusinesLogic.Services;
 using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

@@ -79,6 +79,22 @@ namespace EHospital.Allergies.Model
         public bool IsDeleted { get; set; }
 
         /// <summary>
+        /// Gets or sets the creation date.
+        /// </summary>
+        /// <value>
+        /// The creation date.
+        /// </value>
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets or sets the deletion date.
+        /// </summary>
+        /// <value>
+        /// The deletion date.
+        /// </value>
+        public DateTime? DeletionDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the allergy symptoms.
         /// </summary>
         /// <value>
