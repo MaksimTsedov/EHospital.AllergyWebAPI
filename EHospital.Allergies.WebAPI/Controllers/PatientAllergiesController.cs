@@ -84,7 +84,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpPut("id={id}", Name = "UpdatePatientAllergy")]
-        public async Task<IActionResult> UpdatePatientAllergy(int id, [FromBody]PatientAllergyRequest patientAllergy)
+        public async Task<IActionResult> UpdatePatientAllergy(int id, [FromBody]PatientAllergyUpdateRequest patientAllergy)
         {
             log.Info("Updating patient allergy information.");
             if (!ModelState.IsValid)

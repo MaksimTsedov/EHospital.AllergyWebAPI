@@ -74,7 +74,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         public async Task<IActionResult> CreateAllergy([FromBody]AllergyRequest allergy)
         {
             log.Info("Creating allergy.");
-            if (!ModelState.IsValid) // TODO: Can`t get to model state so i can`t log it, how to fix it?
+            if (!ModelState.IsValid) // TODO: Bug: Can`t get to model state so i can`t log it, how to fix it?
             {
                 log.Error($"Invalid build of allergy: {ModelState}.");
                 return BadRequest(ModelState);

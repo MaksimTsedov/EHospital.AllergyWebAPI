@@ -98,7 +98,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(a => a.PatientAllergyId == allergySymptom.PatientAllergyId
-                                                         && a.SymptomId == allergySymptom.SymptomId))
+                                                         && a.SymptomId == allergySymptom.SymptomId)) //TODO: Bug: Duplicate while deleted
             {
                 throw new ArgumentException("Duplicate allergy-symptom pair.");
             }
@@ -124,6 +124,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                 throw new ArgumentNullException("No sympthom of allergy of patient found.", new ArgumentException(""));
             }
 
+            result.Symptom = _unitOfWork.Symptoms.Get(result.SymptomId);
             result.IsDeleted = true;
             _unitOfWork.AllergySymptoms.Delete(result);
             await _unitOfWork.Save();
