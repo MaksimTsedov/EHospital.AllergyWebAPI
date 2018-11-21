@@ -12,7 +12,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymptomService" /> class.
+        /// Initializes a new instance of the <see cref="PatientAllergyService" /> class.
         /// </summary>
         /// <param name="unitOfWork">The unit of work.</param>
         public PatientAllergyService(IUnitOfWork unitOfWork)

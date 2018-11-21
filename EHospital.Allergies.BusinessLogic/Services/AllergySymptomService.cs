@@ -13,7 +13,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymptomService" /> class.
+        /// Initializes a new instance of the <see cref="AllergySymptomService" /> class.
         /// </summary>
         /// <param name="unitOfWork">The unit of work.</param>
         public AllergySymptomService(IUnitOfWork unitOfWork)
@@ -52,7 +52,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Allergy-symptom pair.
         /// </returns>
-        /// <exception cref="NullReferenceException">Symptom doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Symptom doesn`t exist.</exception>
         public AllergySymptom GetAllergySymptom(int id)
         {
             var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom)
