@@ -16,14 +16,14 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Searches the symptoms by name beginning.
         /// </summary>
         /// <returns>Enumeration of symptoms with start substring.</returns>
-        IQueryable<Symptom> SearchSymptomsByName(string beginning);
+        Task<IQueryable<Symptom>> SearchSymptomsByName(string beginning);
 
         /// <summary>
         /// Gets the symptom.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Symptom.</returns>
-        Symptom GetSymptom(int id);
+        Task<Symptom> GetSymptom(int id);
 
         /// <summary>
         /// Creates the symptom asynchronous and saves it into db.

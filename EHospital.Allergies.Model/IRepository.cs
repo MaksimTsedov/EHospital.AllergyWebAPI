@@ -31,7 +31,7 @@ namespace EHospital.Allergies.Model
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Entity.</returns>
-        T Get(int id);
+        Task<T> Get(int id);
 
         /// <summary>
         /// Inserts the entity.

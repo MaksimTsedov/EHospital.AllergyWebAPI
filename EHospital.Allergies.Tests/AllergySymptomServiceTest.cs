@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace EHospital.Allergies.Tests
 {
@@ -77,8 +78,10 @@ namespace EHospital.Allergies.Tests
             int id = 4;
             AllergySymptom testAllergySymptom = new AllergySymptom { PatientAllergyId = 1, SymptomId = 3 };
 
-            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(_symptomList[2]);
-            _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId)).Returns(new PatientAllergy { Id = 1 });
+            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId))
+                                           .Returns(Task.FromResult(_symptomList[2]));
+            _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId))
+                                                   .Returns(Task.FromResult(new PatientAllergy { Id = 1 }));
             _mockData.Setup(s => s.AllergySymptoms.GetAll())
                                             .Returns(_allergySymptomList.AsQueryable);
             _mockData.Setup(s => s.AllergySymptoms.Insert(testAllergySymptom)).Returns((AllergySymptom a) =>
@@ -108,8 +111,10 @@ namespace EHospital.Allergies.Tests
             //Arrange
             AllergySymptom testAllergySymptom = new AllergySymptom { PatientAllergyId = patientAllergyId, SymptomId = symptomId };
 
-            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(default(Symptom));
-            _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId)).Returns(default(PatientAllergy));
+            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId))
+                                           .Returns(Task.FromResult(default(Symptom)));
+            _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId))
+                                                   .Returns(Task.FromResult(default(PatientAllergy)));
 
             //Assert
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
@@ -124,8 +129,10 @@ namespace EHospital.Allergies.Tests
             int id = 4;
             AllergySymptom testAllergySymptom = new AllergySymptom { PatientAllergyId = 1, SymptomId = 2 };
 
-            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId)).Returns(_symptomList[1]);
-            _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId)).Returns(new PatientAllergy { Id = 1 });
+            _mockData.Setup(s => s.Symptoms.Get(testAllergySymptom.SymptomId))
+                                           .Returns(Task.FromResult(_symptomList[1]));
+            _mockData.Setup(s => s.PatientAllergies.Get(testAllergySymptom.PatientAllergyId))
+                                                   .Returns(Task.FromResult(new PatientAllergy { Id = 1 }));
             _mockData.Setup(s => s.AllergySymptoms.GetAll())
                                             .Returns(_allergySymptomList.AsQueryable);
             _mockData.Setup(s => s.AllergySymptoms.Insert(testAllergySymptom)).Returns((AllergySymptom a) =>
@@ -141,7 +148,7 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public void AllergySymptoms_GetAllergySymptom_IdIs_2_Correct()
+        public async Task AllergySymptoms_GetAllergySymptom_IdIs_2_Correct()
         {
             //Arrange
 
@@ -149,7 +156,7 @@ namespace EHospital.Allergies.Tests
                                                   .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
 
             //Act
-            var actual = new AllergySymptomService(_mockData.Object).GetAllergySymptom(2);
+            var actual = await new AllergySymptomService(_mockData.Object).GetAllergySymptom(2);
 
             //Assert
             Assert.AreEqual(actual, _allergySymptomList[1]);
@@ -160,24 +167,26 @@ namespace EHospital.Allergies.Tests
         [DataRow(0)]
         [DataRow(-2)]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void AllergySymptoms_GetAllergySymptom_ThrowArgumentNullException(int id)
+        public async Task AllergySymptoms_GetAllergySymptom_ThrowArgumentNullException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
                                                   .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
 
             //Act
-            var actual = new AllergySymptomService(_mockData.Object).GetAllergySymptom(id);
+            var actual = await new AllergySymptomService(_mockData.Object).GetAllergySymptom(id);
         }
 
         [TestMethod]
-        public void AllergySymptoms_DeleteAllergySymptomAsync_IdIs_1_Correct()
+        public async Task AllergySymptoms_DeleteAllergySymptomAsync_IdIs_1_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.AllergySymptoms.Get(1)).Returns(_allergySymptomList[0]);
+            _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
+                                                  .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
+            _mockData.Setup(s => s.AllergySymptoms.Get(1)).Returns(Task.FromResult(_allergySymptomList[0]));
 
             //Act
-            var actual = new AllergySymptomService(_mockData.Object).DeleteAllergySymptomAsync(1).Result;
+            var actual = await new AllergySymptomService(_mockData.Object).DeleteAllergySymptomAsync(1);
 
             //Assert
             Assert.IsTrue(actual.IsDeleted);
@@ -191,7 +200,7 @@ namespace EHospital.Allergies.Tests
         public void AllergySymptoms_DeleteAllergySymptomAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.AllergySymptoms.Get(1)).Returns(default(AllergySymptom));
+            _mockData.Setup(s => s.AllergySymptoms.Get(1)).Returns(Task.FromResult(default(AllergySymptom)));
 
             //Assert
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 

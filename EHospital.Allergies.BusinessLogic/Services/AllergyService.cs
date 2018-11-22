@@ -40,9 +40,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Allergy.
         /// </returns>
         /// <exception cref="NullReferenceException">Allergy doesn`t exist.</exception>
-        public Allergy GetAllergy(int id)
+        public async Task<Allergy> GetAllergy(int id)
         {
-            var result = _unitOfWork.Allergies.Get(id);
+            var result = await _unitOfWork.Allergies.Get(id);
             if (result == null)
             {
                 throw new ArgumentNullException("Allergy doesn`t exist.", new ArgumentException(""));
@@ -59,10 +59,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of allergies with start substring.
         /// </returns>
         /// <exception cref="NullReferenceException">Not found any allergy.</exception>
-        public IQueryable<Allergy> SearchAllergiesByName(string searchKey)
+        public async Task<IQueryable<Allergy>> SearchAllergiesByName(string searchKey)
         {
-            return _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(searchKey))
+            var result = _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(searchKey))
                                                        .OrderBy(a => a.Pathogen);
+            return await Task.FromResult(result.AsQueryable());
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="InvalidOperationException">There are exist records with involvment of this allergy.</exception>
         public async Task<Allergy> DeleteAllergyAsync(int id)
         {
-            var result = _unitOfWork.Allergies.Get(id);
+            var result = await _unitOfWork.Allergies.Get(id);
 
             if (result == null)
             {

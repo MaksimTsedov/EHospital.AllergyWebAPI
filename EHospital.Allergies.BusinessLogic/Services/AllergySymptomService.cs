@@ -53,16 +53,15 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Allergy-symptom pair.
         /// </returns>
         /// <exception cref="ArgumentNullException">Symptom doesn`t exist.</exception>
-        public AllergySymptom GetAllergySymptom(int id)
+        public async Task<AllergySymptom> GetAllergySymptom(int id)
         {
-            var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom)
-                                                    .FirstOrDefault(a => a.Id == id);
+            var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom).FirstOrDefault(a => a.Id == id);
             if (result == null)
             {
                 throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.", new ArgumentException(""));
             }
 
-            return result;
+            return await Task.FromResult(result);
         }
 
         /// <summary>
@@ -85,8 +84,8 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </exception>
         public async Task<AllergySymptom> CreateAllergySymptomAsync(AllergySymptom allergySymptom)
         {
-            PatientAllergy patientAllergy = _unitOfWork.PatientAllergies.Get(allergySymptom.PatientAllergyId);
-            Symptom symptom = _unitOfWork.Symptoms.Get(allergySymptom.SymptomId);
+            PatientAllergy patientAllergy = await _unitOfWork.PatientAllergies.Get(allergySymptom.PatientAllergyId);
+            Symptom symptom = await _unitOfWork.Symptoms.Get(allergySymptom.SymptomId);
             if (patientAllergy == null)
             {
                 throw new ArgumentNullException("Not found such allergy of patient.", new ArgumentException(""));
@@ -98,7 +97,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(a => a.PatientAllergyId == allergySymptom.PatientAllergyId
-                                                         && a.SymptomId == allergySymptom.SymptomId)) //TODO: Bug: Duplicate while deleted
+                                                         && a.SymptomId == allergySymptom.SymptomId)) 
             {
                 throw new ArgumentException("Duplicate allergy-symptom pair.");
             }
@@ -118,8 +117,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentNullException">No sympthom of allergy found.</exception>
         public async Task<AllergySymptom> DeleteAllergySymptomAsync(int id)
         {
-            var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom)
-                                                    .FirstOrDefault(a => a.Id == id);
+            var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom).FirstOrDefault(a => a.Id == id);
             if (result == null)
             {
                 throw new ArgumentNullException("No sympthom of allergy of patient found.", new ArgumentException(""));
@@ -129,7 +127,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             result.DeletionDate = DateTime.UtcNow;
             _unitOfWork.AllergySymptoms.Delete(result);
             await _unitOfWork.Save();
-            return result;
+            return await Task.FromResult(result);
         }
     }
 }

@@ -24,10 +24,10 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet("patientId={patientId}")]
-        public IActionResult GetAllPatientAllergies(int patientId)
+        public async Task<IActionResult> GetAllPatientAllergies(int patientId)
         {
             log.Info($"Receiving allergies of patient with its symptoms by {patientId} Id.");
-            var allergies = _patientAllergy.GetAllPatientAllergies(patientId);
+            var allergies = await _patientAllergy.GetAllPatientAllergies(patientId);
 
             if (!allergies.Any())
             {
@@ -39,12 +39,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet("id={id}", Name = "PatientAllergyById")]
-        public IActionResult GetPatientAllergy(int id)
+        public async Task<IActionResult> GetPatientAllergy(int id)
         {
             log.Info($"Getting patient-allergy pair by id = {id}.");
             try
             {
-                var patientAllergy = _patientAllergy.GetPatientAllergy(id);
+                var patientAllergy = await _patientAllergy.GetPatientAllergy(id);
                 log.Info($"Got patient-allergy pair by id = {id}.");
                 return Ok(Mapper.Map<PatientAllergyView>(patientAllergy));
             }

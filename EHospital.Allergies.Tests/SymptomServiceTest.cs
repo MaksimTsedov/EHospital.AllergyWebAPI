@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace EHospital.Allergies.Tests
 {
@@ -46,13 +47,13 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public void Symptoms_GetSymptom_IdIs_2_Correct()
+        public async Task Symptoms_GetSymptom_IdIs_2_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.Symptoms.Get(2)).Returns(_symptomList[1]);
+            _mockData.Setup(s => s.Symptoms.Get(2)).Returns(Task.FromResult(_symptomList[1]));
 
             //Act
-            var actual = new SymptomService(_mockData.Object).GetSymptom(2);
+            var actual = await new SymptomService(_mockData.Object).GetSymptom(2);
 
             //Assert
             Assert.AreEqual(actual, _symptomList[1]);
@@ -63,13 +64,13 @@ namespace EHospital.Allergies.Tests
         [DataRow(0)]
         [DataRow(-2)]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Symptoms_GetSymptom_ThrowArgumentNullException(int id)
+        public async Task Symptoms_GetSymptom_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.Symptoms.Get(id)).Returns(default(Symptom));
+            _mockData.Setup(s => s.Symptoms.Get(id)).Returns(Task.FromResult(default(Symptom)));
 
             //Act
-            var actual = new SymptomService(_mockData.Object).GetSymptom(id);
+            var actual = await new SymptomService(_mockData.Object).GetSymptom(id);
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace EHospital.Allergies.Tests
                                             .Returns(_symptomList.Where(a => a.Naming.StartsWith("p")).AsQueryable);
 
             //Act
-            var actual = new SymptomService(_mockData.Object).SearchSymptomsByName("p").ToList();
+            var actual = new SymptomService(_mockData.Object).SearchSymptomsByName("p").Result.ToList();
 
             //Assert
             Assert.AreEqual(actual.Count(), 2);
@@ -96,7 +97,7 @@ namespace EHospital.Allergies.Tests
                                             .Returns(_symptomList.Where(a => a.Naming.StartsWith("s")).AsQueryable);
 
             //Act
-            var actual = new SymptomService(_mockData.Object).SearchSymptomsByName("s").ToList();
+            var actual = new SymptomService(_mockData.Object).SearchSymptomsByName("s").Result.ToList();
 
             //Assert
             Assert.AreEqual(0, actual.Count);
@@ -138,7 +139,7 @@ namespace EHospital.Allergies.Tests
         public void Symptoms_DeleteSymptomAsync_IdIs_1_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.Symptoms.Get(1)).Returns(_symptomList[0]);
+            _mockData.Setup(s => s.Symptoms.Get(1)).Returns(Task.FromResult(_symptomList[0]));
             _mockData.Setup(s => s.AllergySymptoms.GetAll()).Returns(new List<AllergySymptom>().AsQueryable);
 
             //Act
@@ -156,7 +157,7 @@ namespace EHospital.Allergies.Tests
         public void Symptoms_DeleteSymptomAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.Symptoms.Get(id)).Returns(default(Symptom));
+            _mockData.Setup(s => s.Symptoms.Get(id)).Returns(Task.FromResult(default(Symptom)));
             _mockData.Setup(s => s.AllergySymptoms.GetAll()).Returns(new List<AllergySymptom>().AsQueryable);
 
             //Act
@@ -168,7 +169,7 @@ namespace EHospital.Allergies.Tests
         public void Symptoms_DeleteSymptomAsync_LinkedToPatientAllergy_HasInvalidOperationException()
         {
             //Arrange
-            _mockData.Setup(s => s.Symptoms.Get(1)).Returns(_symptomList[0]);
+            _mockData.Setup(s => s.Symptoms.Get(1)).Returns(Task.FromResult(_symptomList[0]));
             _mockData.Setup(s => s.AllergySymptoms.GetAll()).Returns(new List<AllergySymptom>
             {
                 new AllergySymptom{ PatientAllergyId = 1, SymptomId = 1 }

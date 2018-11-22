@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace EHospital.Allergies.Tests
 {
@@ -41,10 +42,11 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             _mockData.Setup(s => s.PatientAllergies.Include<Allergy>(It.IsAny<Expression<Func<PatientAllergy, Allergy>>>()))
-                                                  .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
+                     .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
 
             //Act
-            var actual = new PatientAllergyService(_mockData.Object).GetAllPatientAllergies(1).ToList();
+            var actual = new PatientAllergyService(_mockData.Object).GetAllPatientAllergies(1).Result
+                                                                                              .ToList();
 
             //Assert
             Assert.AreEqual(actual.Count(), 2);
@@ -56,28 +58,28 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public void PatientAllergies_GetAllPatientAllergies_NoAllergies(int id)
+        public async Task PatientAllergies_GetAllPatientAllergies_NoAllergies(int id)
         {
             //Arrange
             _mockData.Setup(s => s.PatientAllergies.Include<Allergy>(It.IsAny<Expression<Func<PatientAllergy, Allergy>>>()))
-                                                 .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
+                     .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
 
             //Act
-            var actual = new PatientAllergyService(_mockData.Object).GetAllPatientAllergies(3).ToList();
+            var actual = await new PatientAllergyService(_mockData.Object).GetAllPatientAllergies(3);
 
             //Assert
             Assert.AreEqual(actual.Count(), 0);
         }
 
         [TestMethod]
-        public void PatientAllergies_GetPatientAllergy_PatientAllergyIdIs_2_Correct()
+        public async Task PatientAllergies_GetPatientAllergy_PatientAllergyIdIs_2_Correct()
         {
             //Arrange
             _mockData.Setup(s => s.PatientAllergies.Include<Allergy>(It.IsAny<Expression<Func<PatientAllergy, Allergy>>>()))
-                                                  .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
+                     .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
 
             //Act
-            var actual = new PatientAllergyService(_mockData.Object).GetPatientAllergy(2);
+            var actual = await new PatientAllergyService(_mockData.Object).GetPatientAllergy(2);
 
             //Assert
             Assert.AreEqual(actual, _patientAllergyList[1]);
@@ -88,14 +90,14 @@ namespace EHospital.Allergies.Tests
         [DataRow(0)]
         [DataRow(-2)]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void PatientAllergies_GetAllPatientAllergies_ThrowArgumentNullException(int id)
+        public async Task PatientAllergies_GetAllPatientAllergies_ThrowArgumentNullException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.PatientAllergies.Include<Allergy>(It.IsAny<Expression<Func<PatientAllergy, Allergy>>>()))
-                                                 .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
+                     .Returns(_patientAllergyList.AsQueryable().Include(a => a.Allergy));
 
             //Act
-            var actual = new PatientAllergyService(_mockData.Object).GetPatientAllergy(id);
+            var actual = await new PatientAllergyService(_mockData.Object).GetPatientAllergy(id);
         }
 
         [TestMethod]
@@ -105,10 +107,12 @@ namespace EHospital.Allergies.Tests
             int id = 4;
             PatientAllergy testPatientAllergy = new PatientAllergy { PatientId = 1, AllergyId = 3 };
 
-            _mockData.Setup(s => s.Allergies.Get(testPatientAllergy.AllergyId)).Returns(_allergyList[2]);
-            _mockData.Setup(s => s.PatientInfo.Get(testPatientAllergy.PatientId)).Returns(new PatientInfo { Id = 1 });
+            _mockData.Setup(s => s.Allergies.Get(testPatientAllergy.AllergyId))
+                     .Returns(Task.FromResult(_allergyList[2]));
+            _mockData.Setup(s => s.PatientInfo.Get(testPatientAllergy.PatientId))
+                     .Returns(Task.FromResult(new PatientInfo { Id = 1 }));
             _mockData.Setup(s => s.PatientAllergies.GetAll())
-                                            .Returns(_patientAllergyList.AsQueryable);
+                     .Returns(_patientAllergyList.AsQueryable);
             _mockData.Setup(s => s.PatientAllergies.Insert(testPatientAllergy)).Returns((PatientAllergy a) =>
             {
                 a.Id = id;
@@ -137,12 +141,14 @@ namespace EHospital.Allergies.Tests
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { PatientId = patientId, AllergyId = allergyId };
 
-            _mockData.Setup(s => s.Allergies.Get(testPatientAllergy.AllergyId)).Returns(default(Allergy));
-            _mockData.Setup(s => s.PatientInfo.Get(testPatientAllergy.PatientId)).Returns(default(PatientInfo));
+            _mockData.Setup(s => s.Allergies.Get(testPatientAllergy.AllergyId))
+                     .Returns(Task.FromResult(default(Allergy)));
+            _mockData.Setup(s => s.PatientInfo.Get(testPatientAllergy.PatientId))
+                     .Returns(Task.FromResult(default(PatientInfo)));
 
             //Assert
-            Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
-                                    new PatientAllergyService(_mockData.Object)
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(async () =>
+                                    await new PatientAllergyService(_mockData.Object)
                                     .CreatePatientAllergyAsync(testPatientAllergy));
         }
 
@@ -153,8 +159,10 @@ namespace EHospital.Allergies.Tests
             int id = 4;
             PatientAllergy testPatientAllergy = new PatientAllergy { PatientId = 1, AllergyId = 2 };
 
-            _mockData.Setup(s => s.Allergies.Get(testPatientAllergy.AllergyId)).Returns(_allergyList[1]);
-            _mockData.Setup(s => s.PatientInfo.Get(testPatientAllergy.PatientId)).Returns(new PatientInfo { Id = 1 });
+            _mockData.Setup(s => s.Allergies.Get(testPatientAllergy.AllergyId))
+                     .Returns(Task.FromResult(_allergyList[1]));
+            _mockData.Setup(s => s.PatientInfo.Get(testPatientAllergy.PatientId))
+                     .Returns(Task.FromResult(new PatientInfo { Id = 1 }));
             _mockData.Setup(s => s.PatientAllergies.GetAll())
                                             .Returns(_patientAllergyList.AsQueryable);
             _mockData.Setup(s => s.PatientAllergies.Insert(testPatientAllergy)).Returns((PatientAllergy a) =>
@@ -164,8 +172,8 @@ namespace EHospital.Allergies.Tests
             });
 
             //Assert
-            Assert.ThrowsExceptionAsync<ArgumentException>(() =>
-                                    new PatientAllergyService(_mockData.Object)
+            Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                                    await new PatientAllergyService(_mockData.Object)
                                     .CreatePatientAllergyAsync(testPatientAllergy));
         }
 
@@ -174,8 +182,8 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4, AllergyId = 3 };
-            _mockData.Setup(s => s.PatientAllergies.Get(2)).Returns(_patientAllergyList[1]);
-            _mockData.Setup(s => s.Allergies.Get(3)).Returns(_allergyList[2]);
+            _mockData.Setup(s => s.PatientAllergies.Get(2)).Returns(Task.FromResult(_patientAllergyList[1]));
+            _mockData.Setup(s => s.Allergies.Get(3)).Returns(Task.FromResult(_allergyList[2]));
             _mockData.Setup(s => s.PatientAllergies.GetAll()).Returns(_patientAllergyList.AsQueryable);
             _mockData.Setup(s => s.PatientAllergies.Update(It.IsAny<PatientAllergy>())).Returns(testPatientAllergy);
 
@@ -198,8 +206,8 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4,  AllergyId = allergyId };
-            _mockData.Setup(s => s.PatientAllergies.Get(patientAllergyId)).Returns(default(PatientAllergy));
-            _mockData.Setup(s => s.Allergies.Get(allergyId)).Returns(default(Allergy));
+            _mockData.Setup(s => s.PatientAllergies.Get(patientAllergyId)).Returns(Task.FromResult(default(PatientAllergy)));
+            _mockData.Setup(s => s.Allergies.Get(allergyId)).Returns(Task.FromResult(default(Allergy)));
 
             //Assert
             Assert.ThrowsExceptionAsync<ArgumentNullException>(()
@@ -213,8 +221,8 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4, AllergyId = 2 };
-            _mockData.Setup(s => s.PatientAllergies.Get(2)).Returns(_patientAllergyList[1]);
-            _mockData.Setup(s => s.Allergies.Get(2)).Returns(_allergyList[1]);
+            _mockData.Setup(s => s.PatientAllergies.Get(2)).Returns(Task.FromResult(_patientAllergyList[1]));
+            _mockData.Setup(s => s.Allergies.Get(2)).Returns(Task.FromResult(_allergyList[1]));
             _mockData.Setup(s => s.PatientAllergies.GetAll()).Returns(_patientAllergyList.AsQueryable);
             _mockData.Setup(s => s.PatientAllergies.Update(It.IsAny<PatientAllergy>())).Returns(testPatientAllergy);
 
@@ -228,7 +236,7 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4, Notes = "Test" };
-            _mockData.Setup(s => s.PatientAllergies.Get(2)).Returns(_patientAllergyList[1]);
+            _mockData.Setup(s => s.PatientAllergies.Get(2)).Returns(Task.FromResult((_patientAllergyList[1])));
             _mockData.Setup(s => s.PatientAllergies.Update(It.IsAny<PatientAllergy>())).Returns(testPatientAllergy);
 
             //Act
@@ -249,7 +257,7 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4, Notes = "Test" };
-            _mockData.Setup(s => s.PatientAllergies.Get(patientAllergyId)).Returns(default(PatientAllergy));
+            _mockData.Setup(s => s.PatientAllergies.Get(patientAllergyId)).Returns(Task.FromResult(default(PatientAllergy)));
 
             //Assert
             Assert.ThrowsExceptionAsync<ArgumentNullException>(()
@@ -262,7 +270,7 @@ namespace EHospital.Allergies.Tests
         public void PatientAllergies_DeletePatientAllergyAsync_IdIs_1_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.PatientAllergies.Get(1)).Returns(_patientAllergyList[0]);
+            _mockData.Setup(s => s.PatientAllergies.Get(1)).Returns(Task.FromResult(_patientAllergyList[0]));
 
             //Act
             var actual = new PatientAllergyService(_mockData.Object).DeletePatientAllergyAsync(1);
@@ -279,7 +287,7 @@ namespace EHospital.Allergies.Tests
         public void PatientAllergies_DeletePatientAllergyAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.PatientAllergies.Get(1)).Returns(default(PatientAllergy));
+            _mockData.Setup(s => s.PatientAllergies.Get(1)).Returns(Task.FromResult(default(PatientAllergy)));
 
             //Assert
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>

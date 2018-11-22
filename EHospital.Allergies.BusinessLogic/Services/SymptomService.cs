@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
@@ -39,10 +40,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of symptoms with start substring.
         /// </returns>
         /// <exception cref="NullReferenceException">No symptoms exist.</exception>
-        public IQueryable<Symptom> SearchSymptomsByName(string searchKey)
+        public async Task<IQueryable<Symptom>> SearchSymptomsByName(string searchKey)
         {
-            return _unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
+            var result =  _unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
                                                       .OrderBy(s => s.Naming);
+            return await Task.FromResult(result.AsQueryable());
         }
 
         /// <summary>
@@ -53,9 +55,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Symptom.
         /// </returns>
         /// <exception cref="NullReferenceException">Symptom doesn`t exist.</exception>
-        public Symptom GetSymptom(int id)
+        public async Task<Symptom> GetSymptom(int id)
         {
-            var result = _unitOfWork.Symptoms.Get(id);
+            var result = await _unitOfWork.Symptoms.Get(id);
             if (result == null)
             {
                 throw new ArgumentNullException("Symptom doesn`t exist.", new ArgumentException(""));
@@ -95,7 +97,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentException">There are exist records with involvment of this symptom.</exception>
         public async Task<Symptom> DeleteSymptomAsync(int id)
         {
-            var result = _unitOfWork.Symptoms.Get(id);
+            var result = await _unitOfWork.Symptoms.Get(id);
             if (result == null)
             {
                 throw new ArgumentNullException("No symptom found.", new ArgumentException(""));

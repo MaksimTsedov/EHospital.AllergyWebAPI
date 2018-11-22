@@ -39,10 +39,10 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet("searchKey={searchKey}", Name = "SearchAllergyQuery")]
-        public IActionResult GetAllAllergies(string searchKey)
+        public async Task<IActionResult> GetAllAllergies(string searchKey)
         {
             log.Info($"Getting allergies by search key \"{searchKey}\".");
-            var allergies = _allergy.SearchAllergiesByName(searchKey);
+            var allergies = await _allergy.SearchAllergiesByName(searchKey);
             if (!allergies.Any())
             {
                 log.Warn($"No allergy found by \"{searchKey}\" search key.");
@@ -54,12 +54,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "AllergyById")]
-        public IActionResult GetAllergy(int id)
+        public async Task<IActionResult> GetAllergy(int id)
         {
             log.Info($"Getting allergy by id = {id}.");
             try
             {
-                var allergy = _allergy.GetAllergy(id);
+                var allergy = await _allergy.GetAllergy(id);
                 log.Info($"Got allergy by id = {id}.");
                 return Ok(Mapper.Map<AllergyView>(allergy));
             }

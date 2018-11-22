@@ -13,14 +13,14 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// <returns>
         /// List of allergies of chosen patient.
         /// </returns>
-        IQueryable<PatientAllergy> GetAllPatientAllergies(int patientId);
+        Task<IQueryable<PatientAllergy>> GetAllPatientAllergies(int patientId);
 
         /// <summary>
         /// Gets the patient-allergy pair.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Patient-allergy pair.</returns>
-        PatientAllergy GetPatientAllergy(int id);
+        Task<PatientAllergy> GetPatientAllergy(int id);
 
         /// <summary>
         /// Creates the patient-allergy pair asynchronous and saves it into db.

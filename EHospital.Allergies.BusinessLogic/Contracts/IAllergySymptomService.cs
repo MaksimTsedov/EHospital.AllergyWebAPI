@@ -18,7 +18,7 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Allergy-symptom pair.</returns>
-        AllergySymptom GetAllergySymptom(int id);
+        Task<AllergySymptom> GetAllergySymptom(int id);
 
         /// <summary>
         /// Creates the allergy-symptom pair asynchronous and saves it into db.

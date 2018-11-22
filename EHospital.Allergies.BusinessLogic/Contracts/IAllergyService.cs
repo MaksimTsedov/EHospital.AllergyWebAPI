@@ -19,14 +19,14 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// <returns>
         /// Enumeration of allergies with start substring.
         /// </returns>
-        IQueryable<Allergy> SearchAllergiesByName(string beginning);
+        Task<IQueryable<Allergy>> SearchAllergiesByName(string beginning);
 
         /// <summary>
         /// Gets the allergy.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Allergy.</returns>
-        Allergy GetAllergy(int id);
+        Task<Allergy> GetAllergy(int id);
 
         /// <summary>
         /// Creates the allergy asynchronous and saves it into db.

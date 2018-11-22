@@ -10,6 +10,7 @@ namespace EHospital.Allergies.WebAPI
         /// <summary>
         /// Initializes a new instance of the <see cref="AllergyProfile"/> class.
         /// </summary>
+        // TODO: Bug: some tests doesn`t work because of async
         public AllergyProfile()
         {
             //Allergy
@@ -42,7 +43,7 @@ namespace EHospital.Allergies.WebAPI
                                 .ForMember(dest => dest.Duration, opt => opt.MapFrom
                                 (src => src.Duration))
                                 .ForMember(dest => dest.Symptoms, opt => opt.MapFrom
-                                (src => src.AllergySymptoms.Select(c => c.Symptom.Naming))); // TODO: Filter it in services
+                                (src => src.AllergySymptoms.Select(c => c.Symptom.Naming))); 
             CreateMap<PatientAllergy, PatientAllergyView>().
                                 ForMember(dest => dest.Allergy, opt => opt.MapFrom
                                 (src => src.Allergy.Pathogen));           

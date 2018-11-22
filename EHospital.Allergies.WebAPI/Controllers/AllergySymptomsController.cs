@@ -41,12 +41,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet("allergySymptomId={allergySymptomId}", Name = "AllergySymptomById")]
-        public IActionResult GetAllergySymptom(int allergySymptomId)
+        public async Task<IActionResult> GetAllergySymptom(int allergySymptomId)
         {
             log.Info($"Getting allergy-symptom pair by id = {allergySymptomId}.");
             try
             {
-                var allergySymptom = _allergySymptom.GetAllergySymptom(allergySymptomId);
+                var allergySymptom = await _allergySymptom.GetAllergySymptom(allergySymptomId);
                 log.Info($"Got allergy-symptom pair by id = {allergySymptomId}.");
                 return Ok(Mapper.Map<AllergySymptomView>(allergySymptom));
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -65,9 +66,9 @@ namespace EHospital.Allergies.Data
         /// <returns>
         /// Entity.
         /// </returns>
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return _entities.FirstOrDefault(t => t.Id == id);
+            return await _entities.FirstOrDefaultAsync(t => t.Id == id);
         }
 
         /// <summary>
