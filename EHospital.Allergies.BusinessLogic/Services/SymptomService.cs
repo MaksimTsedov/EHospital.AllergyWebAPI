@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
