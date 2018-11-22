@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
@@ -30,8 +31,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="NullReferenceException">Not found any allergy of chosen patient.</exception>
         public IQueryable<PatientAllergy> GetAllPatientAllergies(int patientId)
         {
-            // TODO: Bug: Filter isDeleted allergy symptoms
-            return _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)                                              
+            return _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)                                         
                                                .Include(a => a.AllergySymptoms)                                              
                                                .ThenInclude(a => (a as AllergySymptom).Symptom) // It have an Intellisense issue if it isn`t cast to type)
                                                .Where(a => a.PatientId == patientId);

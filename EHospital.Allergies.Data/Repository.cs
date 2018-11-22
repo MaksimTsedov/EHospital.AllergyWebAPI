@@ -43,7 +43,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public IQueryable<T> GetAll()
         {
-            return _entities.Where(t => !t.IsDeleted).AsNoTracking();
+            return _entities.AsNoTracking();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate)
         {
-            return _entities.Where(t => !t.IsDeleted).Where(predicate).AsNoTracking();
+            return _entities.Where(predicate).AsNoTracking();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public T Get(int id)
         {
-            return _entities.FirstOrDefault(t => !t.IsDeleted && t.Id == id);
+            return _entities.FirstOrDefault(t => t.Id == id);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace EHospital.Allergies.Data
         /// </returns>
         public IIncludableQueryable<T, TProperty> Include<TProperty>(Expression<Func<T, TProperty>> navigationPropertyPath)
         {
-            return _entities.Where(t => !t.IsDeleted).Include(navigationPropertyPath);
+            return _entities.Include(navigationPropertyPath);
         }
     }
 }

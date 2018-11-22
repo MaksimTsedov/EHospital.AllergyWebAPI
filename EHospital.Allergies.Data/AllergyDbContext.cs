@@ -78,6 +78,11 @@ namespace EHospital.Allergies.Data
                 .HasOne(als => als.Symptom)
                 .WithMany(s => s.AllergySymptoms)
                 .HasForeignKey(als => als.SymptomId);
+
+            modelBuilder.Entity<Symptom>().HasQueryFilter(s => !s.IsDeleted);
+            modelBuilder.Entity<AllergySymptom>().HasQueryFilter(s => !s.IsDeleted);
+            modelBuilder.Entity<Allergy>().HasQueryFilter(s => !s.IsDeleted);
+            modelBuilder.Entity<PatientAllergy>().HasQueryFilter(s => !s.IsDeleted);
         }
     }
 }

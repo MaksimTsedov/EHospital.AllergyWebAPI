@@ -42,7 +42,7 @@ namespace EHospital.Allergies.WebAPI
                                 .ForMember(dest => dest.Duration, opt => opt.MapFrom
                                 (src => src.Duration))
                                 .ForMember(dest => dest.Symptoms, opt => opt.MapFrom
-                                (src => src.AllergySymptoms.Where(c => !c.IsDeleted).Select(c => c.Symptom.Naming))); // TODO: Filter it in services
+                                (src => src.AllergySymptoms.Select(c => c.Symptom.Naming))); // TODO: Filter it in services
             CreateMap<PatientAllergy, PatientAllergyView>().
                                 ForMember(dest => dest.Allergy, opt => opt.MapFrom
                                 (src => src.Allergy.Pathogen));           
