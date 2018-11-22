@@ -59,11 +59,9 @@ namespace EHospital.Allergies.WebAPI.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateAllergySymptom([FromBody]AllergySymptomRequest allergySymptom)
-        {
-            log.Info("Assignment symptom to allergy of patient.");
-            if (!ModelState.IsValid)
+        {           
+            if (!(allergySymptom is AllergySymptomRequest))
             {
-                log.Error($"Invalid symptom assignment: {ModelState}.");
                 return BadRequest(ModelState);
             }
 

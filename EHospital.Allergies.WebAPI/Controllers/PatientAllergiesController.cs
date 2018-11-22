@@ -58,10 +58,8 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePatientAllergy([FromBody]PatientAllergyRequest patientAllergy)
         {
-            log.Info("Assignment allergy to a patient.");
-            if (!ModelState.IsValid)
+            if (!(patientAllergy is PatientAllergyRequest))
             {
-                log.Error($"Invalid allergy assignment: {ModelState}.");
                 return BadRequest(ModelState);
             }
 
@@ -85,11 +83,9 @@ namespace EHospital.Allergies.WebAPI.Controllers
 
         [HttpPut("id={id}", Name = "UpdatePatientAllergy")]
         public async Task<IActionResult> UpdatePatientAllergy(int id, [FromBody]PatientAllergyUpdateRequest patientAllergy)
-        {
-            log.Info("Updating patient allergy information.");
-            if (!ModelState.IsValid)
+        {            
+            if (!(patientAllergy is PatientAllergyUpdateRequest))
             {
-                log.Error($"Invalid patient-allergy pair updating: {ModelState}.");
                 return BadRequest(ModelState);
             }
 
@@ -115,17 +111,20 @@ namespace EHospital.Allergies.WebAPI.Controllers
         public async Task<IActionResult> UpdatePatientAllergyNotes(int idToUpdateNotes, [FromBody]string notes)
         {
             log.Info("Change notes about patient allergy.");
-            if (!ModelState.IsValid)
+            if (notes.Length > 500)
             {
-                log.Error($"Invalid notes updating: {ModelState}.");
-                return BadRequest(ModelState);
+                log.Error("Invalid build of PatientAllergyUpdateRequest :"
+                                       + Environment.NewLine
+                                       + "Notes : Too long note, please shorten it."
+                                       + Environment.NewLine);
+                return BadRequest();
             }
 
             try
             {
                 var result = await _patientAllergy.UpdateNotesAsync(idToUpdateNotes, notes);
                 log.Info("Rewriting of notes is successful.");
-                return Ok(Mapper.Map<PatientAllergyView>(result));
+                return Ok(notes);
             }
             catch (ArgumentNullException ex)
             {

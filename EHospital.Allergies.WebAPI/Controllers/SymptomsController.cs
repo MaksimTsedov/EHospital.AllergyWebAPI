@@ -72,10 +72,8 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSymptom([FromBody]SymptomRequest symptom)
         {
-            log.Info("Creating symptom.");
-            if (!ModelState.IsValid)
+            if (!(symptom is SymptomRequest))
             {
-                log.Error($"Invalid build of symptom: {ModelState}.");
                 return BadRequest(ModelState);
             }
 

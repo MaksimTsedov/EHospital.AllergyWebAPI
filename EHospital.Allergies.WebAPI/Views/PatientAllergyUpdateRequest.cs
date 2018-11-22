@@ -1,9 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
 {
     public class PatientAllergyUpdateRequest
     {
+        private string _notes;
+        private static readonly log4net.ILog log = log4net.LogManager
+                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Gets or sets the allergy identifier.
         /// </summary>
@@ -29,6 +38,36 @@ namespace EHospital.Allergies.WebAPI.Views
         /// The notes.
         /// </value>
         [MaxLength(500, ErrorMessage = "Too long note, please shorten it.")]
-        public string Notes { get; set; }
+        public string Notes
+        {
+            get
+            {
+                return _notes;
+            }
+
+            set
+            {
+                log.Info("Updating patient allergy information.");
+                _notes = value;
+                ValidationContext context = new ValidationContext(this);
+                var results = new List<ValidationResult>();
+                bool isValid = Validator.TryValidateObject(this, context, results, true);
+                if (!isValid)
+                {
+                    StringBuilder errorMessage = new StringBuilder();
+                    errorMessage.Append($"Invalid build of {context.DisplayName} :"
+                                                            + Environment.NewLine);
+                    foreach (var error in results)
+                    {
+                        errorMessage.Append(error.MemberNames.First() + " : "
+                                          + error.ErrorMessage + " ; "
+                                          + Environment.NewLine);
+                    }
+
+                    log.Error(errorMessage.ToString());
+                    return;
+                }
+            }
+        }
     }
 }
