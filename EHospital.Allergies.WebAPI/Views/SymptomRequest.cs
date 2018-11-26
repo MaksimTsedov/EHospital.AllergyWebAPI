@@ -1,17 +1,14 @@
-﻿using System;
+﻿using EHospital.Allergies.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
 {
     public class SymptomRequest
     {
-
-        private static readonly log4net.ILog log = log4net.LogManager
-                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private string _naming;
 
         [Required(ErrorMessage = "Every symptom has it naming")]
@@ -26,7 +23,7 @@ namespace EHospital.Allergies.WebAPI.Views
 
             set
             {
-                log.Info("Creating symptom.");
+                LoggingToFile.LoggingInfo("Creating symptom.");
                 _naming = value;
                 ValidationContext context = new ValidationContext(this);
                 var results = new List<ValidationResult>();
@@ -43,7 +40,7 @@ namespace EHospital.Allergies.WebAPI.Views
                                           + Environment.NewLine);
                     }
 
-                    log.Error(errorMessage.ToString());
+                    LoggingToFile.LoggingError(errorMessage.ToString());
                     return;
                 }
             }

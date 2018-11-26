@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="log4net.config" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
@@ -16,10 +19,23 @@
     <ProjectReference Include="..\EHospital.Allergies.Data\EHospital.Allergies.Data.csproj" />
     <ProjectReference Include="..\EHospital.Allergies.BusinessLogic\EHospital.Allergies.BusinessLogic.csproj" />
     <ProjectReference Include="..\EHospital.Allergies.Model\EHospital.Allergies.Model.csproj" />
+    <ProjectReference Include="..\EHospital.Logging\EHospital.Logging.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EHospital.Logging">
+      <HintPath>..\..\EHospital.Logging\EHospital.Logging\bin\Debug\netcoreapp2.1\EHospital.Logging.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

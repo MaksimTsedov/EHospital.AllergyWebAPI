@@ -10,7 +10,6 @@ namespace EHospital.Allergies.WebAPI
         /// <summary>
         /// Initializes a new instance of the <see cref="AllergyProfile"/> class.
         /// </summary>
-        // TODO: Bug: some tests doesn`t work because of async
         public AllergyProfile()
         {
             //Allergy
