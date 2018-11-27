@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EHospital.Allergies.Data\EHospital.Allergies.Data.csproj" />
+    <ProjectReference Include="..\EHospital.Allergies.Model\EHospital.Allergies.Model.csproj" />
+  </ItemGroup>
+
+</Project>
