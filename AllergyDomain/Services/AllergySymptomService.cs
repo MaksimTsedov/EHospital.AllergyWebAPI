@@ -59,7 +59,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                                                     .FirstOrDefault(a => a.Id == id);
             if (result == null)
             {
-                throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.", new ArgumentException());
+                throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.", new ArgumentException(""));
             }
 
             return result;
@@ -89,15 +89,15 @@ namespace EHospital.Allergies.BusinesLogic.Services
             Symptom symptom = _unitOfWork.Symptoms.Get(allergySymptom.SymptomId);
             if (patientAllergy == null)
             {
-                throw new ArgumentNullException("Not found such allergy of patient.", new ArgumentException());
+                throw new ArgumentNullException("Not found such allergy of patient.", new ArgumentException(""));
             }
 
             if (symptom == null)
             {
-                throw new ArgumentNullException("Not found such symptom.", new ArgumentException());
+                throw new ArgumentNullException("Not found such symptom.", new ArgumentException(""));
             }
 
-            if (_unitOfWork.AllergySymptoms.GetAll().Any(a => a.Id == allergySymptom.Id
+            if (_unitOfWork.AllergySymptoms.GetAll().Any(a => a.PatientAllergyId == allergySymptom.PatientAllergyId
                                                          && a.SymptomId == allergySymptom.SymptomId))
             {
                 throw new ArgumentException("Duplicate allergy-symptom pair.");
@@ -121,7 +121,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.AllergySymptoms.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("No sympthom of allergy found.", new ArgumentException());
+                throw new ArgumentNullException("No sympthom of allergy of patient found.", new ArgumentException(""));
             }
 
             result.IsDeleted = true;

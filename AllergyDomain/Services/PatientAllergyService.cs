@@ -51,7 +51,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                                                      .FirstOrDefault(pa => pa.Id == id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
             }
 
             return result;
@@ -75,12 +75,12 @@ namespace EHospital.Allergies.BusinesLogic.Services
             Allergy allergy = _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
             if (patientInfo == null)
             {
-                throw new ArgumentNullException("Not found such patient.", new ArgumentException());
+                throw new ArgumentNullException("Not found such patient.", new ArgumentException(""));
             }
 
             if (allergy == null)
             {
-                throw new ArgumentNullException("Not found such allergy.", new ArgumentException());
+                throw new ArgumentNullException("Not found such allergy.", new ArgumentException(""));
             }
 
             if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == patientAllergy.AllergyId
@@ -108,7 +108,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.PatientAllergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
             }
 
             result.Bind(patientAllergy);

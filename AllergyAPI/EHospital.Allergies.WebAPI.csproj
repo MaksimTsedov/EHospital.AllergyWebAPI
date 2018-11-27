@@ -5,12 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
@@ -18,6 +16,10 @@
     <ProjectReference Include="..\AllergyDA\EHospital.Allergies.Data.csproj" />
     <ProjectReference Include="..\AllergyDomain\EHospital.Allergies.BusinessLogic.csproj" />
     <ProjectReference Include="..\EHospital.Allergies.Model\EHospital.Allergies.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

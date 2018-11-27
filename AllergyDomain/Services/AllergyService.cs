@@ -45,7 +45,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = _unitOfWork.Allergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Allergy doesn`t exist.", new ArgumentException());
+                throw new ArgumentNullException("Allergy doesn`t exist.", new ArgumentException(""));
             }
 
             return result;
@@ -100,7 +100,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
 
             if (result == null)
             {
-                throw new ArgumentNullException("No allergy found.", new ArgumentException());
+                throw new ArgumentNullException("No allergy found.", new ArgumentException(""));
             }
 
             if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.Id))
