@@ -7,7 +7,7 @@ using EHospital.Allergies.WebAPI.Views;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
 using System.Linq;
-using EHospital.Allergies.Logging;
+using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {

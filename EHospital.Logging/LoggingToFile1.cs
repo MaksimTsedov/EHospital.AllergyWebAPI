@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EHospital.Allergies.Logging
+namespace EHospital.Logging
 {
     public static class LoggingToFile
     {
