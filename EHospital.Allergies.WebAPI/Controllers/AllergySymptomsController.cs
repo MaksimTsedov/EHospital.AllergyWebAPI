@@ -23,12 +23,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet("allergyId={allegryId}")]
-        public IActionResult GetAllAllergySymptoms(int allegryId)
+        public async Task<IActionResult> GetAllAllergySymptoms(int allegryId)
         {
             LoggingToFile.LoggingInfo("Receiving all symptoms of chosen patient allergy.");
             try
             {
-                var symptoms = _allergySymptom.GetAllAllergySymptoms(allegryId);
+                var symptoms = await _allergySymptom.GetAllAllergySymptoms(allegryId);
                 LoggingToFile.LoggingInfo($"Successfully obtained {symptoms.Count()} symptoms.");
                 return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }

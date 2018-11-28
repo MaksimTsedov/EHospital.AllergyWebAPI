@@ -65,7 +65,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _patientAllergy.CreatePatientAllergyAsync(Mapper.Map<PatientAllergy>(patientAllergy));
-                LoggingToFile.LoggingInfo("Successfull allergy assignment to a patient.");
+                LoggingToFile.LoggingInfo("Successful allergy assignment to a patient.");
                 return Created("patientallergies", Mapper.Map<PatientAllergyView>(result));
             }
             catch (ArgumentNullException ex)
@@ -91,7 +91,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _patientAllergy.UpdatePatientAllergyAsync(id, Mapper.Map<PatientAllergy>(patientAllergy));
-                LoggingToFile.LoggingInfo("Successfull updating patient allergy information.");
+                LoggingToFile.LoggingInfo("Successful updating patient allergy information.");
                 return Ok(Mapper.Map<PatientAllergyView>(result));
             }
             catch (ArgumentNullException ex)

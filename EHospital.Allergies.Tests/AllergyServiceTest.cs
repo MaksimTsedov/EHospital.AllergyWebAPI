@@ -37,20 +37,21 @@ namespace EHospital.Allergies.Tests
             _mockData.Setup(s => s.Allergies.GetAll()).Returns(_allergyList.AsQueryable);
 
             //Act
-            var actual = new AllergyService(_mockData.Object).GetAllAllergies().ToList();
+            var actual = new AllergyService(_mockData.Object).GetAllAllergies().Result.ToList();
 
             //Assert
             Assert.AreEqual(actual.Count(), 3);
+            //GetAll also descending sorting 
             Assert.AreEqual("abrikos", actual[0].Pathogen);
             Assert.AreEqual("pomidor", actual[1].Pathogen);
             Assert.AreEqual("prisma", actual[2].Pathogen);
         }
 
         [TestMethod]
-        public void Allergies_GetAllergy_IdIs_2_Correct()
+        public void Allergies_GetAllergy_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.Allergies.Get(2)).Returns(Task.FromResult(_allergyList[1]));
+            _mockData.Setup(s => s.Allergies.Get(2)).ReturnsAsync(_allergyList[1]);
 
             //Act
             var actual = new AllergyService(_mockData.Object).GetAllergy(2).Result;
@@ -67,14 +68,14 @@ namespace EHospital.Allergies.Tests
         public async Task Allergies_GetAllergy_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.Allergies.Get(id)).Returns(Task.FromResult(default(Allergy)));
+            _mockData.Setup(s => s.Allergies.Get(id)).ReturnsAsync(default(Allergy));
 
             //Act
             var actual = await new AllergyService(_mockData.Object).GetAllergy(id);
         }
 
         [TestMethod]
-        public async Task Allergies_SearchAllergiesByName_stringKeyIs_p_Correct()
+        public async Task Allergies_SearchAllergiesByName_Correct()
         {
             //Arrange
             _mockData.Setup(s => s.Allergies.GetAll(It.IsAny<Expression<Func<Allergy, bool>>>()))
@@ -90,7 +91,7 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public async Task Allergies_SearchAllergiesByName_stringKeyIs_s_InCorrect()
+        public async Task Allergies_SearchAllergiesByName_NotFoundAnyAllergy()
         {
             //Arrange
             _mockData.Setup(s => s.Allergies.GetAll(It.IsAny<Expression<Func<Allergy, bool>>>()))
@@ -108,12 +109,8 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
             int id = 4;
-            Allergy testAllergy = new Allergy { Pathogen = "Test" };
-            _mockData.Setup(s => s.Allergies.Insert(testAllergy)).Returns((Allergy a) =>
-            {
-                a.Id = id;
-                return a;
-            });
+            Allergy testAllergy = new Allergy { Id = id, Pathogen = "Test" };
+            _mockData.Setup(s => s.Allergies.Insert(testAllergy)).Returns(testAllergy);
 
             //Act
             var actual = new AllergyService(_mockData.Object).CreateAllergyAsync(testAllergy).Result;
@@ -124,7 +121,7 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public void Allergies_CreateAllergyAsync_Incorrect()
+        public void Allergies_CreateAllergyAsync_IncorrectDueToDuplicateName()
         {
             //Arrange
             Allergy testAllergy = new Allergy { Id = 1, Pathogen = "abrikos" };
@@ -132,14 +129,14 @@ namespace EHospital.Allergies.Tests
 
             //Assert
             Assert.ThrowsExceptionAsync<ArgumentException>(() => 
-                                    new AllergyService(_mockData.Object).CreateAllergyAsync(testAllergy));
+                                         new AllergyService(_mockData.Object).CreateAllergyAsync(testAllergy));
         }
 
         [TestMethod]
-        public void Allergies_DeleteAllergyAsync_IdIs_1_Correct()
+        public void Allergies_DeleteAllergyAsync_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.Allergies.Get(1)).Returns(Task.FromResult(_allergyList[0]));
+            _mockData.Setup(s => s.Allergies.Get(1)).ReturnsAsync(_allergyList[0]);
             _mockData.Setup(s => s.PatientAllergies.GetAll()).Returns(new List<PatientAllergy>().AsQueryable);
 
             //Act
@@ -157,19 +154,19 @@ namespace EHospital.Allergies.Tests
         public void Allergies_DeleteAllergyAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.Allergies.Get(id)).Returns(Task.FromResult(default(Allergy)));
+            _mockData.Setup(s => s.Allergies.Get(id)).ReturnsAsync(default(Allergy));
             _mockData.Setup(s => s.PatientAllergies.GetAll()).Returns(new List<PatientAllergy>().AsQueryable);
 
             //Act
             Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
-                                    new AllergyService(_mockData.Object).DeleteAllergyAsync(id));
+                                     new AllergyService(_mockData.Object).DeleteAllergyAsync(id)); //Not found such allergy
         }
 
         [TestMethod]
         public void Allergies_DeleteAllergyAsync_LinkedToPatient_HasInvalidOperationException()
         {
             //Arrange
-            _mockData.Setup(s => s.Allergies.Get(1)).Returns(Task.FromResult(_allergyList[0]));
+            _mockData.Setup(s => s.Allergies.Get(1)).ReturnsAsync(_allergyList[0]);
             _mockData.Setup(s => s.PatientAllergies.GetAll()).Returns(new List<PatientAllergy>
             {
                 new PatientAllergy{ AllergyId = 1, PatientId = 1 }
@@ -177,7 +174,7 @@ namespace EHospital.Allergies.Tests
 
             //Act
             Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-                                    new AllergyService(_mockData.Object).DeleteAllergyAsync(1));
+                                    new AllergyService(_mockData.Object).DeleteAllergyAsync(1)); //Deleting allergy while we have records about this allergy in other tables
         }
     }
 }

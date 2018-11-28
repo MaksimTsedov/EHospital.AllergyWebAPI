@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
@@ -28,13 +29,13 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// List of allergies of chosen patient.
         /// </returns>
         /// <exception cref="NullReferenceException">Not found any allergy of chosen patient.</exception>
-        public async Task<IQueryable<PatientAllergy>> GetAllPatientAllergies(int patientId)
+        public async Task<IEnumerable<PatientAllergy>> GetAllPatientAllergies(int patientId)
         {
-            var result = _unitOfWork.PatientAllergies.Include(pa => pa.Allergy)                                         
+            var result = await Task.FromResult(_unitOfWork.PatientAllergies.Include(pa => pa.Allergy)                                         
                                                .Include(a => a.AllergySymptoms)                                              
-                                               .ThenInclude(a => (a as AllergySymptom).Symptom) // It have an Intellisense issue if it isn`t cast to type)
-                                               .Where(a => a.PatientId == patientId);
-            return await Task.FromResult(result.AsQueryable());
+                                               .ThenInclude(a => (a as AllergySymptom).Symptom) // It have an Intellisense issue if it isn`t cast to type
+                                               .Where(a => a.PatientId == patientId));
+            return result;
         }
 
         /// <summary>
@@ -47,13 +48,14 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public async Task<PatientAllergy> GetPatientAllergy(int id)
         {
-            var result = _unitOfWork.PatientAllergies.Include(pa => pa.Allergy).FirstOrDefault(pa => pa.Id == id);
+            var result = await Task.FromResult(_unitOfWork.PatientAllergies.Include(pa => pa.Allergy)
+                                                                           .FirstOrDefault(pa => pa.Id == id));
             if (result == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
             }
 
-            return await Task.FromResult(result);
+            return result;
         }
 
         /// <summary>
@@ -70,8 +72,10 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentException">Duplicate patient-allergy pair.</exception>
         public async Task<PatientAllergy> CreatePatientAllergyAsync(PatientAllergy patientAllergy)
         {
-            PatientInfo patientInfo = await _unitOfWork.PatientInfo.Get(patientAllergy.PatientId);
-            Allergy allergy = await _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
+            Task<PatientInfo> patientInfo = _unitOfWork.PatientInfo.Get(patientAllergy.PatientId);
+            Task<Allergy> allergy = _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
+            Task.WaitAll(patientInfo, allergy);
+
             if (patientInfo == null)
             {
                 throw new ArgumentNullException("Not found such patient.", new ArgumentException(""));
@@ -88,7 +92,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                 throw new ArgumentException("Duplicate patient-allergy pair.");
             }
 
-            patientAllergy.Allergy = allergy;
+            patientAllergy.Allergy = allergy.Result;
             PatientAllergy result = _unitOfWork.PatientAllergies.Insert(patientAllergy);
             await _unitOfWork.Save();
             return result;
@@ -105,12 +109,14 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public async Task<PatientAllergy> UpdatePatientAllergyAsync(int id, PatientAllergy patientAllergy)
         {
-            var result = await _unitOfWork.PatientAllergies.Get(id);
-            var allergyUpdate = await _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
+            PatientAllergy result = await _unitOfWork.PatientAllergies.Get(id);
+            Allergy allergyUpdate = await _unitOfWork.Allergies.Get(patientAllergy.AllergyId);
+        
             if (result == null || allergyUpdate == null)
             {
                 throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
             }
+
             if (result.AllergyId != patientAllergy.AllergyId)
             {
                 if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == patientAllergy.AllergyId

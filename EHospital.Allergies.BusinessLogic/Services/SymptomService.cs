@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
@@ -26,9 +28,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of symptoms.
         /// </returns>
         /// <exception cref="NullReferenceException">No records in db.</exception>
-        public IQueryable<Symptom> GetAllSymptoms()
+        public async Task<IEnumerable<Symptom>> GetAllSymptoms()
         {
-            return _unitOfWork.Symptoms.GetAll().OrderBy(s => s.Naming);
+            return await Task.FromResult(_unitOfWork.Symptoms.GetAll().OrderBy(s => s.Naming));
         }
 
         /// <summary>
@@ -39,11 +41,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of symptoms with start substring.
         /// </returns>
         /// <exception cref="NullReferenceException">No symptoms exist.</exception>
-        public async Task<IQueryable<Symptom>> SearchSymptomsByName(string searchKey)
+        public async Task<IEnumerable<Symptom>> SearchSymptomsByName(string searchKey)
         {
-            var result =  _unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
-                                                      .OrderBy(s => s.Naming);
-            return await Task.FromResult(result.AsQueryable());
+            var result = await Task.FromResult(_unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
+                                                      .OrderBy(s => s.Naming));
+            return result;
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Deleted symptom.
         /// </returns>
         /// <exception cref="NullReferenceException">No symptom found.</exception>
-        /// <exception cref="ArgumentException">There are exist records with involvment of this symptom.</exception>
+        /// <exception cref="ArgumentException">There are exist records with involvement of this symptom.</exception>
         public async Task<Symptom> DeleteSymptomAsync(int id)
         {
             var result = await _unitOfWork.Symptoms.Get(id);
@@ -104,7 +106,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(s => s.SymptomId == result.Id))
             {
-                throw new InvalidOperationException("There are exist records with involvment of this symptom.");
+                throw new InvalidOperationException("There are exist records with involvement of this symptom.");
             }
 
             result.IsDeleted = true;

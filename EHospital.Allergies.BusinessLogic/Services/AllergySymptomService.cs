@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
@@ -28,7 +29,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of allergy symptoms.
         /// </returns>
         /// <exception cref="ArgumentException">Not found any symptom.</exception>
-        public IQueryable<Symptom> GetAllAllergySymptoms(int patientAllergyId)
+        public async Task<IEnumerable<Symptom>> GetAllAllergySymptoms(int patientAllergyId)
         {
             var allergySymptoms = _unitOfWork.AllergySymptoms.GetAll(a => a.PatientAllergyId == patientAllergyId);
             if (allergySymptoms.Count() == 0)
@@ -37,11 +38,12 @@ namespace EHospital.Allergies.BusinesLogic.Services
             }
 
             IEnumerable<Symptom> result = _unitOfWork.Symptoms.GetAll();
-            return allergySymptoms.Join(result,
+            return await Task.FromResult(
+                                   allergySymptoms.Join(result,
                                    a => a.SymptomId,
                                    s => s.Id,
                                    (a, s) => new Symptom { Id = s.Id, Naming = s.Naming, IsDeleted = s.IsDeleted }).
-                                   OrderBy(s => s.Naming);
+                                   OrderBy(s => s.Naming));
         }
 
         /// <summary>
@@ -83,8 +85,10 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </exception>
         public async Task<AllergySymptom> CreateAllergySymptomAsync(AllergySymptom allergySymptom)
         {
-            PatientAllergy patientAllergy = await _unitOfWork.PatientAllergies.Get(allergySymptom.PatientAllergyId);
-            Symptom symptom = await _unitOfWork.Symptoms.Get(allergySymptom.SymptomId);
+            Task<PatientAllergy> patientAllergy = _unitOfWork.PatientAllergies.Get(allergySymptom.PatientAllergyId);
+            Task<Symptom> symptom = _unitOfWork.Symptoms.Get(allergySymptom.SymptomId);
+            Task.WaitAll(patientAllergy, symptom);
+
             if (patientAllergy == null)
             {
                 throw new ArgumentNullException("Not found such allergy of patient.", new ArgumentException(""));
@@ -96,7 +100,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(a => a.PatientAllergyId == allergySymptom.PatientAllergyId
-                                                         && a.SymptomId == allergySymptom.SymptomId)) 
+                                                                  && a.SymptomId == allergySymptom.SymptomId)) 
             {
                 throw new ArgumentException("Duplicate allergy-symptom pair.");
             }
@@ -113,10 +117,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Deleted allergy-symptom pair
         /// </returns>
-        /// <exception cref="ArgumentNullException">No sympthom of allergy found.</exception>
+        /// <exception cref="ArgumentNullException">No symptom of allergy found.</exception>
         public async Task<AllergySymptom> DeleteAllergySymptomAsync(int id)
         {
-            var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom).FirstOrDefault(a => a.Id == id);
+            var result = await Task.FromResult(_unitOfWork.AllergySymptoms.Include(a => a.Symptom)
+                                                                          .FirstOrDefault(a => a.Id == id));
             if (result == null)
             {
                 throw new ArgumentNullException("No sympthom of allergy of patient found.", new ArgumentException(""));

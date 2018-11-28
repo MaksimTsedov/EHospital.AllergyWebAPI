@@ -23,10 +23,10 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSymptoms()
+        public async Task<IActionResult> GetAllSymptoms()
         {
             LoggingToFile.LoggingInfo("Getting all symptoms.");
-            var symptoms = _symptom.GetAllSymptoms();
+            var symptoms = await _symptom.GetAllSymptoms();
             if (!symptoms.Any())
             {
                 LoggingToFile.LoggingWarn("No symptom recorded.");

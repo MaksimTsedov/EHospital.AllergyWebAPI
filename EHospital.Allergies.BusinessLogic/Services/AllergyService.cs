@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
@@ -26,9 +28,10 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of allergies.
         /// </returns>
         /// <exception cref="NullReferenceException">No records in db.</exception>
-        public IQueryable<Allergy> GetAllAllergies()
+        public async Task<IEnumerable<Allergy>> GetAllAllergies()
         {
-            return _unitOfWork.Allergies.GetAll().OrderBy(a => a.Pathogen);
+            var result = _unitOfWork.Allergies.GetAll().OrderBy(a => a.Pathogen);
+            return await Task.FromResult(result.ToList());
         }
 
         /// <summary>
@@ -58,11 +61,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Enumeration of allergies with start substring.
         /// </returns>
         /// <exception cref="NullReferenceException">Not found any allergy.</exception>
-        public async Task<IQueryable<Allergy>> SearchAllergiesByName(string searchKey)
+        public async Task<IEnumerable<Allergy>> SearchAllergiesByName(string searchKey)
         {
             var result = _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(searchKey))
                                                        .OrderBy(a => a.Pathogen);
-            return await Task.FromResult(result.AsQueryable());
+            return await Task.FromResult(result);
         }
 
         /// <summary>

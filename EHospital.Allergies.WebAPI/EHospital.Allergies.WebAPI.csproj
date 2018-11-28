@@ -32,9 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="EHospital.Logging">
-      <HintPath>..\..\EHospital.Logging\EHospital.Logging\bin\Debug\netcoreapp2.1\EHospital.Logging.dll</HintPath>
-    </Reference>
     <Reference Include="Logging">
       <HintPath>..\..\EHospital.Logging\Logging\bin\Debug\netcoreapp2.1\Logging.dll</HintPath>
     </Reference>

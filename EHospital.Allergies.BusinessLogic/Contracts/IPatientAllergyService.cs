@@ -1,5 +1,5 @@
 ﻿using EHospital.Allergies.Model;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EHospital.Allergies.BusinesLogic.Contracts
@@ -13,7 +13,7 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// <returns>
         /// List of allergies of chosen patient.
         /// </returns>
-        Task<IQueryable<PatientAllergy>> GetAllPatientAllergies(int patientId);
+        Task<IEnumerable<PatientAllergy>> GetAllPatientAllergies(int patientId);
 
         /// <summary>
         /// Gets the patient-allergy pair.
