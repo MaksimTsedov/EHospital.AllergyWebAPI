@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using EHospital.Allergies.Model;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace EHospital.Allergies.WebAPI
 {
@@ -59,6 +60,20 @@ namespace EHospital.Allergies.WebAPI
                     Contact = new Contact() { Name = "Maksim Tsedov", Email = "maksim.czedov.99@gmail.com", Url = "" }
                 });
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                builder => builder.AllowAnyOrigin()
+
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("CorsPolicy"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,13 +88,14 @@ namespace EHospital.Allergies.WebAPI
                 app.UseHsts();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();  
             app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AllergyAPI V1");
+                c.SwaggerEndpoint("../swagger/v1/swagger.json", "AllergyAPI V1");
             });
         }
     }
