@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EHospital.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
@@ -10,8 +10,6 @@ namespace EHospital.Allergies.WebAPI.Views
     public class AllergySymptomRequest
     {
         private int _symptomId;
-        private static readonly log4net.ILog log = log4net.LogManager
-                                    .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Gets or sets the patient-allergy pair identifier.
@@ -38,7 +36,7 @@ namespace EHospital.Allergies.WebAPI.Views
 
             set
             {
-                log.Info("Assignment symptom to allergy of patient.");
+                LoggingToFile.LoggingInfo("Assignment symptom to allergy of patient.");
                 _symptomId = value;
                 ValidationContext context = new ValidationContext(this);
                 var results = new List<ValidationResult>();
@@ -55,7 +53,7 @@ namespace EHospital.Allergies.WebAPI.Views
                                           + Environment.NewLine);
                     }
 
-                    log.Error(errorMessage.ToString());
+                    LoggingToFile.LoggingError(errorMessage.ToString());
                     return;
                 }
             }

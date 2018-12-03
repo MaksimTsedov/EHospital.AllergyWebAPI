@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EHospital.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
@@ -13,8 +13,6 @@ namespace EHospital.Allergies.WebAPI.Views
     public class AllergyRequest
     {
         private string _pathogen;
-        private static readonly log4net.ILog log = log4net.LogManager
-                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         [Required(ErrorMessage = "Please enter the pathogen of allergy.")]
         [MaxLength(200, ErrorMessage = "Pathogen can`t have so long naming.")]
@@ -28,7 +26,7 @@ namespace EHospital.Allergies.WebAPI.Views
 
             set
             {
-                log.Info("Creating allergy.");
+                LoggingToFile.LoggingInfo("Creating allergy.");
                 _pathogen = value;
                 ValidationContext context = new ValidationContext(this);
                 var results = new List<ValidationResult>();
@@ -45,7 +43,7 @@ namespace EHospital.Allergies.WebAPI.Views
                                           + Environment.NewLine);
                     }
 
-                    log.Error(errorMessage.ToString());
+                    LoggingToFile.LoggingError(errorMessage.ToString());
                     return;
                 }
             }

@@ -1,5 +1,5 @@
 ﻿using EHospital.Allergies.Model;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EHospital.Allergies.BusinesLogic.Contracts
@@ -10,13 +10,13 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Gets all symptoms.
         /// </summary>
         /// <returns>Enumeration of symptoms.</returns>
-        IQueryable<Symptom> GetAllSymptoms();
+        Task<IEnumerable<Symptom>> GetAllSymptoms();
 
         /// <summary>
         /// Searches the symptoms by name beginning.
         /// </summary>
         /// <returns>Enumeration of symptoms with start substring.</returns>
-        Task<IQueryable<Symptom>> SearchSymptomsByName(string beginning);
+        Task<IEnumerable<Symptom>> SearchSymptomsByName(string beginning);
 
         /// <summary>
         /// Gets the symptom.

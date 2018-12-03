@@ -7,7 +7,7 @@ using EHospital.Allergies.WebAPI.Views;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
 using System.Linq;
-using System.Reflection;
+using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -15,8 +15,6 @@ namespace EHospital.Allergies.WebAPI.Controllers
     [ApiController]
     public class AllergiesController : ControllerBase
     {
-        private static readonly log4net.ILog log = log4net.LogManager
-                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IAllergyService _allergy;
 
         public AllergiesController(IAllergyService allergy)
@@ -25,13 +23,13 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAllergies()
+        public async Task<IActionResult> GetAllAllergies()
         {
-            log.Info("Getting all allergies.");
-            var allergies = _allergy.GetAllAllergies();
+            LoggingToFile.LoggingInfo("Getting all allergies.");
+            var allergies = await _allergy.GetAllAllergies();
             if (!allergies.Any())
             {
-                log.Warn("No allergy recorded.");
+                LoggingToFile.LoggingWarn("No allergy recorded.");
                 return NotFound("No allergy recorded.");
             }
 
@@ -41,31 +39,31 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpGet("searchKey={searchKey}", Name = "SearchAllergyQuery")]
         public async Task<IActionResult> GetAllAllergies(string searchKey)
         {
-            log.Info($"Getting allergies by search key \"{searchKey}\".");
+            LoggingToFile.LoggingInfo($"Getting allergies by search key \"{searchKey}\".");
             var allergies = await _allergy.SearchAllergiesByName(searchKey);
             if (!allergies.Any())
             {
-                log.Warn($"No allergy found by \"{searchKey}\" search key.");
+                LoggingToFile.LoggingWarn($"No allergy found by \"{searchKey}\" search key.");
                 return NotFound("No allergy recorded.");
             }
 
-            log.Info($"Got {allergies.Count()} allergies with search key \"{searchKey}\".");
+            LoggingToFile.LoggingInfo($"Got {allergies.Count()} allergies with search key \"{searchKey}\".");
             return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
         }
 
         [HttpGet("{id}", Name = "AllergyById")]
         public async Task<IActionResult> GetAllergy(int id)
         {
-            log.Info($"Getting allergy by id = {id}.");
+            LoggingToFile.LoggingInfo($"Getting allergy by id = {id}.");
             try
             {
                 var allergy = await _allergy.GetAllergy(id);
-                log.Info($"Got allergy by id = {id}.");
+                LoggingToFile.LoggingInfo($"Got allergy by id = {id}.");
                 return Ok(Mapper.Map<AllergyView>(allergy));
             }
             catch (ArgumentNullException ex)
             {
-                log.Warn($"No allergy found by id = {id}.", ex);
+                LoggingToFile.LoggingWarn($"No allergy found by id = {id}.", ex);
                 return NotFound(ex.Message);
             }
         }
@@ -81,12 +79,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _allergy.CreateAllergyAsync(Mapper.Map<Allergy>(allergy));
-                log.Info($"Successfull create of {result.Pathogen} allergy.");
+                LoggingToFile.LoggingInfo($"Successfull create of {result.Pathogen} allergy.");
                 return Created("allergies", Mapper.Map<AllergyView>(result));
             }
             catch (ArgumentException ex)
             {
-                log.Error("Cannot insert allergy due to duplicate name.", ex);
+                LoggingToFile.LoggingError("Cannot insert allergy due to duplicate name.", ex);
                 return Conflict(ex.Message);
             }
         }
@@ -94,22 +92,22 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAllergy(int id)
         {
-            log.Info("Deleting allergy.");
+            LoggingToFile.LoggingInfo("Deleting allergy.");
 
             try
             {
                 var result = await _allergy.DeleteAllergyAsync(id);
-                log.Info($"{result.Pathogen} deleted successfully.");
+                LoggingToFile.LoggingInfo($"{result.Pathogen} deleted successfully.");
                 return Ok(Mapper.Map<AllergyView>(result));
             }
             catch (ArgumentNullException ex)
             {
-                log.Error(ex.Message, ex);
+                LoggingToFile.LoggingError(ex.Message, ex);
                 return NotFound(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                log.Warn(ex.Message, ex);
+                LoggingToFile.LoggingWarn(ex.Message, ex);
                 return Conflict(ex.Message);
             }
         }

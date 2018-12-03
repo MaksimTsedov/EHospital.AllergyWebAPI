@@ -7,15 +7,14 @@ using EHospital.Allergies.WebAPI.Views;
 using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
 using System.Linq;
+using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class SymptomsController : ControllerBase
-    {
-        private static readonly log4net.ILog log = log4net.LogManager
-                                                          .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    {   
         private readonly ISymptomService _symptom;
 
         public SymptomsController(ISymptomService symptom)
@@ -24,13 +23,13 @@ namespace EHospital.Allergies.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSymptoms()
+        public async Task<IActionResult> GetAllSymptoms()
         {
-            log.Info("Getting all symptoms.");
-            var symptoms = _symptom.GetAllSymptoms();
+            LoggingToFile.LoggingInfo("Getting all symptoms.");
+            var symptoms = await _symptom.GetAllSymptoms();
             if (!symptoms.Any())
             {
-                log.Warn("No symptom recorded.");
+                LoggingToFile.LoggingWarn("No symptom recorded.");
                 return NotFound("No symptoms recorded.");
             }
 
@@ -40,31 +39,31 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpGet("searchKey={searchKey}", Name = "SearchSymptomQuery")]
         public async Task<IActionResult> GetAllSymptoms(string searchKey)
         {
-            log.Info($"Getting symptoms by search key \"{searchKey}\".");
+            LoggingToFile.LoggingInfo($"Getting symptoms by search key \"{searchKey}\".");
             var symptoms = await _symptom.SearchSymptomsByName(searchKey);
             if (!symptoms.Any())
             {
-                log.Warn($"No symptom found by \"{searchKey}\" search key.");
+                LoggingToFile.LoggingWarn($"No symptom found by \"{searchKey}\" search key.");
                 return NotFound("No symptoms recorded.");
             }
 
-            log.Info($"Got {symptoms.Count()} symptoms with search key \"{searchKey}\".");
+            LoggingToFile.LoggingInfo($"Got {symptoms.Count()} symptoms with search key \"{searchKey}\".");
             return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
         }
 
         [HttpGet("{id}", Name = "SymptomById")]
         public async Task<IActionResult> GetSymptom(int id)
         {
-            log.Info($"Getting symptom by id = {id}.");
+            LoggingToFile.LoggingInfo($"Getting symptom by id = {id}.");
             try
             {
                 var symptom = await _symptom.GetSymptom(id);
-                log.Info($"Got symptom by id = {id}.");
+                LoggingToFile.LoggingInfo($"Got symptom by id = {id}.");
                 return Ok(Mapper.Map<SymptomView>(symptom));
             }
             catch (ArgumentNullException ex)
             {
-                log.Warn($"No symptom found by id = {id}.", ex);
+                LoggingToFile.LoggingWarn($"No symptom found by id = {id}.", ex);
                 return NotFound(ex.Message);
             }
         }
@@ -80,12 +79,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _symptom.CreateSymptomAsync(Mapper.Map<Symptom>(symptom));
-                log.Info($"Successfull create of {result.Naming} symptom.");
+                LoggingToFile.LoggingInfo($"Successfull create of {result.Naming} symptom.");
                 return Created("symptoms", Mapper.Map<SymptomView>(result));
             }
             catch (ArgumentException ex)
             {
-                log.Error("Cannot insert symptom due to duplicate name.", ex);
+                LoggingToFile.LoggingError("Cannot insert symptom due to duplicate name.", ex);
                 return Conflict(ex.Message);
             }
         }
@@ -93,21 +92,21 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteSymptom(int id)
         {
-            log.Info("Deleting symptom.");
+            LoggingToFile.LoggingInfo("Deleting symptom.");
             try
             {
                 var result = await _symptom.DeleteSymptomAsync(id);
-                log.Info($"{result.Naming} deleted successfully.");
+                LoggingToFile.LoggingInfo($"{result.Naming} deleted successfully.");
                 return Ok(Mapper.Map<SymptomView>(result));
             }
             catch (ArgumentNullException ex)
             {
-                log.Error(ex.Message, ex);
+                LoggingToFile.LoggingError(ex.Message, ex);
                 return NotFound(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                log.Warn(ex.Message, ex);
+                LoggingToFile.LoggingWarn(ex.Message, ex);
                 return Conflict(ex.Message);
             }
         }

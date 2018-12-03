@@ -10,7 +10,6 @@ namespace EHospital.Allergies.WebAPI
 {
     public class Program
     {
-        //private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static void Main(string[] args)
         {
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());            

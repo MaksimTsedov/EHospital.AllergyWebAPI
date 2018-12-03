@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.Allergies.Busines
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.Allergies.Model", "EHospital.Allergies.Model\EHospital.Allergies.Model.csproj", "{B23693DB-1857-419A-BE48-2E6A2BAD4151}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EHospital.Allergies.Tests", "EHospital.Allergies.Tests\EHospital.Allergies.Tests.csproj", "{A8F1E0F5-998F-41E5-A46D-4A5DB6065EE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EHospital.Allergies.Tests", "EHospital.Allergies.Tests\EHospital.Allergies.Tests.csproj", "{A8F1E0F5-998F-41E5-A46D-4A5DB6065EE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

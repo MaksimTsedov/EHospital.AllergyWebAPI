@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EHospital.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
@@ -10,8 +10,6 @@ namespace EHospital.Allergies.WebAPI.Views
     public class PatientAllergyUpdateRequest
     {
         private string _notes;
-        private static readonly log4net.ILog log = log4net.LogManager
-                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Gets or sets the allergy identifier.
@@ -47,7 +45,7 @@ namespace EHospital.Allergies.WebAPI.Views
 
             set
             {
-                log.Info("Updating patient allergy information.");
+                LoggingToFile.LoggingInfo("Updating patient allergy information.");
                 _notes = value;
                 ValidationContext context = new ValidationContext(this);
                 var results = new List<ValidationResult>();
@@ -64,7 +62,7 @@ namespace EHospital.Allergies.WebAPI.Views
                                           + Environment.NewLine);
                     }
 
-                    log.Error(errorMessage.ToString());
+                    LoggingToFile.LoggingError(errorMessage.ToString());
                     return;
                 }
             }
