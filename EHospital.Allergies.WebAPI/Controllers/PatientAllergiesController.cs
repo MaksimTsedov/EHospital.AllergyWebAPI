@@ -172,7 +172,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>HTTP response result.</returns>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatientAllergy(int id)
         {
             LoggingToFile.LoggingInfo("Deleting patient allergy.");
