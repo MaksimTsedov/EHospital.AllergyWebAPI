@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace EHospital.Allergies.Data
 {
     /// <summary>
-    /// Repository consists CRUD operations above data of type extending <see cref="IBaseEntity"> interface
+    /// Repository consists CRUD operations above data 
+    /// of type extending IBaseEntity interface.
     /// </summary>
-    /// <typeparam name="T">Entity.</typeparam>
-    /// <seealso cref="Allergies.Data.Contracts.IRepository{T}" />
+    /// <typeparam name="T">Base entity.</typeparam>
+    /// <seealso cref="EHospital.Allergies.Model.IRepository{T}" />
+    /// <seealso cref="EHospital.Allergies.Model.IBaseEntity" />
     public class Repository<T> : IRepository<T> where T : class, IBaseEntity
     {
         /// <summary>
