@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 
 namespace EHospital.Allergies.BusinesLogic.Contracts
 {
+    /// <summary>
+    /// Service abstraction for allergy symptoms
+    /// </summary>
     public interface IAllergySymptomService
     {
         /// <summary>
-        /// Gets all allergy symptoms.
+        /// Gets all symptoms of patient allergy.
         /// </summary>
-        /// <param name="patientAllergyId">The allergy identifier.</param>
+        /// <param name="patientAllergyId">The patient allergy identifier.</param>
         /// <returns>Enumeration of allergy symptoms.</returns>
         Task<IEnumerable<Symptom>> GetAllAllergySymptoms(int patientAllergyId);
 
@@ -17,14 +20,14 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Gets the allergy-symptom pair.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns>Allergy-symptom pair.</returns>
+        /// <returns>Symptom of patient allergy.</returns>
         Task<AllergySymptom> GetAllergySymptom(int id);
 
         /// <summary>
         /// Creates the allergy-symptom pair asynchronous and saves it into db.
         /// </summary>
         /// <param name="allergySymptom">The allergy-symptom pair.</param>
-        /// <returns>Allergy-symptom pair.</returns>
+        /// <returns>Created symptom of patient allergy.</returns>
         Task<AllergySymptom> CreateAllergySymptomAsync(AllergySymptom allergySymptom);
 
         /// <summary>

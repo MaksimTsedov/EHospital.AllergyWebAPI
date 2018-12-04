@@ -51,13 +51,13 @@ namespace EHospital.Allergies.Model
         IRepository<PatientInfo> PatientInfo { get; }
 
         /// <summary>
-        /// Soft cascade delete patient-allergy pair.
+        /// Soft cascade delete patient-allergy pair. Related on stored procedure.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of patient-allergy pair.</param>
         void CascadeDeletePatientAllergy(int id);
 
         /// <summary>
-        /// Saves this instance into db.
+        /// Saves changes into db.
         /// </summary>
         Task Save();
     }

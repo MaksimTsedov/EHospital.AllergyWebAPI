@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
+    /// <summary>
+    /// Allergy service business logic
+    /// </summary>
+    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.IAllergyService" />
     public class AllergyService : IAllergyService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -27,7 +31,6 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Enumeration of allergies.
         /// </returns>
-        /// <exception cref="NullReferenceException">No records in db.</exception>
         public async Task<IEnumerable<Allergy>> GetAllAllergies()
         {
             var result = _unitOfWork.Allergies.GetAll().OrderBy(a => a.Pathogen);
@@ -41,13 +44,13 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Allergy.
         /// </returns>
-        /// <exception cref="NullReferenceException">Allergy doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Allergy doesn`t exist.</exception>
         public async Task<Allergy> GetAllergy(int id)
         {
             var result = await _unitOfWork.Allergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Allergy doesn`t exist.", new ArgumentException(""));
+                throw new ArgumentNullException("Allergy doesn`t exist.");
             }
 
             return result;
@@ -56,11 +59,10 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <summary>
         /// Searches the allergies by name beginning.
         /// </summary>
-        /// <param name="searchKey">The beginning of naming.</param>
+        /// <param name="searchKey">The search key.</param>
         /// <returns>
         /// Enumeration of allergies with start substring.
         /// </returns>
-        /// <exception cref="NullReferenceException">Not found any allergy.</exception>
         public async Task<IEnumerable<Allergy>> SearchAllergiesByName(string searchKey)
         {
             var result = _unitOfWork.Allergies.GetAll(a => a.Pathogen.StartsWith(searchKey))
@@ -71,9 +73,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <summary>
         /// Creates the allergy asynchronous and saves it into db.
         /// </summary>
-        /// <param name="allergy">The allergy.</param>
+        /// <param name="allergy">The input validated allergy.</param>
         /// <returns>
-        /// Inserted allergy.
+        /// Created allergy.
         /// </returns>
         /// <exception cref="ArgumentException">Duplicate allergy.</exception>
         public async Task<Allergy> CreateAllergyAsync(Allergy allergy)
@@ -91,24 +93,24 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <summary>
         /// Deletes the allergy asynchronous from db.
         /// </summary>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">The identifier of allergy.</param>
         /// <returns>
         /// Deleted allergy.
         /// </returns>
         /// <exception cref="ArgumentNullException">No allergy found.</exception>
-        /// <exception cref="InvalidOperationException">There are exist records with involvment of this allergy.</exception>
+        /// <exception cref="InvalidOperationException">There are exist records with involvement of this allergy.</exception>
         public async Task<Allergy> DeleteAllergyAsync(int id)
         {
             var result = await _unitOfWork.Allergies.Get(id);
 
             if (result == null)
             {
-                throw new ArgumentNullException("No allergy found.", new ArgumentException(""));
+                throw new ArgumentNullException("No allergy found.");
             }
 
             if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == result.Id))
             {
-                throw new InvalidOperationException("There are exist records with involvment of this allergy.");
+                throw new InvalidOperationException("There are exist records with involvement of this allergy.");
             }
 
             result.IsDeleted = true;

@@ -1,5 +1,8 @@
 ﻿namespace EHospital.Allergies.WebAPI.Views
 {
+    /// <summary>
+    /// View model for notes of patient allergy
+    /// </summary>
     public class PatientAllergyNotesView
     {
         /// <summary>

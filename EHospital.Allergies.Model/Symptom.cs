@@ -37,7 +37,7 @@ namespace EHospital.Allergies.Model
         public bool IsDeleted { get; set; }
 
         /// <summary>
-        /// Gets or sets the allergy symptoms.
+        /// Gets or sets the allergy symptoms. EFCore reference on elements due to mapping on.
         /// </summary>
         /// <value>
         /// The allergy symptoms.

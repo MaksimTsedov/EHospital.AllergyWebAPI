@@ -28,7 +28,7 @@ namespace EHospital.Allergies.Model
         public int PatientId { get; set; }
 
         /// <summary>
-        /// Gets or sets the patient.
+        /// Gets or sets the patient. EFCore reference on element due to mapping on.
         /// </summary>
         /// <value>
         /// The patient.
@@ -45,7 +45,7 @@ namespace EHospital.Allergies.Model
         public int AllergyId { get; set; }
 
         /// <summary>
-        /// Gets or sets the allergy.
+        /// Gets or sets the allergy. EFCore reference on element due to mapping on.
         /// </summary>
         /// <value>
         /// The allergy.
@@ -95,7 +95,7 @@ namespace EHospital.Allergies.Model
         public DateTime? DeletionDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the allergy symptoms.
+        /// Gets or sets the allergy symptoms. EFCore reference on elements due to mapping on.
         /// </summary>
         /// <value>
         /// The allergy symptoms.
@@ -106,7 +106,7 @@ namespace EHospital.Allergies.Model
         /// Maps the specified patient allergy to this instance.
         /// </summary>
         /// <param name="patientAllergy">The patient-allergy pair.</param>
-        public void Bind(PatientAllergy patientAllergy)
+        public void Assign(PatientAllergy patientAllergy)
         {
             this.AllergyId = patientAllergy.AllergyId;
             this.Duration = patientAllergy.Duration;
@@ -116,7 +116,7 @@ namespace EHospital.Allergies.Model
         /// <summary>
         /// Clones the notes to this instance.
         /// </summary>
-        /// <param name="notesToSet">The notes to clone.</param>
+        /// <param name="notesToSet">The notes.</param>
         public void SetNotes(string notesToSet)
         {
             this.Notes = notesToSet;

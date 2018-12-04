@@ -11,24 +11,37 @@ using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for <see cref="BusinesLogic.Services.AllergySymptomService">
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
     [ApiController]
     public class AllergySymptomsController : ControllerBase
-    {
+    {        
         private readonly IAllergySymptomService _allergySymptom;
 
-        public AllergySymptomsController(IAllergySymptomService allergySymptom, ISymptomService symptoms)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AllergySymptomsController"/> class.
+        /// </summary>
+        /// <param name="allergySymptom">The allergy symptom.</param>
+        public AllergySymptomsController(IAllergySymptomService allergySymptom)
         {
             _allergySymptom = allergySymptom;
         }
 
+        /// <summary>
+        /// Gets all allergy symptoms by allergy id.
+        /// </summary>
+        /// <param name="allergyId">The allergy identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("allergyId={allegryId}")]
-        public async Task<IActionResult> GetAllAllergySymptoms(int allegryId)
+        public async Task<IActionResult> GetAllAllergySymptoms(int allergyId)
         {
             LoggingToFile.LoggingInfo("Receiving all symptoms of chosen patient allergy.");
             try
             {
-                var symptoms = await _allergySymptom.GetAllAllergySymptoms(allegryId);
+                var symptoms = await _allergySymptom.GetAllAllergySymptoms(allergyId);
                 LoggingToFile.LoggingInfo($"Successfully obtained {symptoms.Count()} symptoms.");
                 return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
             }
@@ -39,6 +52,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the allergy symptom by its id.
+        /// </summary>
+        /// <param name="allergySymptomId">The allergy-symptom pair identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("allergySymptomId={allergySymptomId}", Name = "AllergySymptomById")]
         public async Task<IActionResult> GetAllergySymptom(int allergySymptomId)
         {
@@ -56,6 +74,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates the allergy symptom from client.
+        /// </summary>
+        /// <param name="allergySymptom">The allergy symptom.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateAllergySymptom([FromBody]AllergySymptomRequest allergySymptom)
         {           
@@ -67,7 +90,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _allergySymptom.CreateAllergySymptomAsync(Mapper.Map<AllergySymptom>(allergySymptom));
-                LoggingToFile.LoggingInfo($"Successfull create of allergy-symptom pair.");
+                LoggingToFile.LoggingInfo($"Successful create of allergy-symptom pair.");
                 return Created("allergysymptoms", Mapper.Map<AllergySymptomView>(result));
             }
             catch (ArgumentNullException ex)
@@ -82,6 +105,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes the allergy symptom by id.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteAllergySymptom(int id)
         {

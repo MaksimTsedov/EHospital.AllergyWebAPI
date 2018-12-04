@@ -27,7 +27,7 @@ namespace EHospital.Allergies.Model
         public int PatientAllergyId { get; set; }
 
         /// <summary>
-        /// Gets or sets the patient allergy.
+        /// Gets or sets the patient allergy. EFCore reference on element due to mapping on.
         /// </summary>
         /// <value>
         /// The patient allergy.
@@ -44,7 +44,7 @@ namespace EHospital.Allergies.Model
         public int SymptomId { get; set; }
 
         /// <summary>
-        /// Gets or sets the symptom.
+        /// Gets or sets the symptom. EFCore reference on element due to mapping on.
         /// </summary>
         /// <value>
         /// The symptom.

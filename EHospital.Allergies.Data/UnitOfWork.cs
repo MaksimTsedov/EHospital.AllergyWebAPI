@@ -20,7 +20,6 @@ namespace EHospital.Allergies.Data
         /// </summary>
         private static AllergyDbContext _context;
 
-        // How about this approach?
         private readonly Lazy<Repository<Allergy>> _allergyRepository 
                    = new Lazy<Repository<Allergy>>(() => new Repository<Allergy>(_context));
         private readonly Lazy<Repository<Symptom>> _symptomRepository 
@@ -37,6 +36,10 @@ namespace EHospital.Allergies.Data
         /// </summary>
         private bool disposed = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+        /// </summary>
+        /// <param name="context">The allergy context.</param>
         public UnitOfWork(AllergyDbContext context)
         {
             _context = context;
@@ -113,9 +116,9 @@ namespace EHospital.Allergies.Data
         }
 
         /// <summary>
-        /// Soft cascade delete patient-allergy pair.
+        /// Soft cascade delete patient-allergy pair. Related on stored procedure.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of patient-allergy pair.</param>
         public void CascadeDeletePatientAllergy(int id)
         {
             var procId = new SqlParameter("@Id", id);
@@ -124,7 +127,7 @@ namespace EHospital.Allergies.Data
         }
 
         /// <summary>
-        /// Saves this instance into db.
+        /// Saves changes into db.
         /// </summary>
         public async Task Save()
         {

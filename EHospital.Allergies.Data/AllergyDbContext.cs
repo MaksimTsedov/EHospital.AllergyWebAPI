@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EHospital.Allergies.Data
 {
     /// <summary>
-    /// Database context for allergy
+    /// Database context for allergy service
     /// </summary>
     /// <seealso cref="Microsoft.EntityFrameworkCore.DbContext" />
     public class AllergyDbContext : DbContext
@@ -26,7 +26,7 @@ namespace EHospital.Allergies.Data
         public virtual DbSet<Allergy> Allergies { get; set; }
 
         /// <summary>
-        /// Gets or sets the allergy symptoms.
+        /// Gets or sets the allergy-symptom pairs.
         /// </summary>
         /// <value>
         /// The allergy symptoms.
@@ -34,7 +34,7 @@ namespace EHospital.Allergies.Data
         public virtual DbSet<AllergySymptom> AllergySymptoms { get; set; }
 
         /// <summary>
-        /// Gets or sets the patient allergies.
+        /// Gets or sets the patient-allergy pairs.
         /// </summary>
         /// <value>
         /// The patient allergies.
@@ -57,6 +57,7 @@ namespace EHospital.Allergies.Data
         /// </value>
         public virtual DbSet<PatientInfo> PatientInfo { get; }
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PatientAllergy>()

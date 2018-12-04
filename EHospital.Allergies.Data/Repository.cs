@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace EHospital.Allergies.Data
 {
     /// <summary>
-    /// Repository consists CRUD operations above data of 'T' type
+    /// Repository consists CRUD operations above data of type extending <see cref="IBaseEntity"> interface
     /// </summary>
     /// <typeparam name="T">Entity.</typeparam>
     /// <seealso cref="Allergies.Data.Contracts.IRepository{T}" />
@@ -47,7 +47,7 @@ namespace EHospital.Allergies.Data
         }
 
         /// <summary>
-        /// Gets all entities by the specified predicate.
+        /// Gets all entities by expression.
         /// </summary>
         /// <param name="predicate">The predicate to entity sample.</param>
         /// <returns>

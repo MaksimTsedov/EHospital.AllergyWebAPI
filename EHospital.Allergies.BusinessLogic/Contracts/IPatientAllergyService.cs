@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace EHospital.Allergies.BusinesLogic.Contracts
 {
+    /// <summary>
+    /// Service abstraction for allergies of patient
+    /// </summary>
     public interface IPatientAllergyService
     {
         /// <summary>
@@ -26,7 +29,7 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Creates the patient-allergy pair asynchronous and saves it into db.
         /// </summary>
         /// <param name="patientAllergy">The patient-allergy pair.</param>
-        /// <returns>Patient-allergy pair.</returns>
+        /// <returns>Created patient-allergy pair.</returns>
         Task<PatientAllergy> CreatePatientAllergyAsync(PatientAllergy patientAllergy);
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Updates the notes of patient-allergy pair asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="notes">The notes.</param>
+        /// <param name="notes">New notes.</param>
         /// <returns>
         /// Updated patient-allergy pair.
         /// </returns>
@@ -51,9 +54,6 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Deletes the patient-allergy pair asynchronous from db.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns>
-        /// Task.
-        /// </returns>
         Task DeletePatientAllergyAsync(int id);
     }
 }

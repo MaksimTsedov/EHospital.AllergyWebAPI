@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace EHospital.Allergies.Model
 {
     /// <summary>
-    /// Abstract CRUD operations for entity.
+    /// Repository pattern implementation. Abstract CRUD operations for entity.
     /// </summary>
-    /// <typeparam name="T">Entity.</typeparam>
+    /// <typeparam name="T">Base entity.</typeparam>
     public interface IRepository<T> where T : IBaseEntity
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace EHospital.Allergies.Model
         IQueryable<T> GetAll();
 
         /// <summary>
-        /// Gets all entities by the specified predicate.
+        /// Gets all entities by expression.
         /// </summary>
         /// <param name="predicate">The predicate to entity sample.</param>
         /// <returns>Entity collection.</returns>

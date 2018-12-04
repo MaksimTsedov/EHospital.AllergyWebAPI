@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
+    /// <summary>
+    /// Patient allergy service business logic
+    /// </summary>
+    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.IPatientAllergyService" />
     public class PatientAllergyService : IPatientAllergyService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -28,12 +32,11 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// List of allergies of chosen patient.
         /// </returns>
-        /// <exception cref="NullReferenceException">Not found any allergy of chosen patient.</exception>
         public async Task<IEnumerable<PatientAllergy>> GetAllPatientAllergies(int patientId)
         {
             var result = await Task.FromResult(_unitOfWork.PatientAllergies.Include(pa => pa.Allergy)                                         
                                                .Include(a => a.AllergySymptoms)                                              
-                                               .ThenInclude(a => (a as AllergySymptom).Symptom) // It have an Intellisense issue if it isn`t cast to type
+                                               .ThenInclude(a => (a as AllergySymptom).Symptom)
                                                .Where(a => a.PatientId == patientId));
             return result;
         }
@@ -52,7 +55,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                                                                            .FirstOrDefault(pa => pa.Id == id));
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
             return result;
@@ -63,12 +66,13 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </summary>
         /// <param name="patientAllergy">The patient-allergy pair.</param>
         /// <returns>
-        /// Patient-allergy pair.
+        /// Created patient-allergy pair.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Not found such patient.
         /// or
-        /// Not found such allergy.</exception>
+        /// Not found such allergy.
+        /// </exception>
         /// <exception cref="ArgumentException">Duplicate patient-allergy pair.</exception>
         public async Task<PatientAllergy> CreatePatientAllergyAsync(PatientAllergy patientAllergy)
         {
@@ -78,12 +82,12 @@ namespace EHospital.Allergies.BusinesLogic.Services
 
             if (patientInfo == null)
             {
-                throw new ArgumentNullException("Not found such patient.", new ArgumentException(""));
+                throw new ArgumentNullException("Not found such patient.");
             }
 
             if (allergy == null)
             {
-                throw new ArgumentNullException("Not found such allergy.", new ArgumentException(""));
+                throw new ArgumentNullException("Not found such allergy.");
             }
 
             if (_unitOfWork.PatientAllergies.GetAll().Any(a => a.AllergyId == patientAllergy.AllergyId
@@ -107,6 +111,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Updated patient-allergy pair.
         /// </returns>
         /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
+        /// <exception cref="ArgumentException">Duplicate patient-allergy pair.</exception>
         public async Task<PatientAllergy> UpdatePatientAllergyAsync(int id, PatientAllergy patientAllergy)
         {
             PatientAllergy result = await _unitOfWork.PatientAllergies.Get(id);
@@ -114,7 +119,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         
             if (result == null || allergyUpdate == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException(""));
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
             if (result.AllergyId != patientAllergy.AllergyId)
@@ -126,7 +131,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
                 }
             }
             
-            result.Bind(patientAllergy);
+            result.Assign(patientAllergy);
             _unitOfWork.PatientAllergies.Update(result);
             await _unitOfWork.Save();
             return result;
@@ -136,7 +141,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Updates the notes of patient-allergy pair asynchronous.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="notes">The notes.</param>
+        /// <param name="notes">New notes.</param>
         /// <returns>
         /// Updated patient-allergy pair.
         /// </returns>
@@ -146,7 +151,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             var result = await _unitOfWork.PatientAllergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
             result.SetNotes(notes);
@@ -159,16 +164,13 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// Deletes the patient-allergy pair asynchronous from db.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns>
-        /// Task.
-        /// </returns>
         /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
         public async Task DeletePatientAllergyAsync(int id)
         {
             var result = await _unitOfWork.PatientAllergies.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.", new ArgumentException());
+                throw new ArgumentNullException("Patient-allergy pair doesn`t exist.");
             }
 
             _unitOfWork.CascadeDeletePatientAllergy(id);

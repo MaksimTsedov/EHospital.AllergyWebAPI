@@ -7,6 +7,9 @@ using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
 {
+    /// <summary>
+    /// Symptom record for filling in from client
+    /// </summary>
     public class SymptomRequest
     {
         private string _naming;

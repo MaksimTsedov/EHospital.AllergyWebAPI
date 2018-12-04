@@ -11,17 +11,30 @@ using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for <see cref="BusinesLogic.Services.PatientAllergyService">
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
     [ApiController]
     public class PatientAllergiesController : ControllerBase
     {
         private readonly IPatientAllergyService _patientAllergy;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PatientAllergiesController"/> class.
+        /// </summary>
+        /// <param name="patientAllergy">The patient allergy.</param>
         public PatientAllergiesController(IPatientAllergyService patientAllergy)
         {
             this._patientAllergy = patientAllergy;
         }
 
+        /// <summary>
+        /// Gets all patient allergies by patient id.
+        /// </summary>
+        /// <param name="patientId">The patient identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("patientId={patientId}")]
         public async Task<IActionResult> GetAllPatientAllergies(int patientId)
         {
@@ -37,6 +50,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             return Ok(Mapper.Map<IEnumerable<PatientAllergiesSymptomsView>>(allergies));
         }
 
+        /// <summary>
+        /// Gets the patient-allergy record by id.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("id={id}", Name = "PatientAllergyById")]
         public async Task<IActionResult> GetPatientAllergy(int id)
         {
@@ -54,6 +72,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates the patient allergy.
+        /// </summary>
+        /// <param name="patientAllergy">The patient-allergy data from client.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpPost]
         public async Task<IActionResult> CreatePatientAllergy([FromBody]PatientAllergyRequest patientAllergy)
         {
@@ -80,6 +103,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the patient allergy info.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="patientAllergy">The patient allergy new info.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpPut("id={id}", Name = "UpdatePatientAllergy")]
         public async Task<IActionResult> UpdatePatientAllergy(int id, [FromBody]PatientAllergyUpdateRequest patientAllergy)
         {            
@@ -106,6 +135,12 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the patient allergy notes.
+        /// </summary>
+        /// <param name="idToUpdateNotes">The identifier of patient allergy record.</param>
+        /// <param name="notes">The notes.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpPut("idToUpdateNotes={idToUpdateNotes}", Name = "UpdateNotes")]
         public async Task<IActionResult> UpdatePatientAllergyNotes(int idToUpdateNotes, [FromBody]string notes)
         {
@@ -132,6 +167,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes the patient allergy record.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpDelete]
         public async Task<IActionResult> DeletePatientAllergy(int id)
         {

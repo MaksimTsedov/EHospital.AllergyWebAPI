@@ -11,17 +11,29 @@ using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for <see cref="BusinesLogic.Services.AllergyService"/>
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
     [ApiController]
     public class AllergiesController : ControllerBase
     {
         private readonly IAllergyService _allergy;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AllergiesController"/> class.
+        /// </summary>
+        /// <param name="allergy">The allergy.</param>
         public AllergiesController(IAllergyService allergy)
         {
             _allergy = allergy;
         }
 
+        /// <summary>
+        /// Gets all allergies.
+        /// </summary>
+        /// <returns>HTTP response result.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllAllergies()
         {
@@ -36,6 +48,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
         }
 
+        /// <summary>
+        /// Gets all allergies by search key.
+        /// </summary>
+        /// <param name="searchKey">The search key.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("searchKey={searchKey}", Name = "SearchAllergyQuery")]
         public async Task<IActionResult> GetAllAllergies(string searchKey)
         {
@@ -51,6 +68,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
         }
 
+        /// <summary>
+        /// Gets the allergy by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("{id}", Name = "AllergyById")]
         public async Task<IActionResult> GetAllergy(int id)
         {
@@ -68,6 +90,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates the allergy.
+        /// </summary>
+        /// <param name="allergy">The allergy got from client.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateAllergy([FromBody]AllergyRequest allergy)
         {
@@ -79,7 +106,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _allergy.CreateAllergyAsync(Mapper.Map<Allergy>(allergy));
-                LoggingToFile.LoggingInfo($"Successfull create of {result.Pathogen} allergy.");
+                LoggingToFile.LoggingInfo($"Successful create of {result.Pathogen} allergy.");
                 return Created("allergies", Mapper.Map<AllergyView>(result));
             }
             catch (ArgumentException ex)
@@ -89,6 +116,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes the allergy by id.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteAllergy(int id)
         {

@@ -8,12 +8,18 @@ using System.Text;
 namespace EHospital.Allergies.WebAPI.Views
 {
     /// <summary>
-    /// Allergy view model for filling in
+    /// Allergy model for filling in from client
     /// </summary>
     public class AllergyRequest
     {
         private string _pathogen;
 
+        /// <summary>
+        /// Gets or sets the naming of allergy.
+        /// </summary>
+        /// <value>
+        /// The pathogen.
+        /// </value>
         [Required(ErrorMessage = "Please enter the pathogen of allergy.")]
         [MaxLength(200, ErrorMessage = "Pathogen can`t have so long naming.")]
         [MinLength(2, ErrorMessage = "Too short naming for pathogen.")]

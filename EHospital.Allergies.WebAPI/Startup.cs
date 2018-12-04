@@ -14,11 +14,18 @@ using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace EHospital.Allergies.WebAPI
 {
+    /// <summary>
+    /// Configuration object for allergy service.
+    /// </summary>
     public class Startup
     {
 
         private static readonly log4net.ILog log = log4net.LogManager
                                                           .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,7 +33,10 @@ namespace EHospital.Allergies.WebAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.  
+        /// </summary>
+        /// <param name="services">The services.</param>      
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AllergyDbContext>(options =>
@@ -76,7 +86,12 @@ namespace EHospital.Allergies.WebAPI
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        //      
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.   
+        /// </summary>
+        /// <param name="app">The application build.</param>
+        /// <param name="env">The hosting environment.</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

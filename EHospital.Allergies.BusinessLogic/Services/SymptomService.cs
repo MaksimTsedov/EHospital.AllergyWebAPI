@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
+    /// <summary>
+    /// Symptom service business logic
+    /// </summary>
+    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.ISymptomService" />
     public class SymptomService : ISymptomService
     {
         IUnitOfWork _unitOfWork;
@@ -27,20 +31,18 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Enumeration of symptoms.
         /// </returns>
-        /// <exception cref="NullReferenceException">No records in db.</exception>
         public async Task<IEnumerable<Symptom>> GetAllSymptoms()
         {
             return await Task.FromResult(_unitOfWork.Symptoms.GetAll().OrderBy(s => s.Naming));
         }
 
         /// <summary>
-        /// Searches the symptoms by name beginning.
+        /// Searches the symptoms by search key.
         /// </summary>
-        /// <param name="searchKey"></param>
+        /// <param name="searchKey">The start of symptom naming.</param>
         /// <returns>
         /// Enumeration of symptoms with start substring.
         /// </returns>
-        /// <exception cref="NullReferenceException">No symptoms exist.</exception>
         public async Task<IEnumerable<Symptom>> SearchSymptomsByName(string searchKey)
         {
             var result = await Task.FromResult(_unitOfWork.Symptoms.GetAll(s => s.Naming.StartsWith(searchKey))
@@ -55,13 +57,13 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Symptom.
         /// </returns>
-        /// <exception cref="NullReferenceException">Symptom doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Symptom doesn`t exist.</exception>
         public async Task<Symptom> GetSymptom(int id)
         {
             var result = await _unitOfWork.Symptoms.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("Symptom doesn`t exist.", new ArgumentException(""));
+                throw new ArgumentNullException("Symptom doesn`t exist.");
             }
 
             return result;
@@ -72,7 +74,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </summary>
         /// <param name="symptom">The symptom.</param>
         /// <returns>
-        /// Symptom.
+        /// Created symptom.
         /// </returns>
         /// <exception cref="ArgumentException">Duplicate symptom.</exception>
         public async Task<Symptom> CreateSymptomAsync(Symptom symptom)
@@ -94,14 +96,14 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Deleted symptom.
         /// </returns>
-        /// <exception cref="NullReferenceException">No symptom found.</exception>
-        /// <exception cref="ArgumentException">There are exist records with involvement of this symptom.</exception>
+        /// <exception cref="ArgumentNullException">No symptom found.</exception>
+        /// <exception cref="InvalidOperationException">There are exist records with involvement of this symptom.</exception>
         public async Task<Symptom> DeleteSymptomAsync(int id)
         {
             var result = await _unitOfWork.Symptoms.Get(id);
             if (result == null)
             {
-                throw new ArgumentNullException("No symptom found.", new ArgumentException(""));
+                throw new ArgumentNullException("No symptom found.");
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(s => s.SymptomId == result.Id))

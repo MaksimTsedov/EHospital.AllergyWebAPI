@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EHospital.Allergies.Model
 {
+    /// <summary>
+    /// Patient info entity
+    /// </summary>
+    /// <seealso cref="EHospital.Allergies.Model.IBaseEntity" />
     public class PatientInfo : IBaseEntity
     {
         /// <summary>
@@ -15,7 +19,7 @@ namespace EHospital.Allergies.Model
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the patient allergies.
+        /// Gets or sets the patient allergies. EFCore reference on elements due to mapping on.
         /// </summary>
         /// <value>
         /// The patient allergies.

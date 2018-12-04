@@ -1,5 +1,8 @@
 ﻿namespace EHospital.Allergies.WebAPI.Views
 {
+    /// <summary>
+    /// Allergy symptom view model. Hides unnecessary returned information.
+    /// </summary>
     public class AllergySymptomView
     {
         /// <summary>

@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace EHospital.Allergies.BusinesLogic.Contracts
 {
+    /// <summary>
+    /// Service abstraction for allergies working on
+    /// </summary>
     public interface IAllergyService
     {
         /// <summary>
@@ -15,11 +18,11 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// <summary>
         /// Searches the allergies by name beginning.
         /// </summary>
-        /// <param name="beginning">The beginning of naming.</param>
+        /// <param name="searchKey">The search key.</param>
         /// <returns>
         /// Enumeration of allergies with start substring.
         /// </returns>
-        Task<IEnumerable<Allergy>> SearchAllergiesByName(string beginning);
+        Task<IEnumerable<Allergy>> SearchAllergiesByName(string searchKey);
 
         /// <summary>
         /// Gets the allergy.
@@ -31,14 +34,14 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// <summary>
         /// Creates the allergy asynchronous and saves it into db.
         /// </summary>
-        /// <param name="allergy">The allergy.</param>
-        /// <returns>Allergy.</returns>
+        /// <param name="allergy">The input validated allergy.</param>
+        /// <returns>Created allergy.</returns>
         Task<Allergy> CreateAllergyAsync(Allergy allergy);
 
         /// <summary>
         /// Deletes the allergy asynchronous from db.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="id">The identifier of allergy.</param>
         /// <returns>
         /// Deleted allergy.
         /// </returns>

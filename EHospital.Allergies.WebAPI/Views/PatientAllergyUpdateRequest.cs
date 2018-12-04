@@ -7,6 +7,9 @@ using System.Text;
 
 namespace EHospital.Allergies.WebAPI.Views
 {
+    /// <summary>
+    /// Model for update info.
+    /// </summary>
     public class PatientAllergyUpdateRequest
     {
         private string _notes;
@@ -26,7 +29,7 @@ namespace EHospital.Allergies.WebAPI.Views
         /// <value>
         /// The allergy duration.
         /// </value>
-        [MaxLength(25, ErrorMessage = "Please, input duration in one calculus(like '3 years' or '5 monthes').")]
+        [MaxLength(25, ErrorMessage = "Please, input duration in one calculus(like '3 years' or '5 months').")]
         public string Duration { get; set; }
 
         /// <summary>

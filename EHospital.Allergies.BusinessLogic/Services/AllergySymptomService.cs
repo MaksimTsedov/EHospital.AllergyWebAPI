@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.BusinesLogic.Services
 {
+    /// <summary>
+    /// Service on symptoms of patient allergy
+    /// </summary>
+    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.IAllergySymptomService" />
     public class AllergySymptomService : IAllergySymptomService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,9 +26,9 @@ namespace EHospital.Allergies.BusinesLogic.Services
         }
 
         /// <summary>
-        /// Gets all allergy symptoms.
+        /// Gets all symptoms of patient allergy.
         /// </summary>
-        /// <param name="patientAllergyId">The patient-allergy identifier.</param>
+        /// <param name="patientAllergyId">The patient allergy identifier.</param>
         /// <returns>
         /// Enumeration of allergy symptoms.
         /// </returns>
@@ -51,15 +55,15 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>
-        /// Allergy-symptom pair.
+        /// Symptom of patient allergy.
         /// </returns>
-        /// <exception cref="ArgumentNullException">Symptom doesn`t exist.</exception>
+        /// <exception cref="ArgumentNullException">Allergy-symptom pair doesn`t exist.</exception>
         public async Task<AllergySymptom> GetAllergySymptom(int id)
         {
             var result = _unitOfWork.AllergySymptoms.Include(a => a.Symptom).FirstOrDefault(a => a.Id == id);
             if (result == null)
             {
-                throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.", new ArgumentException(""));
+                throw new ArgumentNullException("Allergy-symptom pair doesn`t exist.");
             }
 
             return await Task.FromResult(result);
@@ -70,18 +74,15 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </summary>
         /// <param name="allergySymptom">The allergy-symptom pair.</param>
         /// <returns>
-        /// Allergy-symptom pair.
+        /// Created symptom of patient allergy.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Not found such allergy of patient.
         /// or
         /// Not found such symptom.
         /// </exception>
-        /// <exception cref="ArgumentException">Duplicate allergy-symptom pair.</exception>
-        /// <exception cref="NullReferenceException">
-        /// Not found such allergy of patient.
-        /// or
-        /// Not found such symptom.
+        /// <exception cref="ArgumentException">
+        /// Duplicate allergy-symptom pair.
         /// </exception>
         public async Task<AllergySymptom> CreateAllergySymptomAsync(AllergySymptom allergySymptom)
         {
@@ -91,12 +92,12 @@ namespace EHospital.Allergies.BusinesLogic.Services
 
             if (patientAllergy == null)
             {
-                throw new ArgumentNullException("Not found such allergy of patient.", new ArgumentException(""));
+                throw new ArgumentNullException("Not found such allergy of patient.");
             }
 
             if (symptom == null)
             {
-                throw new ArgumentNullException("Not found such symptom.", new ArgumentException(""));
+                throw new ArgumentNullException("Not found such symptom.");
             }
 
             if (_unitOfWork.AllergySymptoms.GetAll().Any(a => a.PatientAllergyId == allergySymptom.PatientAllergyId
@@ -115,16 +116,16 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>
-        /// Deleted allergy-symptom pair
+        /// Deleted allergy-symptom
         /// </returns>
-        /// <exception cref="ArgumentNullException">No symptom of allergy found.</exception>
+        /// <exception cref="ArgumentNullException">No symptom of allergy of patient found.</exception>
         public async Task<AllergySymptom> DeleteAllergySymptomAsync(int id)
         {
             var result = await Task.FromResult(_unitOfWork.AllergySymptoms.Include(a => a.Symptom)
                                                                           .FirstOrDefault(a => a.Id == id));
             if (result == null)
             {
-                throw new ArgumentNullException("No sympthom of allergy of patient found.", new ArgumentException(""));
+                throw new ArgumentNullException("No symptom of allergy of patient found.");
             }
 
             result.IsDeleted = true;

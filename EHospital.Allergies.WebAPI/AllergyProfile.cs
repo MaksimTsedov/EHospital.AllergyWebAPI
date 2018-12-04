@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace EHospital.Allergies.WebAPI
 {
+    /// <summary>
+    /// Map profile for correct view relate to models.
+    /// </summary>
+    /// <seealso cref="AutoMapper.Profile" />
     public class AllergyProfile : Profile
     {
         /// <summary>

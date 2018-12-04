@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace EHospital.Allergies.BusinesLogic.Contracts
 {
+    /// <summary>
+    /// Service abstraction for symptoms working on
+    /// </summary>
     public interface ISymptomService
     {
         /// <summary>
@@ -13,10 +16,13 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         Task<IEnumerable<Symptom>> GetAllSymptoms();
 
         /// <summary>
-        /// Searches the symptoms by name beginning.
+        /// Searches the symptoms by search key.
         /// </summary>
-        /// <returns>Enumeration of symptoms with start substring.</returns>
-        Task<IEnumerable<Symptom>> SearchSymptomsByName(string beginning);
+        /// <param name="searchKey">The start of symptom naming.</param>
+        /// <returns>
+        /// Enumeration of symptoms with start substring.
+        /// </returns>
+        Task<IEnumerable<Symptom>> SearchSymptomsByName(string searchKey);
 
         /// <summary>
         /// Gets the symptom.
@@ -29,7 +35,7 @@ namespace EHospital.Allergies.BusinesLogic.Contracts
         /// Creates the symptom asynchronous and saves it into db.
         /// </summary>
         /// <param name="symptom">The symptom.</param>
-        /// <returns>Symptom.</returns>
+        /// <returns>Created symptom.</returns>
         Task<Symptom> CreateSymptomAsync(Symptom symptom);
 
         /// <summary>

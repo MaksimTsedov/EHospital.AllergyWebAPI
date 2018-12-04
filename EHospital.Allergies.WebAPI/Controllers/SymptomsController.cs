@@ -11,17 +11,29 @@ using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
+    /// <summary>
+    /// Controller for <see cref="BusinesLogic.Services.SymptomService">
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
     [ApiController]
     public class SymptomsController : ControllerBase
     {   
         private readonly ISymptomService _symptom;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SymptomsController"/> class.
+        /// </summary>
+        /// <param name="symptom">The symptom.</param>
         public SymptomsController(ISymptomService symptom)
         {
             _symptom = symptom;
         }
 
+        /// <summary>
+        /// Gets all symptoms.
+        /// </summary>
+        /// <returns>HTTP response result.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllSymptoms()
         {
@@ -36,6 +48,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
         }
 
+        /// <summary>
+        /// Gets all symptoms by search key.
+        /// </summary>
+        /// <param name="searchKey">The search key.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("searchKey={searchKey}", Name = "SearchSymptomQuery")]
         public async Task<IActionResult> GetAllSymptoms(string searchKey)
         {
@@ -51,6 +68,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
         }
 
+        /// <summary>
+        /// Gets the symptom by id.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpGet("{id}", Name = "SymptomById")]
         public async Task<IActionResult> GetSymptom(int id)
         {
@@ -68,6 +90,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates the symptom.
+        /// </summary>
+        /// <param name="symptom">The symptom info got from client.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateSymptom([FromBody]SymptomRequest symptom)
         {
@@ -79,7 +106,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _symptom.CreateSymptomAsync(Mapper.Map<Symptom>(symptom));
-                LoggingToFile.LoggingInfo($"Successfull create of {result.Naming} symptom.");
+                LoggingToFile.LoggingInfo($"Successful create of {result.Naming} symptom.");
                 return Created("symptoms", Mapper.Map<SymptomView>(result));
             }
             catch (ArgumentException ex)
@@ -89,6 +116,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes the symptom.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>HTTP response result.</returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteSymptom(int id)
         {

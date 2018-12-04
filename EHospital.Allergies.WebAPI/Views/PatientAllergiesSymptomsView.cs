@@ -2,6 +2,9 @@
 
 namespace EHospital.Allergies.WebAPI.Views
 {
+    /// <summary>
+    /// View model for detailed information of patient allergy.
+    /// </summary>
     public class PatientAllergiesSymptomsView
     {
         /// <summary>
