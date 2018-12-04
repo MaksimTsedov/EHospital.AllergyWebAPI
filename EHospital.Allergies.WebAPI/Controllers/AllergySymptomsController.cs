@@ -35,7 +35,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         /// </summary>
         /// <param name="allergyId">The allergy identifier.</param>
         /// <returns>HTTP response result.</returns>
-        [HttpGet("allergyId={allegryId}")]
+        [HttpGet("allergyId={allergyId}")]
         public async Task<IActionResult> GetAllAllergySymptoms(int allergyId)
         {
             LoggingToFile.LoggingInfo("Receiving all symptoms of chosen patient allergy.");

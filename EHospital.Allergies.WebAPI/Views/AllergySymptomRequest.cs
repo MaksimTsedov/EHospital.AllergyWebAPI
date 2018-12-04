@@ -21,6 +21,7 @@ namespace EHospital.Allergies.WebAPI.Views
         /// The patient-allergy pair identifier.
         /// </value>
         [Required(ErrorMessage = "It is required to give symptom to certain patient allergy.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Input correct id.")]
         public int PatientAllergyId { get; set; }
 
         /// <summary>
@@ -30,6 +31,7 @@ namespace EHospital.Allergies.WebAPI.Views
         /// The symptom identifier.
         /// </value>
         [Required(ErrorMessage = "Please select symptom.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Input correct id.")]
         public int SymptomId
         {
             get

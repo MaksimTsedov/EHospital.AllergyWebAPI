@@ -21,6 +21,7 @@ namespace EHospital.Allergies.WebAPI.Views
         /// The allergy identifier.
         /// </value>
         [Required(ErrorMessage = "Please select allergy.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Input correct id.")]
         public int AllergyId { get; set; }
 
         /// <summary>
