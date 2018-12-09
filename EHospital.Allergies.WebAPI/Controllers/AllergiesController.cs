@@ -59,13 +59,14 @@ namespace EHospital.Allergies.WebAPI.Controllers
         {
             LoggingToFile.LoggingInfo($"Getting allergies by search key \"{searchKey}\".");
             var allergies = await _allergy.SearchAllergiesByName(searchKey);
-            if (!allergies.Any())
+            var allergyList = allergies as Allergy[] ?? allergies.ToArray();
+            if (!allergyList.Any())
             {
                 LoggingToFile.LoggingWarn($"No allergy found by \"{searchKey}\" search key.");
                 return NotFound("No allergy recorded.");
             }
 
-            LoggingToFile.LoggingInfo($"Got {allergies.Count()} allergies with search key \"{searchKey}\".");
+            LoggingToFile.LoggingInfo($"Got {allergyList.Count()} allergies with search key \"{searchKey}\".");
             return Ok(Mapper.Map<IEnumerable<AllergyView>>(allergies));
         }
 
@@ -99,7 +100,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAllergy([FromBody]AllergyRequest allergy)
         {
-            if (!(allergy is AllergyRequest))
+            if (allergy == null)
             {
                 return BadRequest(ModelState);
             }

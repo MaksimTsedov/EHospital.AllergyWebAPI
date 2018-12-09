@@ -13,7 +13,7 @@ using EHospital.Logging;
 namespace EHospital.Allergies.WebAPI.Controllers
 {
     /// <summary>
-    /// Controller for <see cref="SymptomService">
+    /// Controller for <see cref="SymptomService" />
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
@@ -59,13 +59,14 @@ namespace EHospital.Allergies.WebAPI.Controllers
         {
             LoggingToFile.LoggingInfo($"Getting symptoms by search key \"{searchKey}\".");
             var symptoms = await _symptom.SearchSymptomsByName(searchKey);
-            if (!symptoms.Any())
+            var symptomList = symptoms.ToList();
+            if (!symptomList.Any())
             {
                 LoggingToFile.LoggingWarn($"No symptom found by \"{searchKey}\" search key.");
                 return NotFound("No symptoms recorded.");
             }
 
-            LoggingToFile.LoggingInfo($"Got {symptoms.Count()} symptoms with search key \"{searchKey}\".");
+            LoggingToFile.LoggingInfo($"Got {symptomList.Count()} symptoms with search key \"{searchKey}\".");
             return Ok(Mapper.Map<IEnumerable<SymptomView>>(symptoms));
         }
 
@@ -99,7 +100,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSymptom([FromBody]SymptomRequest symptom)
         {
-            if (!(symptom is SymptomRequest))
+            if (symptom == null)
             {
                 return BadRequest(ModelState);
             }

@@ -40,7 +40,7 @@ namespace EHospital.Allergies.Tests
             var actual = new SymptomService(_mockData.Object).GetAllSymptoms().Result.ToList();
 
             //Assert
-            Assert.AreEqual(actual.Count(), 3);
+            Assert.AreEqual(actual.Count, 3);
             Assert.AreEqual("abrikos", actual[0].Naming);
             Assert.AreEqual("pomidor", actual[1].Naming);
             Assert.AreEqual("prisma", actual[2].Naming);
@@ -84,7 +84,7 @@ namespace EHospital.Allergies.Tests
             var actual = new SymptomService(_mockData.Object).SearchSymptomsByName("p").Result.ToList();
 
             //Assert
-            Assert.AreEqual(actual.Count(), 2);
+            Assert.AreEqual(actual.Count, 2);
             Assert.AreEqual("pomidor", actual[0].Naming);
             Assert.AreEqual("prisma", actual[1].Naming);
         }

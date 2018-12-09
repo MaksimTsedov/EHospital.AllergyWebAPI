@@ -40,7 +40,7 @@ namespace EHospital.Allergies.Tests
             var actual = new AllergyService(_mockData.Object).GetAllAllergies().Result.ToList();
 
             //Assert
-            Assert.AreEqual(actual.Count(), 3);
+            Assert.AreEqual(actual.Count, 3);
             //GetAll also descending sorting 
             Assert.AreEqual("abrikos", actual[0].Pathogen);
             Assert.AreEqual("pomidor", actual[1].Pathogen);

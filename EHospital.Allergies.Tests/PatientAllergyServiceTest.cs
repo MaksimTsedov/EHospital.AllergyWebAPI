@@ -48,7 +48,7 @@ namespace EHospital.Allergies.Tests
             var actual = new PatientAllergyService(_mockData.Object).GetAllPatientAllergies(1).Result.ToList();
 
             //Assert
-            Assert.AreEqual(actual.Count(), 2);
+            Assert.AreEqual(actual.Count, 2);
             Assert.AreEqual(_patientAllergyList[0], actual[0]);
             Assert.AreEqual(_patientAllergyList[1], actual[1]);
         }

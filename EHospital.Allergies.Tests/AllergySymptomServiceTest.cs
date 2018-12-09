@@ -50,7 +50,7 @@ namespace EHospital.Allergies.Tests
             var actual = new AllergySymptomService(_mockData.Object).GetAllAllergySymptoms(1).Result.ToList();
 
             //Assert
-            Assert.AreEqual(actual.Count(), 2);
+            Assert.AreEqual(actual.Count, 2);
             Assert.AreEqual("pomidor", actual[0].Naming);
             Assert.AreEqual("prisma", actual[1].Naming);
         }

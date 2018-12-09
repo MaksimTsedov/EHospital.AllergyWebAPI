@@ -18,25 +18,19 @@ namespace EHospital.Allergies.WebAPI
         {
             //Allergy
             CreateMap<Allergy, AllergyView>();
-            CreateMap<AllergyRequest, Allergy>().ConvertUsing(arg =>
+            CreateMap<AllergyRequest, Allergy>().ConvertUsing(arg => new Allergy()
             {
-                return new Allergy()
-                {
-                    Pathogen = arg.Pathogen
-                };
+                Pathogen = arg.Pathogen
             });
 
             //AllergySymptom
             CreateMap<AllergySymptom, AllergySymptomView>().
                                 ForMember(dest => dest.SymptomName, opt => opt.MapFrom
                                 (src => src.Symptom.Naming));
-            CreateMap<AllergySymptomRequest, AllergySymptom>().ConvertUsing(arg =>
+            CreateMap<AllergySymptomRequest, AllergySymptom>().ConvertUsing(arg => new AllergySymptom()
             {
-                return new AllergySymptom()
-                {
-                    PatientAllergyId = arg.PatientAllergyId,
-                    SymptomId = arg.SymptomId
-                };
+                PatientAllergyId = arg.PatientAllergyId,
+                SymptomId = arg.SymptomId
             });
 
             //PatientAllergy
@@ -50,36 +44,27 @@ namespace EHospital.Allergies.WebAPI
             CreateMap<PatientAllergy, PatientAllergyView>().
                                 ForMember(dest => dest.Allergy, opt => opt.MapFrom
                                 (src => src.Allergy.Pathogen));           
-            CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg =>
+            CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg => new PatientAllergy()
             {
-                return new PatientAllergy()
-                {
-                    PatientId = arg.PatientId,
-                    AllergyId = arg.AllergyId,
-                    Duration = arg.Duration,
-                    Notes = arg.Notes
-                };
+                PatientId = arg.PatientId,
+                AllergyId = arg.AllergyId,
+                Duration = arg.Duration,
+                Notes = arg.Notes
             });
-            CreateMap<PatientAllergyUpdateRequest, PatientAllergy>().ConvertUsing(arg =>
+            CreateMap<PatientAllergyUpdateRequest, PatientAllergy>().ConvertUsing(arg => new PatientAllergy()
             {
-                return new PatientAllergy()
-                {
-                    AllergyId = arg.AllergyId,
-                    Duration = arg.Duration,
-                    Notes = arg.Notes
-                };
+                AllergyId = arg.AllergyId,
+                Duration = arg.Duration,
+                Notes = arg.Notes
             });
             CreateMap<PatientAllergy, PatientAllergyNotesView>().
                 ForMember(desc => desc.Notes, opt => opt.MapFrom(c => c.Notes));
 
             //Symptoms
             CreateMap<Symptom, SymptomView>();
-            CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg =>
+            CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg => new Symptom()
             {
-                return new Symptom()
-                {
-                    Naming = arg.Naming
-                };
+                Naming = arg.Naming
             });
         }
     }
