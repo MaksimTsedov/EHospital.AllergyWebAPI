@@ -121,14 +121,14 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public async void Allergies_CreateAllergyAsync_IncorrectDueToDuplicateName()
+        public void Allergies_CreateAllergyAsync_IncorrectDueToDuplicateName()
         {
             //Arrange
             Allergy testAllergy = new Allergy { Id = 1, Pathogen = "abrikos" };
             _mockData.Setup(s => s.Allergies.GetAll()).Returns(_allergyList.AsQueryable);
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentException>(() => 
+            Assert.ThrowsExceptionAsync<ArgumentException>(() => 
                                          new AllergyService(_mockData.Object).CreateAllergyAsync(testAllergy));
         }
 
@@ -151,19 +151,19 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public async void Allergies_DeleteAllergyAsync_ThrowArgumentNullException(int id)
+        public void Allergies_DeleteAllergyAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.Allergies.Get(id)).ReturnsAsync(default(Allergy));
             _mockData.Setup(s => s.PatientAllergies.GetAll()).Returns(new List<PatientAllergy>().AsQueryable);
 
             //Act
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
                                      new AllergyService(_mockData.Object).DeleteAllergyAsync(id)); //Not found such allergy
         }
 
         [TestMethod]
-        public async void Allergies_DeleteAllergyAsync_LinkedToPatient_HasInvalidOperationException()
+        public void Allergies_DeleteAllergyAsync_LinkedToPatient_HasInvalidOperationException()
         {
             //Arrange
             _mockData.Setup(s => s.Allergies.Get(1)).ReturnsAsync(_allergyList[0]);
@@ -173,7 +173,7 @@ namespace EHospital.Allergies.Tests
             }.AsQueryable);
 
             //Act
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
                                     new AllergyService(_mockData.Object).DeleteAllergyAsync(1)); //Deleting allergy while we have records about this allergy in other tables
         }
     }

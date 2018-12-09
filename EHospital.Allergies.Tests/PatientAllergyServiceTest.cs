@@ -131,7 +131,7 @@ namespace EHospital.Allergies.Tests
         [DataRow(-1, 1)]
         [DataRow(1, -1)]
         [DataRow(-1, -1)]
-        public async void PatientAllergies_CreatePatientAllergyAsync_ThrowArgumentNullException(int patientId, int allergyId)
+        public void PatientAllergies_CreatePatientAllergyAsync_ThrowArgumentNullException(int patientId, int allergyId)
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { PatientId = patientId, AllergyId = allergyId };
@@ -142,12 +142,12 @@ namespace EHospital.Allergies.Tests
                      .ReturnsAsync(default(PatientInfo));
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                                     new PatientAllergyService(_mockData.Object).CreatePatientAllergyAsync(testPatientAllergy));
         }
 
         [TestMethod]
-        public async void PatientAllergies_CreatePatientAllergyAsync_ThrowArgumentExceptionDueToDuplicatePair()
+        public void PatientAllergies_CreatePatientAllergyAsync_ThrowArgumentExceptionDueToDuplicatePair()
         {
             //Arrange
             int id = 4;
@@ -166,7 +166,7 @@ namespace EHospital.Allergies.Tests
             });
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+            Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
                                     await new PatientAllergyService(_mockData.Object)
                                     .CreatePatientAllergyAsync(testPatientAllergy));
         }
@@ -196,7 +196,7 @@ namespace EHospital.Allergies.Tests
         [DataRow(2, 4)]
         [DataRow(0, 0)]
         [DataRow(-2, -4)]
-        public async void PatientAllergies_UpdatePatientAllergyAsync_ThrowArgumentNullException(int patientAllergyId, int allergyId)
+        public void PatientAllergies_UpdatePatientAllergyAsync_ThrowArgumentNullException(int patientAllergyId, int allergyId)
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4,  AllergyId = allergyId };
@@ -204,14 +204,14 @@ namespace EHospital.Allergies.Tests
             _mockData.Setup(s => s.Allergies.Get(allergyId)).ReturnsAsync(default(Allergy));
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(()
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(()
                                  => new PatientAllergyService(_mockData.Object)
                                         .UpdatePatientAllergyAsync(patientAllergyId, testPatientAllergy)); //Can`t update due to nonexistence such patient or allergy
 
         }
 
         [TestMethod]
-        public async void PatientAllergies_UpdatePatientAllergyAsync_ThrowArgumentExceptionDueToDuplicatePair()
+        public void PatientAllergies_UpdatePatientAllergyAsync_ThrowArgumentExceptionDueToDuplicatePair()
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4, AllergyId = 2 };
@@ -221,7 +221,7 @@ namespace EHospital.Allergies.Tests
             _mockData.Setup(s => s.PatientAllergies.Update(It.IsAny<PatientAllergy>())).Returns(testPatientAllergy);
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentException>(()
+            Assert.ThrowsExceptionAsync<ArgumentException>(()
                                 => new PatientAllergyService(_mockData.Object)
                                        .UpdatePatientAllergyAsync(2, testPatientAllergy));
         }
@@ -247,14 +247,14 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public async void PatientAllergies_UpdateNotesAsync_ThrowArgumentNullException(int patientAllergyId)
+        public void PatientAllergies_UpdateNotesAsync_ThrowArgumentNullException(int patientAllergyId)
         {
             //Arrange
             PatientAllergy testPatientAllergy = new PatientAllergy { Id = 4, Notes = "Test" };
             _mockData.Setup(s => s.PatientAllergies.Get(patientAllergyId)).ReturnsAsync(default(PatientAllergy));
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(()
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(()
                                  => new PatientAllergyService(_mockData.Object)
                                         .UpdateNotesAsync(patientAllergyId, testPatientAllergy.Notes)); //Not found such pair
         }
@@ -278,13 +278,13 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public async void PatientAllergies_DeletePatientAllergyAsync_ThrowArgumentNullException(int id)
+        public void PatientAllergies_DeletePatientAllergyAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.PatientAllergies.Get(1)).ReturnsAsync(default(PatientAllergy));
 
             //Assert
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                                     new PatientAllergyService(_mockData.Object).DeletePatientAllergyAsync(id));
         }
     }
