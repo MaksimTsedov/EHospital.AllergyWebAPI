@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Contracts;
 using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace EHospital.Allergies.BusinesLogic.Services
+namespace EHospital.Allergies.BusinessLogic.Services
 {
     /// <summary>
     /// Patient allergy service business logic
     /// </summary>
-    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.IPatientAllergyService" />
+    /// <seealso cref="IPatientAllergyService" />
     public class PatientAllergyService : IPatientAllergyService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -102,6 +102,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
             return result;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Updates the patient-allergy pair asynchronous.
         /// </summary>
@@ -110,8 +111,8 @@ namespace EHospital.Allergies.BusinesLogic.Services
         /// <returns>
         /// Updated patient-allergy pair.
         /// </returns>
-        /// <exception cref="ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
-        /// <exception cref="ArgumentException">Duplicate patient-allergy pair.</exception>
+        /// <exception cref="T:System.ArgumentNullException">Patient-allergy pair doesn`t exist.</exception>
+        /// <exception cref="T:System.ArgumentException">Duplicate patient-allergy pair.</exception>
         public async Task<PatientAllergy> UpdatePatientAllergyAsync(int id, PatientAllergy patientAllergy)
         {
             PatientAllergy result = await _unitOfWork.PatientAllergies.Get(id);

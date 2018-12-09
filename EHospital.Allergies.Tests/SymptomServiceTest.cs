@@ -1,5 +1,4 @@
-﻿using EHospital.Allergies.BusinesLogic.Services;
-using EHospital.Allergies.Model;
+﻿using EHospital.Allergies.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using EHospital.Allergies.BusinessLogic.Services;
 
 namespace EHospital.Allergies.Tests
 {
@@ -120,14 +120,14 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public void Symptoms_CreateSymptomAsync_ThrowAtgumentExceptionDueToDuplicate()
+        public async void Symptoms_CreateSymptomAsync_ThrowAtgumentExceptionDueToDuplicate()
         {
             //Arrange
             Symptom testSymptom = new Symptom { Id = 1, Naming = "abrikos" };
             _mockData.Setup(s => s.Symptoms.GetAll()).Returns(_symptomList.AsQueryable);
 
             //Assert
-            Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                     new SymptomService(_mockData.Object).CreateSymptomAsync(testSymptom));
         }
 
@@ -150,19 +150,19 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public void Symptoms_DeleteSymptomAsync_ThrowArgumentNullException(int id)
+        public async void Symptoms_DeleteSymptomAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.Symptoms.Get(id)).ReturnsAsync(default(Symptom));
             _mockData.Setup(s => s.AllergySymptoms.GetAll()).Returns(new List<AllergySymptom>().AsQueryable);
 
             //Act
-            Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                                     new SymptomService(_mockData.Object).DeleteSymptomAsync(id));
         }
 
         [TestMethod]
-        public void Symptoms_DeleteSymptomAsync_LinkedToPatientAllergy_HasInvalidOperationException()
+        public async void Symptoms_DeleteSymptomAsync_LinkedToPatientAllergy_HasInvalidOperationException()
         {
             //Arrange
             _mockData.Setup(s => s.Symptoms.Get(1)).ReturnsAsync(_symptomList[0]);
@@ -172,7 +172,7 @@ namespace EHospital.Allergies.Tests
             }.AsQueryable);
 
             //Act
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
                                     new SymptomService(_mockData.Object).DeleteSymptomAsync(1)); //Deleting symptom while we have records about this allergy in other tables
         }
     }

@@ -108,9 +108,9 @@ namespace EHospital.Allergies.Model
         /// <param name="patientAllergy">The patient-allergy pair.</param>
         public void Assign(PatientAllergy patientAllergy)
         {
-            this.AllergyId = patientAllergy.AllergyId;
-            this.Duration = patientAllergy.Duration;
-            this.Notes = patientAllergy.Notes;
+            AllergyId = patientAllergy.AllergyId;
+            Duration = patientAllergy.Duration;
+            Notes = patientAllergy.Notes;
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace EHospital.Allergies.Model
         /// <param name="notesToSet">The notes.</param>
         public void SetNotes(string notesToSet)
         {
-            this.Notes = notesToSet;
+            Notes = notesToSet;
         }
     }
 }

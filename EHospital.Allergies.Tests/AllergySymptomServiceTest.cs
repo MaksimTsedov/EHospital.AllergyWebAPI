@@ -1,5 +1,4 @@
-﻿using EHospital.Allergies.BusinesLogic.Services;
-using EHospital.Allergies.Model;
+﻿using EHospital.Allergies.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using EHospital.Allergies.BusinessLogic.Services;
 
 namespace EHospital.Allergies.Tests
 {
@@ -59,7 +59,7 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public void AllergySymptoms_GetAllAllergySymptoms_ThrowArgumentException(int id)
+        public async void AllergySymptoms_GetAllAllergySymptoms_ThrowArgumentException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.AllergySymptoms.GetAll(It.IsAny<Expression<Func<AllergySymptom, bool>>>()))
@@ -67,7 +67,7 @@ namespace EHospital.Allergies.Tests
             _mockData.Setup(s => s.Symptoms.GetAll()).Returns(_symptomList.AsQueryable);
 
             //Act
-            Assert.ThrowsExceptionAsync<ArgumentException>(() 
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() 
                                  => new AllergySymptomService(_mockData.Object)
                                  .GetAllAllergySymptoms(id)); //Not found any symptom.
         }
@@ -103,7 +103,7 @@ namespace EHospital.Allergies.Tests
         [DataRow(-1, 1)]
         [DataRow(1, -1)]
         [DataRow(-1, -1)]       
-        public void AllergySymptoms_CreateAllergySymptomAsync_ThrowArgumentNullException(int patientAllergyId, int symptomId)
+        public async void AllergySymptoms_CreateAllergySymptomAsync_ThrowArgumentNullException(int patientAllergyId, int symptomId)
         {
             //Arrange
             AllergySymptom testAllergySymptom = new AllergySymptom { PatientAllergyId = patientAllergyId, SymptomId = symptomId };
@@ -114,13 +114,13 @@ namespace EHospital.Allergies.Tests
                                                    .ReturnsAsync(default(PatientAllergy));
 
             //Assert
-            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
                                     new AllergySymptomService(_mockData.Object)
                                     .CreateAllergySymptomAsync(testAllergySymptom)); // Not found such symptom or patient-allergy pair
         }
 
         [TestMethod]
-        public void AllergySymptoms_CreateAllergySymptomAsync_ThrowArgumentExceptionDueToDuplicatePair()
+        public async void AllergySymptoms_CreateAllergySymptomAsync_ThrowArgumentExceptionDueToDuplicatePair()
         {
             //Arrange
             int id = 4;
@@ -135,7 +135,7 @@ namespace EHospital.Allergies.Tests
             _mockData.Setup(s => s.AllergySymptoms.Insert(testAllergySymptom)).Returns(testAllergySymptom);
 
             //Assert
-            Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
                                     new AllergySymptomService(_mockData.Object)
                                     .CreateAllergySymptomAsync(testAllergySymptom));
         }
@@ -190,13 +190,13 @@ namespace EHospital.Allergies.Tests
         [DataRow(6)]
         [DataRow(0)]
         [DataRow(-2)]
-        public void AllergySymptoms_DeleteAllergySymptomAsync_ThrowArgumentNullException(int id)
+        public async void AllergySymptoms_DeleteAllergySymptomAsync_ThrowArgumentNullException(int id)
         {
             //Arrange
             _mockData.Setup(s => s.AllergySymptoms.Get(1)).ReturnsAsync(default(AllergySymptom));
 
             //Assert
-            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(() => 
                                     new AllergySymptomService(_mockData.Object).DeleteAllergySymptomAsync(id)); //No symptom of allergy of patient found.
         }
     }

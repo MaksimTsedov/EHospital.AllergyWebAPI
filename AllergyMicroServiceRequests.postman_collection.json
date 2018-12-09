@@ -1,0 +1,580 @@
+{
+	"info": {
+		"_postman_id": "7053e097-94bc-4a50-be78-a951d727c969",
+		"name": "AllergyMicroServiceRequests",
+		"description": "Testing allergy service responses on successful result.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AllergiesRequesrs",
+			"item": [
+				{
+					"name": "Get all allergies",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"pathogen\": \"testallergy\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Allergies",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Allergies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new allergy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"pathogen\": \"testallergy\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Allergies",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Allergies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete allergy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:44393/api/Allergies/10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Allergies",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get allergies by search key",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Symptoms/searchKey=s",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Symptoms",
+								"searchKey=s"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get allergy by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Allergies/6",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Allergies",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AllergySymptomsRequests",
+			"item": [
+				{
+					"name": "Get all symptoms of allergy by its id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/AllergySymptoms/allergyId=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"AllergySymptoms",
+								"allergyId=1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get allergy symptom record",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/AllergySymptoms/allergySymptomId=2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"AllergySymptoms",
+								"allergySymptomId=2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new allergy-symptom pair",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientAllergyId\": 3,\r\n  \"symptomId\": 4\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/AllergySymptoms",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"AllergySymptoms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete allergy symptom",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/AllergySymptoms/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"AllergySymptoms",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PatientAllergiesRequests",
+			"item": [
+				{
+					"name": "Get unfold information about patient allergies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/PatientAllergies/patientId=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"PatientAllergies",
+								"patientId=1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get patient allergy by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/PatientAllergies/id=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"PatientAllergies",
+								"id=1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create patient allergy record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"patientId\": 3,\r\n  \"allergyId\": 4,\r\n  \"duration\": \"test\",\r\n  \"notes\": \"testnotes\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/PatientAllergies",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"PatientAllergies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update information about patient allergy",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"allergyId\": 7,\r\n  \"duration\": \"updatetest\",\r\n  \"notes\": \"notesupdate\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/PatientAllergies/id=3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"PatientAllergies",
+								"id=3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update notes of patient allergy",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"another test\""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/PatientAllergies/idToUpdateNotes=3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"PatientAllergies",
+								"idToUpdateNotes=3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete patient allergy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/PatientAllergies/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"PatientAllergies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SymptomRequests",
+			"item": [
+				{
+					"name": "Get all symptoms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Symptoms",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Symptoms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new symptom",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"naming\": \"test naming\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Symptoms",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Symptoms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get symptoms by search key",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Symptoms/searchKey=s",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Symptoms",
+								"searchKey=s"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get symptom by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Symptoms/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Symptoms",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete symptom",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:44393/api/Symptoms/5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44393",
+							"path": [
+								"api",
+								"Symptoms",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

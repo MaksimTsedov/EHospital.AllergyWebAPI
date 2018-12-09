@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using EHospital.Allergies.WebAPI.Views;
-using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Services;
 using EHospital.Allergies.Model;
-using System.Linq;
-using System.Collections.Generic;
+using EHospital.Allergies.WebAPI.Views;
 using EHospital.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
     /// <summary>
-    /// Controller for <see cref="BusinesLogic.Services.PatientAllergyService">
+    /// Controller for <see cref="PatientAllergyService" />
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
@@ -27,7 +28,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         /// <param name="patientAllergy">The patient allergy.</param>
         public PatientAllergiesController(IPatientAllergyService patientAllergy)
         {
-            this._patientAllergy = patientAllergy;
+            _patientAllergy = patientAllergy;
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePatientAllergy([FromBody]PatientAllergyRequest patientAllergy)
         {
-            if (!(patientAllergy is PatientAllergyRequest))
+            if (patientAllergy == null)
             {
                 return BadRequest(ModelState);
             }
@@ -112,7 +113,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
         [HttpPut("id={id}", Name = "UpdatePatientAllergy")]
         public async Task<IActionResult> UpdatePatientAllergy(int id, [FromBody]PatientAllergyUpdateRequest patientAllergy)
         {            
-            if (!(patientAllergy is PatientAllergyUpdateRequest))
+            if (patientAllergy == null)
             {
                 return BadRequest(ModelState);
             }
@@ -156,7 +157,11 @@ namespace EHospital.Allergies.WebAPI.Controllers
 
             try
             {
-                var result = await _patientAllergy.UpdateNotesAsync(idToUpdateNotes, notes);
+                if (_patientAllergy != null)
+                {
+                    await _patientAllergy.UpdateNotesAsync(idToUpdateNotes, notes);
+                }
+
                 LoggingToFile.LoggingInfo("Rewriting of notes is successful.");
                 return Ok(notes);
             }

@@ -1,8 +1,8 @@
-﻿using EHospital.Allergies.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using EHospital.Allergies.Model;
 
-namespace EHospital.Allergies.BusinesLogic.Contracts
+namespace EHospital.Allergies.BusinessLogic.Contracts
 {
     /// <summary>
     /// Service abstraction for allergy symptoms

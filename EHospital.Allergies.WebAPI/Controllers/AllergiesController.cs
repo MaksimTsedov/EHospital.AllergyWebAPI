@@ -4,15 +4,16 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using EHospital.Allergies.WebAPI.Views;
-using EHospital.Allergies.BusinesLogic.Contracts;
 using EHospital.Allergies.Model;
 using System.Linq;
+using EHospital.Allergies.BusinessLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Services;
 using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
     /// <summary>
-    /// Controller for <see cref="BusinesLogic.Services.AllergyService"/>
+    /// Controller for <see cref="AllergyService"/>
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]

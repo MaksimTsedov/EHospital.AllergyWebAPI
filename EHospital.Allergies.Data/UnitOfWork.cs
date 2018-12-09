@@ -3,17 +3,16 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using EHospital.Allergies.Model;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace EHospital.Allergies.Data
 {
+    /// <inheritdoc />
     /// <summary>
     /// Unit of Work allows you to simplify work with different repositories
     /// and makes sure that all repositories will use the same data context.
     /// </summary>
-    /// <seealso cref="Allergies.Data.IUnitOfWork" />
-    public class UnitOfWork : IUnitOfWork
+    /// <seealso cref="!:Allergies.Data.IUnitOfWork" />
+    public sealed class UnitOfWork : IUnitOfWork
     {
         /// <summary>
         /// The allergy context
@@ -34,7 +33,7 @@ namespace EHospital.Allergies.Data
         /// <summary>
         /// The disposed state
         /// </summary>
-        private bool disposed = false;
+        private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -138,16 +137,16 @@ namespace EHospital.Allergies.Data
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         /// <summary>
@@ -156,7 +155,9 @@ namespace EHospital.Allergies.Data
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            UnitOfWork obj = this;
+            // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
+            GC.SuppressFinalize(obj);
         }
     }
 }

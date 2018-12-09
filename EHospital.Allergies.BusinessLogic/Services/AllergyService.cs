@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Contracts;
 using EHospital.Allergies.Model;
-using Microsoft.EntityFrameworkCore;
 
-namespace EHospital.Allergies.BusinesLogic.Services
+namespace EHospital.Allergies.BusinessLogic.Services
 {
     /// <summary>
     /// Allergy service business logic
     /// </summary>
-    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.IAllergyService" />
+    /// <seealso cref="IAllergyService" />
     public class AllergyService : IAllergyService
     {
         private readonly IUnitOfWork _unitOfWork;

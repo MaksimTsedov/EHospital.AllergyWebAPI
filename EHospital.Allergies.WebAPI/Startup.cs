@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using EHospital.Allergies.Data;
-using EHospital.Allergies.BusinesLogic.Contracts;
-using EHospital.Allergies.BusinesLogic.Services;
+using EHospital.Allergies.BusinessLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ namespace EHospital.Allergies.WebAPI
     public class Startup
     {
 
-        private static readonly log4net.ILog log = log4net.LogManager
+        private static readonly log4net.ILog Log = log4net.LogManager
                                                           .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -57,7 +57,7 @@ namespace EHospital.Allergies.WebAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            log.Info("Using allergy service.");
+            Log.Info("Using allergy service.");
 
             services.AddSwaggerGen(c =>
             {

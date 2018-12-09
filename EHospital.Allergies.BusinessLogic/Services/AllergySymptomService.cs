@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Contracts;
 using EHospital.Allergies.Model;
-using Microsoft.EntityFrameworkCore;
 
-namespace EHospital.Allergies.BusinesLogic.Services
+namespace EHospital.Allergies.BusinessLogic.Services
 {
     /// <summary>
     /// Service on symptoms of patient allergy
     /// </summary>
-    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.IAllergySymptomService" />
+    /// <seealso cref="IAllergySymptomService" />
     public class AllergySymptomService : IAllergySymptomService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -36,7 +35,7 @@ namespace EHospital.Allergies.BusinesLogic.Services
         public async Task<IEnumerable<Symptom>> GetAllAllergySymptoms(int patientAllergyId)
         {
             var allergySymptoms = _unitOfWork.AllergySymptoms.GetAll(a => a.PatientAllergyId == patientAllergyId);
-            if (allergySymptoms.Count() == 0)
+            if (!allergySymptoms.Any())
             {
                 throw new ArgumentException("Not found any symptom.");
             }

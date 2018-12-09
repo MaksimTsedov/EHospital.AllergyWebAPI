@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EHospital.Allergies.BusinesLogic.Contracts;
+using EHospital.Allergies.BusinessLogic.Contracts;
 using EHospital.Allergies.Model;
-using Microsoft.EntityFrameworkCore;
 
-namespace EHospital.Allergies.BusinesLogic.Services
+namespace EHospital.Allergies.BusinessLogic.Services
 {
     /// <summary>
     /// Symptom service business logic
     /// </summary>
-    /// <seealso cref="EHospital.Allergies.BusinesLogic.Contracts.ISymptomService" />
+    /// <seealso cref="ISymptomService" />
     public class SymptomService : ISymptomService
     {
-        IUnitOfWork _unitOfWork;
+        readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SymptomService" /> class.

@@ -25,7 +25,7 @@ namespace EHospital.Allergies.Data
         /// <summary>
         /// Set of entities
         /// </summary>
-        private DbSet<T> _entities;
+        private readonly DbSet<T> _entities;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{T}"/> class.
