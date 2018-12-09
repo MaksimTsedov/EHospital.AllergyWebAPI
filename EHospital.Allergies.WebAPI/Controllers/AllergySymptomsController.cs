@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using EHospital.Allergies.WebAPI.Views;
-using EHospital.Allergies.Model;
-using System.Linq;
 using EHospital.Allergies.BusinessLogic.Contracts;
 using EHospital.Allergies.BusinessLogic.Services;
+using EHospital.Allergies.Model;
+using EHospital.Allergies.WebAPI.Views;
 using EHospital.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EHospital.Allergies.WebAPI.Controllers
 {
@@ -91,7 +91,7 @@ namespace EHospital.Allergies.WebAPI.Controllers
             try
             {
                 var result = await _allergySymptom.CreateAllergySymptomAsync(Mapper.Map<AllergySymptom>(allergySymptom));
-                LoggingToFile.LoggingInfo($"Successful create of allergy-symptom pair.");
+                LoggingToFile.LoggingInfo("Successful create of allergy-symptom pair.");
                 return Created("allergysymptoms", Mapper.Map<AllergySymptomView>(result));
             }
             catch (ArgumentNullException ex)

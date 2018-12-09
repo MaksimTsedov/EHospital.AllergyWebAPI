@@ -1,13 +1,13 @@
-﻿using EHospital.Allergies.Model;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinessLogic.Services;
+using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace EHospital.Allergies.Tests
 {
@@ -25,12 +25,14 @@ namespace EHospital.Allergies.Tests
             _mockRepo = new Mock<IRepository<AllergySymptom>>();
             _mockData = new Mock<IUnitOfWork>();
             _mockData.Setup(s => s.AllergySymptoms).Returns(_mockRepo.Object);
-            _symptomList = new List<Symptom>() {
+            _symptomList = new List<Symptom>
+            {
            new Symptom { Id = 1, Naming = "prisma" },
            new Symptom { Id = 2, Naming = "pomidor" },
            new Symptom { Id = 3, Naming = "abrikos" }
             };
-            _allergySymptomList = new List<AllergySymptom>() {
+            _allergySymptomList = new List<AllergySymptom>
+            {
            new AllergySymptom { Id = 1, PatientAllergyId = 1, SymptomId = 1 },
            new AllergySymptom { Id = 2, PatientAllergyId = 1, SymptomId = 2 },
            new AllergySymptom { Id = 3, PatientAllergyId = 2, SymptomId = 3 }
@@ -145,7 +147,7 @@ namespace EHospital.Allergies.Tests
         {
             //Arrange
 
-            _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
+            _mockData.Setup(s => s.AllergySymptoms.Include(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
                                                   .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
 
             //Act
@@ -163,7 +165,7 @@ namespace EHospital.Allergies.Tests
         public async Task AllergySymptoms_GetAllergySymptom_ThrowArgumentNullException(int id)
         {
             //Arrange
-            _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
+            _mockData.Setup(s => s.AllergySymptoms.Include(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
                                                   .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
 
             //Act
@@ -174,7 +176,7 @@ namespace EHospital.Allergies.Tests
         public async Task AllergySymptoms_DeleteAllergySymptomAsync_Correct()
         {
             //Arrange
-            _mockData.Setup(s => s.AllergySymptoms.Include<Symptom>(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
+            _mockData.Setup(s => s.AllergySymptoms.Include(It.IsAny<Expression<Func<AllergySymptom, Symptom>>>()))
                                                   .Returns(_allergySymptomList.AsQueryable().Include(a => a.Symptom));
             _mockData.Setup(s => s.AllergySymptoms.Get(1)).ReturnsAsync(_allergySymptomList[0]);
 

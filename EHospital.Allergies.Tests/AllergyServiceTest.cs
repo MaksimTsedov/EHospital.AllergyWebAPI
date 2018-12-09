@@ -1,12 +1,12 @@
-using EHospital.Allergies.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinessLogic.Services;
+using EHospital.Allergies.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace EHospital.Allergies.Tests
 {
@@ -23,7 +23,8 @@ namespace EHospital.Allergies.Tests
             _mockRepo = new Mock<IRepository<Allergy>>();
             _mockData = new Mock<IUnitOfWork>();
             _mockData.Setup(s => s.Allergies).Returns(_mockRepo.Object);
-            _allergyList = new List<Allergy>() {
+            _allergyList = new List<Allergy>
+            {
            new Allergy { Id = 1, Pathogen = "prisma" },
            new Allergy { Id = 2, Pathogen = "pomidor" },
            new Allergy { Id = 3, Pathogen = "abrikos" }

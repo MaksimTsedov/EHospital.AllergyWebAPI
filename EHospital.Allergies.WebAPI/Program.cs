@@ -1,10 +1,9 @@
-﻿using log4net;
+﻿using System.IO;
+using System.Reflection;
+using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using System.Reflection;
-using System.Xml;
 
 namespace EHospital.Allergies.WebAPI
 {

@@ -1,9 +1,9 @@
-﻿using EHospital.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using EHospital.Logging;
 
 namespace EHospital.Allergies.WebAPI.Views
 {
@@ -67,7 +67,6 @@ namespace EHospital.Allergies.WebAPI.Views
                     }
 
                     LoggingToFile.LoggingError(errorMessage.ToString());
-                    return;
                 }
             }
         }

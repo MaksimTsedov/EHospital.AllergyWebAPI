@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using EHospital.Allergies.Model;
 using EHospital.Allergies.WebAPI.Views;
-using System.Linq;
 
 namespace EHospital.Allergies.WebAPI
 {
@@ -18,7 +18,7 @@ namespace EHospital.Allergies.WebAPI
         {
             //Allergy
             CreateMap<Allergy, AllergyView>();
-            CreateMap<AllergyRequest, Allergy>().ConvertUsing(arg => new Allergy()
+            CreateMap<AllergyRequest, Allergy>().ConvertUsing(arg => new Allergy
             {
                 Pathogen = arg.Pathogen
             });
@@ -27,7 +27,7 @@ namespace EHospital.Allergies.WebAPI
             CreateMap<AllergySymptom, AllergySymptomView>().
                                 ForMember(dest => dest.SymptomName, opt => opt.MapFrom
                                 (src => src.Symptom.Naming));
-            CreateMap<AllergySymptomRequest, AllergySymptom>().ConvertUsing(arg => new AllergySymptom()
+            CreateMap<AllergySymptomRequest, AllergySymptom>().ConvertUsing(arg => new AllergySymptom
             {
                 PatientAllergyId = arg.PatientAllergyId,
                 SymptomId = arg.SymptomId
@@ -44,14 +44,14 @@ namespace EHospital.Allergies.WebAPI
             CreateMap<PatientAllergy, PatientAllergyView>().
                                 ForMember(dest => dest.Allergy, opt => opt.MapFrom
                                 (src => src.Allergy.Pathogen));           
-            CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg => new PatientAllergy()
+            CreateMap<PatientAllergyRequest, PatientAllergy>().ConvertUsing(arg => new PatientAllergy
             {
                 PatientId = arg.PatientId,
                 AllergyId = arg.AllergyId,
                 Duration = arg.Duration,
                 Notes = arg.Notes
             });
-            CreateMap<PatientAllergyUpdateRequest, PatientAllergy>().ConvertUsing(arg => new PatientAllergy()
+            CreateMap<PatientAllergyUpdateRequest, PatientAllergy>().ConvertUsing(arg => new PatientAllergy
             {
                 AllergyId = arg.AllergyId,
                 Duration = arg.Duration,
@@ -62,7 +62,7 @@ namespace EHospital.Allergies.WebAPI
 
             //Symptoms
             CreateMap<Symptom, SymptomView>();
-            CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg => new Symptom()
+            CreateMap<SymptomRequest, Symptom>().ConvertUsing(arg => new Symptom
             {
                 Naming = arg.Naming
             });

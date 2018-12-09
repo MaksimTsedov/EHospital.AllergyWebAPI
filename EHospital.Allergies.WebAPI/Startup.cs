@@ -1,16 +1,18 @@
-﻿using AutoMapper;
-using EHospital.Allergies.Data;
+﻿using System.Reflection;
+using AutoMapper;
 using EHospital.Allergies.BusinessLogic.Contracts;
 using EHospital.Allergies.BusinessLogic.Services;
+using EHospital.Allergies.Data;
+using EHospital.Allergies.Model;
+using log4net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using EHospital.Allergies.Model;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace EHospital.Allergies.WebAPI
 {
@@ -20,8 +22,8 @@ namespace EHospital.Allergies.WebAPI
     public class Startup
     {
 
-        private static readonly log4net.ILog Log = log4net.LogManager
-                                                          .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager
+                                                          .GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -67,7 +69,7 @@ namespace EHospital.Allergies.WebAPI
                     Title = "AllergyAPI",
                     Description = "UI for testing correct functionality of Allergy service",
                     TermsOfService = "None",
-                    Contact = new Contact() { Name = "Maksim Tsedov", Email = "maksim.czedov.99@gmail.com", Url = "" }
+                    Contact = new Contact { Name = "Maksim Tsedov", Email = "maksim.czedov.99@gmail.com", Url = "" }
                 });
             });
 

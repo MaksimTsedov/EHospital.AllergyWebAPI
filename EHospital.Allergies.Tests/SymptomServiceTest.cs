@@ -1,12 +1,12 @@
-﻿using EHospital.Allergies.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EHospital.Allergies.BusinessLogic.Services;
+using EHospital.Allergies.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace EHospital.Allergies.Tests
 {
@@ -23,7 +23,8 @@ namespace EHospital.Allergies.Tests
             _mockRepo = new Mock<IRepository<Symptom>>();
             _mockData = new Mock<IUnitOfWork>();
             _mockData.Setup(s => s.Symptoms).Returns(_mockRepo.Object);
-            _symptomList = new List<Symptom>() {
+            _symptomList = new List<Symptom>
+            {
            new Symptom { Id = 1, Naming = "prisma" },
            new Symptom { Id = 2, Naming = "pomidor" },
            new Symptom { Id = 3, Naming = "abrikos" }
@@ -120,7 +121,7 @@ namespace EHospital.Allergies.Tests
         }
 
         [TestMethod]
-        public void Symptoms_CreateSymptomAsync_ThrowAtgumentExceptionDueToDuplicate()
+        public void Symptoms_CreateSymptomAsync_ThrowArgumentExceptionDueToDuplicate()
         {
             //Arrange
             Symptom testSymptom = new Symptom { Id = 1, Naming = "abrikos" };

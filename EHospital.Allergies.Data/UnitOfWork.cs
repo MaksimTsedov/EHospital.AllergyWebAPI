@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using EHospital.Allergies.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EHospital.Allergies.Data
 {
